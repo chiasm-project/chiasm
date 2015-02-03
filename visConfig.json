@@ -5,6 +5,7 @@
       "editor",
       [
         "vertical",
+        "datasetPicker",
         "correlationMatrix",
         "scatterPlot"
       ]
@@ -12,28 +13,45 @@
   },
   {
     "links": [
-      {
-        "source": "correlationMatrix.lineWidth",
-        "target": "scatterPlot.lineWidth"
-      }
+      [
+        "datasetPicker.lineWidth",
+        "correlationMatrix.lineWidth"
+      ],
+      [
+        "datasetPicker.pending",
+        "correlationMatrix.pending"
+      ],
+      [
+        "correlationMatrix.lineWidth",
+        "scatterPlot.lineWidth"
+      ]
     ]
   },
   {
     "id": "editor",
     "module": "dummyVis",
     "text": "Editor",
+    "color": "rgb(237,72,174)",
+    "size": "100px"
+  },
+  {
+    "id": "datasetPicker",
+    "module": "dummyVis",
+    "text": "Dataset Picker",
     "color": "rgb(237,72,174)"
+    "size": "150px"
   },
   {
     "id": "correlationMatrix",
     "module": "dummyVis",
     "text": "Correlation Matrix",
     "color": "rgb(147,123,191)"
+    "size": "1.5"
   },
   {
-    "id": "editor",
+    "id": "scatterPlot",
     "module": "dummyVis",
     "text": "Scatter Plot",
-    "color": "(19,231,214)"
+    "color": "rgb(19,231,214)"
   }
 ]
