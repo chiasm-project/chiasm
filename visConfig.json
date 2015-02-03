@@ -1,0 +1,39 @@
+[
+  {
+    "layout": [
+      "horizontal",
+      "editor",
+      [
+        "vertical",
+        "correlationMatrix",
+        "scatterPlot"
+      ]
+    ]
+  },
+  {
+    "links": [
+      {
+        "source": "correlationMatrix.lineWidth",
+        "target": "scatterPlot.lineWidth"
+      }
+    ]
+  },
+  {
+    "id": "editor",
+    "module": "dummyVis",
+    "text": "Editor",
+    "color": "rgb(237,72,174)"
+  },
+  {
+    "id": "correlationMatrix",
+    "module": "dummyVis",
+    "text": "Correlation Matrix",
+    "color": "rgb(147,123,191)"
+  },
+  {
+    "id": "editor",
+    "module": "dummyVis",
+    "text": "Scatter Plot",
+    "color": "(19,231,214)"
+  }
+]
