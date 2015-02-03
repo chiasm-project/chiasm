@@ -1,0 +1,31 @@
+{
+  "name": "visEditor",
+  "version": "1.0.0",
+  "description": "A pluggable interactive visualization runtime environment.",
+  "main": "js/main.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/curran/visEditor.git"
+  },
+  "keywords": [
+    "visualization"
+  ],
+  "author": "Curran Kelleher",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/curran/visEditor/issues"
+  },
+  "homepage": "https://github.com/curran/visEditor",
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "gulp": "^3.8.10",
+    "gulp-mocha": "^2.0.0",
+    "requirejs": "^2.1.15"
+  }
+}

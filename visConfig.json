@@ -38,14 +38,14 @@
     "id": "datasetPicker",
     "module": "dummyVis",
     "text": "Dataset Picker",
-    "color": "rgb(237,72,174)"
+    "color": "rgb(237,72,174)",
     "size": "150px"
   },
   {
     "id": "correlationMatrix",
     "module": "dummyVis",
     "text": "Correlation Matrix",
-    "color": "rgb(147,123,191)"
+    "color": "rgb(147,123,191)",
     "size": "1.5"
   },
   {

@@ -2,22 +2,24 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <!--
 
-    /**
-     * A starting point for building a data visualization editor.
-     *
-     * Created by Curran Kelleher February 2015
-     */
+      A starting point for building a data visualization editor.
+      Created by Curran Kelleher February 2015
 
+    -->
     <title>Visualization Editor</title>
   </head>
   <body>
+
+    <!-- The container for the runtime environment. -->
     <div id="container"></div>
+
+    <!-- Run the main program via RequireJS. -->
+    <script data-main="js/main" src="bower_components/requirejs/require.js"></script>
 
     <!-- Configure AMD modules. -->
     <script src="requireJSConfig.js"></script>
 
-    <!-- Run the main program via RequireJS. -->
-    <script data-main="js/main" src="bower_components/requirejs/require.js"></script>
   </body>
 </html>
