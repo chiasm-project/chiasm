@@ -1,6 +1,6 @@
 // This module provides a single function that computes a nested box layout.
 //
-// Created by Cuyrran Kelleher Feb 2015
+// Created by Curran Kelleher Feb 2015
 define(["lodash"], function (_) {
 
   // Takes as input the following arguments:
