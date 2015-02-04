@@ -1,38 +1,29 @@
 # visEditor
 
-A pluggable interactive visualization runtime environment.
+A pluggable interactive visualization runtime environment and configuration editor.
 
-The core concept of this editor is that visualizations can be instantiated,
-configured with data, arranged on the screen, and linked together through
-interactions. A JSON configuration structure defines the entire state of an
+The core concept of this project is that visualizations can be instantiated,
+configured with data, arranged on the screen, and coupled together to produce
+linked views. A JSON configuration structure defines the entire state of an
 application. The configuration refers to plugins by name, which are loaded
-at runtime and instantiate instances of visualizations.
+at runtime and called upon to instantiate instances of visualizations and other
+components.
 
-Configuration changes can be made at runtime, at which time the change is
-detected and only the change (not the entire configuration) is propagated
+Configuration changes can be made at runtime using an interactive JSON editor
+based on CodeMirror and Inlet. When changes are made, the difference in configuration
+is computed and only the difference (not the entire configuration) is propagated
 through the system. This lays the foundation for undo/redo and real-time
 synchronization between many clients.
 
 ## Configuration Structure
 
- * A configuration is a JSON structure containing an array of
-   component configuration objects.
- * Each component configuration object has the following properties:
-   * `id` A unique string identifier for the component.
-   * `module` the name of the AMD module that provides the plugin
-     that sets up (and later tears down) the component at runtime.
-   * Additional properties are used to populate property values of 
-     the runtime component model (a ModelJS model returned by the factory).
-
-## Syntactic Sugar
-
-The following rules when loading a configuration allow for cleaner
-configurations that are easier to read and do not have any unnecessary
-repetition.
-
- * If `id` is unspecified, the value for `module` is used as the value for `id`.
- * If `module` and `id` are both unspecified and there is only one property,
-   that property name is used for the value of both `id` and `module`.
+ * A configuration is a JSON object encapsulating an application state.
+ * Keys are component aliases.
+ * Values are objects with properties
+   * `module` - The name of the plugin module that provides a factory
+     that instantiates the component (and later tears it down).
+   * `model` - An object containing the serialized state of the component,
+     which is a ModelJS model created by the plugin.
 
 ## Foundational Plugins
 
@@ -50,7 +41,6 @@ The JSON Editor is an enhanced text editor for editing the configuration at runt
 TODO
 
  * Get basic version working with CodeMirror and Inlet
- * Investigate ShareJS
 
 ### DummyVis
 
