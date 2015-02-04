@@ -2,11 +2,15 @@
 // relating to RequireJS and sharing module paths between the browser
 // and NodeJS.
 //
+// This module, when required using Node's "require()", returns
+// an instance of RequireJS that is configured with module paths
+// found in ../requireJSConfig.js, which is also used in the browser.
+//
 // Created by Curran Kelleher Feb 2015
 
 // Load RequireJS for use in unit tests.
 // "var" is omitted intentionally to induce a global variable,
-// so the requireJSConfig file can run properly in "eval".
+// so the requireJSConfig file can access requirejs in "eval".
 // See http://stackoverflow.com/questions/24522719/node-js-global-eval-throwing-referenceerror
 requirejs = require("requirejs");
 

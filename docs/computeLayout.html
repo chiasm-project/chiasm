@@ -32,7 +32,7 @@ Created by Cuyrran Kelleher Feb 2015</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"lodash"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -45,32 +45,203 @@ Created by Cuyrran Kelleher Feb 2015</p>
               </div>
               <p>Takes as input</p>
 <ul>
-<li><code>layout</code> A nested array structure defining the nested boxes.
-Each array starts with a string, either “horizontal” or “vertical”, and subsequent entries are either<ul>
-<li>strings that are component aliases, or</li>
-<li>arrays that follow the same structure as <code>layout</code></li>
+<li><code>layout</code> A tree data structure defining nested boxes. The root
+may be a leaf node or internal node.<ul>
+<li>Leaf nodes are component alias strings.</li>
+<li>Internal nodes are objects with the following properties:<ul>
+<li><code>orientation</code> A string, either<ul>
+<li>“horizontal”, meaning this node is subdivided horizontally
+with children placed from left to right, or</li>
+<li>“vertical”, meaning this node is subdivided vertically
+with children placed from top to bottom.</li>
 </ul>
 </li>
-<li><code>properties</code> An object where<ul>
+<li><code>children</code> - an array of child node objects, which may be leaf
+nodes or internal nodes.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>sizes</code> An object where<ul>
 <li>Keys are component aliases</li>
 <li>Values are objects with the following properties<ul>
-<li><code>size</code> the width (if the containing box is horizontal) or height (if the containing box is vertical) of the component. The <code>size</code> value may be either:<ul>
-<li>a number (like “1.5” or “1”) that determines size relative to siblings within the containing box, or</li>
-<li>a count of pixels (like “50px” or “200px”) that determines an absolute fixed size. This is useful in cases where components have fixed-size UI widgets rather than resizable visualizations.</li>
-<li>If <code>size</code> is not specified, it is assigned a default value of 1. For example, if a horizontal box has three components within it each with an unspecified <code>size</code>, they will all be given an equal amount of space within their containing box.</li>
+<li><code>size</code> the width (if the containing box is horizontal)
+or height (if the containing box is vertical) of the component.
+The <code>size</code> value may be either:<ul>
+<li>a number (like “1.5” or “1”) that determines size relative to 
+siblings within the containing box, or</li>
+<li>a count of pixels (like “50px” or “200px”) that determines an absolute
+fixed size. This is useful in cases where components have fixed-size UI 
+widgets rather than resizable visualizations.</li>
+<li>If <code>size</code> is not specified, it is assigned a default value of 1.</li>
+</ul>
+</li>
+<li><code>hidden</code> A boolean for hiding components. If true, the component
+is excluded from the layout, if false the component is included.</li>
 </ul>
 </li>
 </ul>
 </li>
+<li><code>box</code> An object describing the outermost box of the layout, with the following properties:<ul>
+<li><code>width</code> The width of the box in pixels.</li>
+<li><code>height</code> The height of the box in pixels.</li>
+<li><code>x</code> The X offset of the box in pixels. If not specified, this defaults to zero.</li>
+<li><code>y</code> The Y offset of the box in pixels. If not specified, this defaults to zero.</li>
+</ul>
+</li>
+</ul>
+<p>The returned result is an object where</p>
+<ul>
+<li>Keys are component aliases</li>
+<li>Values are objects representing the computed box for the component, having the following properties:<ul>
+<li><code>x</code> The X offset of the box in pixels.</li>
+<li><code>y</code> The Y offset of the box in pixels.</li>
+<li><code>width</code> The width of the box in pixels.</li>
+<li><code>height</code> The height of the box in pixels.</li>
 </ul>
 </li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeLayout</span> <span class="hljs-params">(layout, properties)</span></span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeLayout</span> <span class="hljs-params">(layout, sizes, box)</span></span>{
+    <span class="hljs-keyword">var</span> result = {},
+        alias,
+        isHorizontal,
+        wiggleRoom,
+        sizeSum = <span class="hljs-number">0</span>,
+        x,
+        y;
 
+    box.x = box.x || <span class="hljs-number">0</span>;
+    box.y = box.y || <span class="hljs-number">0</span>;
+    sizes = sizes || {};
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">size</span><span class="hljs-params">(layout)</span></span>{
+      <span class="hljs-keyword">if</span>(isLeafNode(layout)){
+        alias = layout;
+        <span class="hljs-keyword">if</span>((alias <span class="hljs-keyword">in</span> sizes) &amp;&amp; (<span class="hljs-string">"size"</span> <span class="hljs-keyword">in</span> sizes[alias])){
+          <span class="hljs-keyword">return</span> sizes[alias].size;
+        } <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+        }
+      } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>TODO test this path</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> layout.size || <span class="hljs-number">1</span>;
+      }
+    }
+
+    <span class="hljs-keyword">if</span>(isLeafNode(layout)){
+      result[layout] = _.clone(box);
+    } <span class="hljs-keyword">else</span> {
+      isHorizontal = layout.orientation === <span class="hljs-string">"horizontal"</span>;
+      wiggleRoom = isHorizontal ? box.width : box.height;
+      layout.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(child)</span> </span>{
+        <span class="hljs-keyword">if</span>(isPixelCount(size(child))){
+          wiggleRoom -= pixelCount(size(child));
+        } <span class="hljs-keyword">else</span> {
+          sizeSum += size(child);
+        }
+      });
+      x = box.x;
+      y = box.y;
+      layout.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(child)</span> </span>{
+        <span class="hljs-keyword">var</span> childBox = { x: x, y: y},
+            sizeInPixels;
+        <span class="hljs-keyword">if</span>(isPixelCount(size(child))){
+          sizeInPixels = pixelCount(size(child));
+        } <span class="hljs-keyword">else</span> {
+          sizeInPixels = (size(child) / sizeSum) * wiggleRoom;
+        }
+        <span class="hljs-keyword">if</span>(isHorizontal){
+          childBox.width = sizeInPixels;
+          childBox.height = box.height;
+          x += childBox.width;
+        } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>TODO test this path</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          childBox.width = box.width;
+          childBox.height = sizeInPixels;
+          y += childBox.height;
+        }
+        <span class="hljs-keyword">if</span>(isLeafNode(child)){
+          alias = child;
+          result[alias] = childBox;
+        } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>TODO test this path</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        }
+      });
+    }
+
+    <span class="hljs-keyword">return</span> result;
   };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isLeafNode</span><span class="hljs-params">(layout)</span></span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> layout === <span class="hljs-string">"string"</span>;
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isPixelCount</span><span class="hljs-params">(size)</span></span>{
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> size === <span class="hljs-string">"string"</span>) &amp;&amp; endsWith(size, <span class="hljs-string">"px"</span>);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p><a href="http://stackoverflow.com/questions/280634/endswith-in-javascript">http://stackoverflow.com/questions/280634/endswith-in-javascript</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">endsWith</span><span class="hljs-params">(str, suffix)</span></span>{
+    <span class="hljs-keyword">return</span> str.indexOf(suffix, str.length - suffix.length) !== -<span class="hljs-number">1</span>;
+  }
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pixelCount</span><span class="hljs-params">(size)</span></span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseInt</span>(size.substr(<span class="hljs-number">0</span>, size.length - <span class="hljs-number">2</span>));
+  }
 });</pre></div></div>
             
         </li>

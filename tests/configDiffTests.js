@@ -27,7 +27,7 @@ function writeTest(actions){
 
 describe("configDiff", function () {
 
-  it("should handle one added alias", function() {
+  it("one added alias", function() {
     var actions = diff({}, {
       myFoo: {
         module: "foo",
@@ -43,7 +43,7 @@ describe("configDiff", function () {
     expect(actions.length).to.equal(3);
   });
 
-  it("should handle one added property", function() {
+  it("one added property", function() {
     var actions = diff({
       myFoo: {
         module: "foo",
@@ -64,7 +64,7 @@ describe("configDiff", function () {
     expect(actions.length).to.equal(1);
   });
 
-  it("should handle two added properties", function() {
+  it("two added properties", function() {
     var actions = diff({
       myFoo: {
         module: "foo",
@@ -87,7 +87,7 @@ describe("configDiff", function () {
     expect(actions.length).to.equal(2);
   });
 
-  it("should handle one removed property", function() {
+  it("one removed property", function() {
     var actions = diff({
       myFoo: {
         module: "foo",
@@ -108,7 +108,7 @@ describe("configDiff", function () {
     expect(actions.length).to.equal(1);
   });
 
-  it("should handle two removed properties", function() {
+  it("two removed properties", function() {
     var actions = diff({
       myFoo: {
         module: "foo",
@@ -128,7 +128,7 @@ describe("configDiff", function () {
     expect(actions).to.contain("unset(myFoo, y)");
     expect(actions.length).to.equal(2);
   });
-  it("should handle one updated property", function() {
+  it("one updated property", function() {
     var actions = diff({
       myFoo: {
         module: "foo",
@@ -150,7 +150,7 @@ describe("configDiff", function () {
     expect(actions.length).to.equal(1);
   });
 
-  it("should handle two updated properties", function() {
+  it("two updated properties", function() {
     var actions = diff({
       myFoo: {
         module: "foo",
@@ -173,7 +173,7 @@ describe("configDiff", function () {
     expect(actions.length).to.equal(2);
   });
 
-  it("should handle one removed alias", function() {
+  it("one removed alias", function() {
     var actions = diff({
       myFoo: {
         module: "foo",
