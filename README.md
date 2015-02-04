@@ -42,27 +42,6 @@ several foundational pieces are implemented as plugins.
 ### Layout
 
 The `layout` module provides visualization containers using a nested box layout.
-The `layout` property defines the nested box structure using nested arrays. Each
-array starts with either "horizontal" or "vertical", and subsequent strings are
-ids of components.
-
-Each component referred to by id in the `layout` property has a `size` property
-that represents the size of the component along the axis of its containing box.
-
-The `size` value may be either:
-
- * a number (like "1.5" or "1") that determines relative size depending on the container, or
- * a count of pixels (like "50px" or "200px") that determines an absolute fixed size.
-
-If `size` is not specified, it is assigned a default value of 1. For example, if a horizontal 
-box has three components within it each with an unspecified `size`, they will all be given an 
-equal amount of space.
-
-TODO
-
- * Write unit tests
- * Port implementation from nested boxes prototype
- * Implement pixel-based size
 
 ### JSON Editor
 

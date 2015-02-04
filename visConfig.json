@@ -1,57 +1,67 @@
-[
-  {
-    "layout": [
-      "horizontal",
-      "editor",
-      [
-        "vertical",
-        "datasetPicker",
-        "correlationMatrix",
-        "scatterPlot"
+{
+  "layout": {
+    "module": "layout",
+    "model": {
+      "layout": [
+        "horizontal",
+        "editor",
+        [
+          "vertical",
+          "datasetPicker",
+          "correlationMatrix",
+          "scatterPlot"
+        ]
       ]
-    ]
+    }
   },
-  {
-    "links": [
-      [
-        "datasetPicker.lineWidth",
-        "correlationMatrix.lineWidth"
-      ],
-      [
-        "datasetPicker.pending",
-        "correlationMatrix.pending"
-      ],
-      [
-        "correlationMatrix.lineWidth",
-        "scatterPlot.lineWidth"
+  "links": {
+    "module": "links",
+    "model": {
+      "links": [
+        [
+          "datasetPicker.lineWidth",
+          "correlationMatrix.lineWidth"
+        ],
+        [
+          "datasetPicker.loading",
+          "correlationMatrix.pending"
+        ],
+        [
+          "correlationMatrix.lineWidth",
+          "scatterPlot.lineWidth"
+        ]
       ]
-    ]
+    }
   },
-  {
-    "id": "editor",
+  "editor": {
     "module": "dummyVis",
-    "text": "Editor",
-    "color": "rgb(237,72,174)",
-    "size": "100px"
+    "model": {
+      "text": "Editor",
+      "color": "rgb(237,72,174)",
+      "size": "100px"
+    }
   },
-  {
-    "id": "datasetPicker",
+  "datasetPicker": {
     "module": "dummyVis",
-    "text": "Dataset Picker",
-    "color": "rgb(237,72,174)",
-    "size": "150px"
+    "model": {
+      "text": "Dataset Picker",
+      "color": "rgb(237,72,174)",
+      "size": "150px"
+    }
   },
-  {
-    "id": "correlationMatrix",
+  "correlationMatrix": {
     "module": "dummyVis",
-    "text": "Correlation Matrix",
-    "color": "rgb(147,123,191)",
-    "size": "1.5"
+    "model": {
+      "text": "Correlation Matrix",
+      "color": "rgb(147,123,191)",
+      "size": "1.5"
+    }
   },
-  {
-    "id": "scatterPlot",
+  "scatterPlot": {
     "module": "dummyVis",
-    "text": "Scatter Plot",
-    "color": "rgb(19,231,214)"
+    "model": {
+      "text": "Scatter Plot",
+      "color": "rgb(19,231,214)"
+    }
   }
-]
+}

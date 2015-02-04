@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>configDiff.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="action.html">
+                  action.js
+                </a>
+              
+                
+                <a class="source" href="computeLayout.html">
+                  computeLayout.js
+                </a>
+              
+                
+                <a class="source" href="configDiff.html">
+                  configDiff.js
+                </a>
+              
+                
+                <a class="source" href="main.html">
+                  main.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>configDiff.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This module computes the difference (“diff”) between two configurations.
+The diff is expressed as an array of Action objects.</p>
+<p>Based on a pervious prototype at
+<a href="https://github.com/curran/overseer/blob/master/src/configDiff.js">https://github.com/curran/overseer/blob/master/src/configDiff.js</a></p>
+<p>Created by Curran Kelleher Bef 2015</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"lodash"</span>, <span class="hljs-string">"action"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_, Action)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Computes the difference between two configuration objects,
+returns the difference as a sequence of actions to be executed.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">configDiff</span><span class="hljs-params">(oldConfig, newConfig)</span></span>{
+    <span class="hljs-keyword">var</span> actions = [],
+        newAliases = _.keys(newConfig),
+        oldAliases = _.keys(oldConfig);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Handle removed aliases.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _.difference(oldAliases, newAliases).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(alias)</span> </span>{
+      actions.push(Action.destroy(alias));
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Handle updated aliases.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    newAliases.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(alias)</span> </span>{
+      <span class="hljs-keyword">var</span> oldModel = oldConfig[alias] ? oldConfig[alias].model : <span class="hljs-literal">null</span>,
+          newModel = newConfig[alias].model,
+          oldProperties = _.keys(oldModel),
+          newProperties = _.keys(newModel);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Handle added aliases.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span>(!oldModel){
+        actions.push(Action.create(alias, newConfig[alias].module));
+        newProperties.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
+          actions.push(Action.set(alias, property, newModel[property]));
+        });
+      } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Handle added properties.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        _.difference(newProperties, oldProperties).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
+          actions.push(Action.set(alias, property, newModel[property]));
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Handle removed properties.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        _.difference(oldProperties, newProperties).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
+          actions.push(Action.unset(alias, property));
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Handle updated properties.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        _.intersection(newProperties, oldProperties).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
+          <span class="hljs-keyword">if</span>(!_.isEqual(oldModel[property], newModel[property])){
+            actions.push(Action.set(alias, property, newModel[property]));
+          }
+        });
+      }
+    });
+    <span class="hljs-keyword">return</span> actions;
+  };
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
