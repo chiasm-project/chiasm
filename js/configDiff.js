@@ -4,7 +4,7 @@
 // Based on a pervious prototype at
 // https://github.com/curran/overseer/blob/master/src/configDiff.js
 //
-// Created by Curran Kelleher Bef 2015
+// Created by Curran Kelleher Feb 2015
 define(["lodash", "action"], function (_, Action) {
 
   // Computes the difference between two configuration objects,
