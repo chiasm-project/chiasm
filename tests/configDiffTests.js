@@ -5,16 +5,7 @@
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect;
 
-// Load RequireJS for use in unit tests.
-// "var" omitted intentionally to induce a global variable,
-// so the requireJSConfig file can run properly in "eval".
-// See http://stackoverflow.com/questions/24522719/node-js-global-eval-throwing-referenceerror
-requirejs = require("requirejs");
-
-// Configure AMD module paths.
-// Using eval like this seems to be the simplest way to 
-// share module paths between the browser and unit tests.
-eval(require("../requireJSConfig.js"));
+var requirejs = require("./configureRequireJS.js");
 
 var configDiff = requirejs("configDiff");
 var Action = requirejs("action");
