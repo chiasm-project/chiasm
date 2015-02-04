@@ -35,6 +35,7 @@ function writeTest(actions){
 }
 
 describe("configDiff", function () {
+
   it("should handle one added alias", function() {
     var actions = diff({}, {
       myFoo: {
@@ -45,10 +46,153 @@ describe("configDiff", function () {
         }
       }
     });
-    
     expect(actions).to.contain("create(myFoo, foo)");
     expect(actions).to.contain("set(myFoo, x, 50)");
     expect(actions).to.contain("set(myFoo, y, 40)");
     expect(actions.length).to.equal(3);
+  });
+
+  it("should handle one added property", function() {
+    var actions = diff({
+      myFoo: {
+        module: "foo",
+        model: {
+          y: 40
+        }
+      }
+    }, {
+      myFoo: {
+        module: "foo",
+        model: {
+          x: 50,
+          y: 40
+        }
+      }
+    });
+    expect(actions).to.contain("set(myFoo, x, 50)");
+    expect(actions.length).to.equal(1);
+  });
+
+  it("should handle two added properties", function() {
+    var actions = diff({
+      myFoo: {
+        module: "foo",
+        model: {
+          y: 40
+        }
+      }
+    }, {
+      myFoo: {
+        module: "foo",
+        model: {
+          x: 50,
+          y: 40,
+          z: 70
+        }
+      }
+    });
+    expect(actions).to.contain("set(myFoo, x, 50)");
+    expect(actions).to.contain("set(myFoo, z, 70)");
+    expect(actions.length).to.equal(2);
+  });
+
+  it("should handle one removed property", function() {
+    var actions = diff({
+      myFoo: {
+        module: "foo",
+        model: {
+          x: 50,
+          y: 40
+        }
+      }
+    }, {
+      myFoo: {
+        module: "foo",
+        model: {
+          y: 40
+        }
+      }
+    });
+    expect(actions).to.contain("unset(myFoo, x)");
+    expect(actions.length).to.equal(1);
+  });
+
+  it("should handle two removed properties", function() {
+    var actions = diff({
+      myFoo: {
+        module: "foo",
+        model: {
+          x: 50,
+          y: 40
+        }
+      }
+    }, {
+      myFoo: {
+        module: "foo",
+        model: {
+        }
+      }
+    });
+    expect(actions).to.contain("unset(myFoo, x)");
+    expect(actions).to.contain("unset(myFoo, y)");
+    expect(actions.length).to.equal(2);
+  });
+  it("should handle one updated property", function() {
+    var actions = diff({
+      myFoo: {
+        module: "foo",
+        model: {
+          x: 50,
+          y: 40
+        }
+      }
+    }, {
+      myFoo: {
+        module: "foo",
+        model: {
+          x: 60,
+          y: 40
+        }
+      }
+    });
+    expect(actions).to.contain("set(myFoo, x, 60)");
+    expect(actions.length).to.equal(1);
+  });
+
+  it("should handle two updated properties", function() {
+    var actions = diff({
+      myFoo: {
+        module: "foo",
+        model: {
+          x: 50,
+          y: 40
+        }
+      }
+    }, {
+      myFoo: {
+        module: "foo",
+        model: {
+          x: 60,
+          y: 50
+        }
+      }
+    });
+    expect(actions).to.contain("set(myFoo, x, 60)");
+    expect(actions).to.contain("set(myFoo, y, 50)");
+    expect(actions.length).to.equal(2);
+  });
+
+  it("should handle one removed alias", function() {
+    var actions = diff({
+      myFoo: {
+        module: "foo",
+        model: {
+          x: 50,
+          y: 40
+        }
+      }
+    }, {});
+    expect(actions).to.contain("destroy(myFoo)");
+    expect(actions.length).to.equal(1);
   });
 });
