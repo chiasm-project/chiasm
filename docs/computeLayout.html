@@ -27,8 +27,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>This module provides a single function that computes a nested box layout.
-Created by Cuyrran Kelleher Feb 2015</p>
+              <p>This module provides a single function that computes a nested box layout.</p>
+<p>Created by Curran Kelleher Feb 2015</p>
 
             </div>
             
@@ -43,10 +43,10 @@ Created by Cuyrran Kelleher Feb 2015</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Takes as input</p>
+              <p>Takes as input the following arguments:</p>
 <ul>
 <li><code>layout</code> A tree data structure defining nested boxes. The root
-of the tree may be a leaf node or internal node.<ul>
+of the tree may be either a leaf node or an internal node.<ul>
 <li>Leaf nodes are component alias strings.</li>
 <li>Internal nodes are objects with the following properties:<ul>
 <li><code>orientation</code> A string, either<ul>
@@ -56,23 +56,24 @@ with children placed from left to right, or</li>
 with children placed from top to bottom.</li>
 </ul>
 </li>
-<li><code>children</code> - an array of child node objects, which may be leaf
-nodes or internal nodes.</li>
+<li><code>children</code> An array of child node objects, each of which may be 
+either leaf nodes or internal nodes.</li>
+<li><code>size</code> The size of the internal node, with the same specifications
+as values within <code>sizes</code> (see next bullet point).</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><code>sizes</code> An object where<ul>
+<li><code>sizes</code> An object that specifies component size options, where<ul>
 <li>Keys are component alias strings.</li>
-<li>Values are objects with the following properties<ul>
+<li>Values are objects with the following properties:<ul>
 <li><code>size</code> the width (if the containing box is horizontal)
-or height (if the containing box is vertical) of the component.
-The <code>size</code> value may be either:<ul>
-<li>a number (like “1.5” or “1”) that determines size relative to 
-siblings within the containing box, or</li>
-<li>a count of pixels (like “50px” or “200px”) that determines an absolute
-fixed size. This is useful in cases where components have fixed-size UI 
-widgets rather than resizable visualizations.</li>
+or height (if the containing box is vertical) of the component. May be either:<ul>
+<li>a number (like “1.5” or “1”, expressed as a number or a string) that determines 
+size relative to siblings within the containing box, or</li>
+<li>a count of pixels (like “50px” or “200px” expressed as a string with “px” suffix)
+that determines an absolute fixed size. This is useful in cases where components 
+have fixed-size UI widgets rather than flexibly resizable visualizations.</li>
 <li>If <code>size</code> is not specified, it is assigned a default value of 1.</li>
 </ul>
 </li>
@@ -90,9 +91,9 @@ is excluded from the layout, if false the component is included.</li>
 </ul>
 </li>
 </ul>
-<p>The returned result is an object where</p>
+<p>Returns an object where</p>
 <ul>
-<li>Keys are component aliases</li>
+<li>Keys are component aliases.</li>
 <li>Values are objects representing the computed box for the component, having the following properties:<ul>
 <li><code>x</code> The X offset of the box in pixels.</li>
 <li><code>y</code> The Y offset of the box in pixels.</li>
