@@ -20,6 +20,9 @@ requirejs.config({
     // http://benmccormick.org/2014/11/12/underscore-vs-lodash/
     lodash: "../bower_components/lodash/lodash.min",
 
+    // https://github.com/caolan/async
+    async: "../bower_components/async/lib/async"
+
     // for future use
     // http://square.github.io/crossfilter/
     // crossfilter: "../../bower_components/crossfilter/crossfilter"

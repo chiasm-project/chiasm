@@ -1,7 +1,7 @@
 // This module computes the difference ("diff") between two configurations.
 // The diff is expressed as an array of Action objects.
 //
-// Based on a pervious prototype at
+// Based on pervious work found at
 // https://github.com/curran/overseer/blob/master/src/configDiff.js
 //
 // Created by Curran Kelleher Feb 2015
@@ -21,14 +21,14 @@ define(["lodash", "action"], function (_, Action) {
 
     // Handle updated aliases.
     newAliases.forEach(function (alias) {
-      var oldModel = oldConfig[alias] ? oldConfig[alias].model : null,
-          newModel = newConfig[alias].model,
+      var oldModel = oldConfig[alias] ? oldConfig[alias].state : null,
+          newModel = newConfig[alias].state,
           oldProperties = _.keys(oldModel),
           newProperties = _.keys(newModel);
 
       // Handle added aliases.
       if(!oldModel){
-        actions.push(Action.create(alias, newConfig[alias].module));
+        actions.push(Action.create(alias, newConfig[alias].plugin));
         newProperties.forEach(function (property) {
           actions.push(Action.set(alias, property, newModel[property]));
         });

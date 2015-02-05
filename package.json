@@ -29,6 +29,7 @@
     "gulp-docco": "0.0.4",
     "gulp-jshint": "^1.9.2",
     "gulp-mocha": "^2.0.0",
+    "jsdom": "^3.1.0",
     "jshint-stylish": "^1.0.0",
     "requirejs": "^2.1.15"
   }

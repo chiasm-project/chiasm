@@ -8,7 +8,7 @@
 // and expressed in terms of Action objects, then the Action objects
 // are applied to the runtime.
 //
-// Based on a previous prototype found at:
+// Based on previous work found at:
 // https://github.com/curran/overseer/blob/master/src/action.js
 //
 // This lays the foundation for undo/redo and real-time synchronization.
@@ -20,8 +20,8 @@
 // Created by Curran Kelleher Feb 2015
 define([], function () {
   return {
-    create: function (alias, module) {
-      return { method: "create", alias: alias, module: module };
+    create: function (alias, plugin) {
+      return { method: "create", alias: alias, plugin: plugin };
     },
     destroy: function (alias) {
       return { method: "destroy", alias: alias };
@@ -37,7 +37,7 @@ define([], function () {
         action.alias,
         action.property !== undefined ? ", " + action.property : "",
         action.value !== undefined ? ", " + action.value : "",
-        action.module !== undefined ? ", " + action.module : ""
+        action.plugin !== undefined ? ", " + action.plugin : ""
       ].join("") + ")";
     }
   };

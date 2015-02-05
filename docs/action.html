@@ -35,7 +35,7 @@ JSON application configuration at runtime. To avoid reloading the
 entire configuration on each change, the difference is computed
 and expressed in terms of Action objects, then the Action objects
 are applied to the runtime.</p>
-<p>Based on a previous prototype found at:
+<p>Based on previous work found at:
 <a href="https://github.com/curran/overseer/blob/master/src/action.js">https://github.com/curran/overseer/blob/master/src/action.js</a></p>
 <p>This lays the foundation for undo/redo and real-time synchronization.</p>
 <p>For synchronization, these Action objects should be directly translatable
@@ -47,8 +47,8 @@ into ShareJS operations for JSON transformation, documented at
             
             <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
   <span class="hljs-keyword">return</span> {
-    create: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(alias, module)</span> </span>{
-      <span class="hljs-keyword">return</span> { method: <span class="hljs-string">"create"</span>, alias: alias, <span class="hljs-built_in">module</span>: <span class="hljs-built_in">module</span> };
+    create: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(alias, plugin)</span> </span>{
+      <span class="hljs-keyword">return</span> { method: <span class="hljs-string">"create"</span>, alias: alias, plugin: plugin };
     },
     destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(alias)</span> </span>{
       <span class="hljs-keyword">return</span> { method: <span class="hljs-string">"destroy"</span>, alias: alias };
@@ -64,7 +64,7 @@ into ShareJS operations for JSON transformation, documented at
         action.alias,
         action.property !== <span class="hljs-literal">undefined</span> ? <span class="hljs-string">", "</span> + action.property : <span class="hljs-string">""</span>,
         action.value !== <span class="hljs-literal">undefined</span> ? <span class="hljs-string">", "</span> + action.value : <span class="hljs-string">""</span>,
-        action.module !== <span class="hljs-literal">undefined</span> ? <span class="hljs-string">", "</span> + action.module : <span class="hljs-string">""</span>
+        action.plugin !== <span class="hljs-literal">undefined</span> ? <span class="hljs-string">", "</span> + action.plugin : <span class="hljs-string">""</span>
       ].join(<span class="hljs-string">""</span>) + <span class="hljs-string">")"</span>;
     }
   };

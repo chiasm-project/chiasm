@@ -29,7 +29,7 @@
               </div>
               <p>This module computes the difference (“diff”) between two configurations.
 The diff is expressed as an array of Action objects.</p>
-<p>Based on a pervious prototype at
+<p>Based on pervious work found at
 <a href="https://github.com/curran/overseer/blob/master/src/configDiff.js">https://github.com/curran/overseer/blob/master/src/configDiff.js</a></p>
 <p>Created by Curran Kelleher Feb 2015</p>
 
@@ -87,8 +87,8 @@ returns the difference as a sequence of actions to be executed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    newAliases.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(alias)</span> </span>{
-      <span class="hljs-keyword">var</span> oldModel = oldConfig[alias] ? oldConfig[alias].model : <span class="hljs-literal">null</span>,
-          newModel = newConfig[alias].model,
+      <span class="hljs-keyword">var</span> oldModel = oldConfig[alias] ? oldConfig[alias].state : <span class="hljs-literal">null</span>,
+          newModel = newConfig[alias].state,
           oldProperties = _.keys(oldModel),
           newProperties = _.keys(newModel);</pre></div></div>
             
@@ -106,7 +106,7 @@ returns the difference as a sequence of actions to be executed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span>(!oldModel){
-        actions.push(Action.create(alias, newConfig[alias].module));
+        actions.push(Action.create(alias, newConfig[alias].plugin));
         newProperties.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
           actions.push(Action.set(alias, property, newModel[property]));
         });

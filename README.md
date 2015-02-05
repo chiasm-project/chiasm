@@ -6,13 +6,24 @@ The core concept of this project is that visualizations can be instantiated, con
 
 ## Configuration Structure
 
- * A configuration is a JSON object encapsulating an application state.
- * Keys are component aliases.
- * Values are objects with properties
-   * `module` - The name of the plugin module that provides a factory
-     that instantiates the component (and later tears it down).
-   * `model` - An object containing the serialized state of the component,
-     which is a ModelJS model created by the plugin.
+A configuration is a JSON object encapsulating an application state. This configuration contains specifications for a set of runtime components, each of which has:
+
+ * a unique name (called the "alias" of the component),
+ * an associated plugin that creates the runtime component, and
+ * a key-value dictionary specifying the state of the runtime component.
+
+The configuration structure can be summarized as follows.
+
+```
+{ 
+  alias -> {
+    plugin: string,
+    state: { property -> value }
+  }
+}
+```
+ 
+See the [runtime module](http://curran.github.io/visEditor/docs/runtime.html) for detailed documentation of configuration structure.
 
 ## Runtime Environment
 
