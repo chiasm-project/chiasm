@@ -25,7 +25,7 @@ The runtime environment is responsible for synchronizing the JSON configuration 
 
 This organization allows a dynamic configuration structure to drive the state of the application, and also allows changes resulting from user interactions with runtime components to be propagated to the configuration.
 
-<img src="images/Plugins.png">
+![Runtime Diagram](images/Plugins.png)
 
 This diagram illustrates that
 
