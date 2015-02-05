@@ -23,9 +23,7 @@ describe("runtime", function () {
     var runtime = Runtime();
 
     runtime.plugins.simplestPlugin = function(runtime){
-      return Model({
-        publicProperties: ["message"]
-      });
+      return Model();
     }
     
     runtime.config = {
@@ -35,37 +33,44 @@ describe("runtime", function () {
     };
 
     runtime.getComponent("foo", function(foo){
-      expect(foo.publicProperties).to.contain("message");
-      expect(foo.publicProperties.length).to.equal(1);
+      expect(foo).to.exist();
       done();
     });
   });
 
-  //it("create a component", function(done) {
-  //  var runtime = Runtime();
+  it("create a component, set state single property", function(done) {
+    var runtime = Runtime();
 
-  //  runtime.plugins.simplestPlugin = function(runtime){
-  //    return Model({
-  //      publicProperties: ["message"]
-  //    });
-  //  }
-  //  
-  //  runtime.config = {
-  //    foo: {
-  //      plugin: "examplePlugin",
-  //      state: {
-  //        message: "Hello"
-  //      }
-  //    }
-  //  };
+    runtime.plugins.simplePlugin = function(runtime){
+      return Model({
+      });
+    }
+    
+    runtime.config = {
+      foo: {
+        plugin: "simplePlugin",
+        state: {
+          message: "Hello"
+        }
+      }
+    };
 
-  //  runtime.getComponent("foo", function(foo){
-  //    foo.when("message", function(message){
-  //      expect(message).to.equal("hello");
-  //      done();
-  //    });
-  //  });
-  //});
+    runtime.getComponent("foo", function(foo){
+      expect(foo).to.exist();
+      foo.when("message", function(message){
+        expect(message).to.equal("Hello");
+        done();
+      });
+    });
+  });
+  // TODO
+  // set multiple properties
+  // config sequences
+  // destroy
+  // updates propataging from components to config
+
+      //expect(foo.publicProperties).to.contain("message");
+      //expect(foo.publicProperties.length).to.equal(1);
 });
 //var runtime = Runtime(createDiv());
 //function ExamplePlugin(runtime){

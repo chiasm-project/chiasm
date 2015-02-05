@@ -168,16 +168,7 @@ necessary for computing configuration differences.</p>
       create: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
         create(action.alias, action.plugin, callback);
       },
-      destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
-        destroy(action.alias, callback);
-      },
-      set: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
-        set(action.alias, action.property, action.value, callback);
-      },
-      unset: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
-        unset(action.alias, action.property, callback);
-      }
-    };</pre></div></div>
+      destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -187,6 +178,43 @@ necessary for computing configuration differences.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>TODO test</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        destroy(action.alias, callback);
+      },
+      set: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
+        set(action.alias, action.property, action.value, callback);
+      },
+      unset: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>TODO test</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        unset(action.alias, action.property, callback);
+      }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>An asynchronous FIFO queue for applying actions to the runtime.</p>
 
@@ -199,54 +227,26 @@ necessary for computing configuration differences.</p>
         </li>
         
         
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>Respond to changes in configuration.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    runtime.when(<span class="hljs-string">"config"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newConfig)</span></span>{
-      configDiff(oldConfig, newConfig).forEach(actionQueue.push);
-      oldConfig = newConfig;
-    });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>Gets a component by alias. May be asynchronous
-if the component has not yet been constructed.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getComponent</span> <span class="hljs-params">(alias, callback)</span> </span>{
-      <span class="hljs-keyword">var</span> component = components[alias] ? components[alias]: <span class="hljs-literal">null</span>;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>If the component is already loaded, call the callback immediately.</p>
+              <p>Gets a component by alias, passes it to the callback.
+If the component exists, the callback is called immediately.
+If the component does not exist, this function waits until the
+component is created (by polling), then the callback is called.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span>(component){
-        callback(component);
-      } <span class="hljs-keyword">else</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getComponent</span> <span class="hljs-params">(alias, callback)</span> </span>{
+      async.until(
+        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{ <span class="hljs-keyword">return</span> alias <span class="hljs-keyword">in</span> components; },
+        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(cb)</span></span>{ setTimeout(cb, <span class="hljs-number">0</span>); },
+        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{ callback(components[alias]); }
+      );
+    }</pre></div></div>
             
         </li>
         
@@ -257,17 +257,13 @@ if the component has not yet been constructed.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Otherwise, wait until the component has loaded by polling every 100ms.</p>
+              <p>Loads a plugin by name. 
+First tries to find plugin in runtime.plugins,
+then uses RequireJS to load the plugin as an AMD module.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
-          runtime.getComponent(alias, callback);
-        }, <span class="hljs-number">100</span>);
-      }
-    }
-
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadPlugin</span><span class="hljs-params">(plugin, callback)</span></span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadPlugin</span><span class="hljs-params">(plugin, callback)</span></span>{
       <span class="hljs-keyword">if</span>(plugin <span class="hljs-keyword">in</span> runtime.plugins){
         callback(runtime.plugins[plugin]);
       } <span class="hljs-keyword">else</span> {</pre></div></div>
@@ -287,15 +283,81 @@ if the component has not yet been constructed.</p>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">require</span>([plugin], callback);
       }
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Applies a “create” action to the runtime.</p>
 
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">create</span><span class="hljs-params">(alias, plugin)</span></span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">create</span><span class="hljs-params">(alias, plugin, callback)</span></span>{
       loadPlugin(plugin, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(constructor)</span> </span>{
         components[alias] = constructor(runtime);
+        callback();
       });
-    }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Applies a “set” action to the runtime.</p>
 
-    runtime.getComponent = getComponent;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">set</span><span class="hljs-params">(alias, property, value, callback)</span> </span>{
+      getComponent(alias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(component)</span></span>{
+        component[property] = value;
+        callback();
+      });
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Respond to changes in configuration.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    runtime.when(<span class="hljs-string">"config"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newConfig)</span></span>{
+      <span class="hljs-keyword">var</span> actions = configDiff(oldConfig, newConfig);
+      actions.forEach(actionQueue.push);
+      oldConfig = newConfig;
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Expose getComponent as a public method.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    runtime.getComponent = getComponent;
 
     <span class="hljs-keyword">return</span> runtime;
   };

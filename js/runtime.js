@@ -53,12 +53,14 @@ define(["model", "configDiff", "async"], function (Model, configDiff, async) {
         create(action.alias, action.plugin, callback);
       },
       destroy: function (action, callback) {
+        // TODO test
         destroy(action.alias, callback);
       },
       set: function (action, callback) {
         set(action.alias, action.property, action.value, callback);
       },
       unset: function (action, callback) {
+        // TODO test
         unset(action.alias, action.property, callback);
       }
     };
@@ -68,29 +70,21 @@ define(["model", "configDiff", "async"], function (Model, configDiff, async) {
       methods[action.method](action, callback);
     }, 1);
 
-    // Respond to changes in configuration.
-    runtime.when("config", function(newConfig){
-      configDiff(oldConfig, newConfig).forEach(actionQueue.push);
-      oldConfig = newConfig;
-    });
-
-    // Gets a component by alias. May be asynchronous
-    // if the component has not yet been constructed.
+    // Gets a component by alias, passes it to the callback.
+    // If the component exists, the callback is called immediately.
+    // If the component does not exist, this function waits until the
+    // component is created (by polling), then the callback is called.
     function getComponent (alias, callback) {
-      var component = components[alias] ? components[alias]: null;
-
-      // If the component is already loaded, call the callback immediately.
-      if(component){
-        callback(component);
-      } else {
-
-        // Otherwise, wait until the component has loaded by polling every 100ms.
-        setTimeout(function () {
-          runtime.getComponent(alias, callback);
-        }, 100);
-      }
+      async.until(
+        function(){ return alias in components; },
+        function(cb){ setTimeout(cb, 0); },
+        function(){ callback(components[alias]); }
+      );
     }
 
+    // Loads a plugin by name. 
+    // First tries to find plugin in runtime.plugins,
+    // then uses RequireJS to load the plugin as an AMD module.
     function loadPlugin(plugin, callback){
       if(plugin in runtime.plugins){
         callback(runtime.plugins[plugin]);
@@ -100,12 +94,30 @@ define(["model", "configDiff", "async"], function (Model, configDiff, async) {
       }
     }
 
-    function create(alias, plugin){
+    // Applies a "create" action to the runtime.
+    function create(alias, plugin, callback){
       loadPlugin(plugin, function (constructor) {
         components[alias] = constructor(runtime);
+        callback();
+      });
+    }
+    
+    // Applies a "set" action to the runtime.
+    function set(alias, property, value, callback) {
+      getComponent(alias, function(component){
+        component[property] = value;
+        callback();
       });
     }
 
+    // Respond to changes in configuration.
+    runtime.when("config", function(newConfig){
+      var actions = configDiff(oldConfig, newConfig);
+      actions.forEach(actionQueue.push);
+      oldConfig = newConfig;
+    });
+
+    // Expose getComponent as a public method.
     runtime.getComponent = getComponent;
 
     return runtime;
