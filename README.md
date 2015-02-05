@@ -45,6 +45,8 @@ See also
  * [runtime module](http://curran.github.io/visEditor/docs/runtime.html)
  * [runtime module unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/runtimeTest.js)
 
+Status: partially implemented.
+
 ## Foundational Plugins
 
 Since the architecture for this visualization editor is based on plugins, several foundational pieces are implemented as plugins.
@@ -54,6 +56,7 @@ Since the architecture for this visualization editor is based on plugins, severa
 The `layout` module provides tiled visualization containers using a nested box layout, computed by the [computeLayout module](http://curran.github.io/visEditor/docs/computeLayout.html).
 
 ![Boxes](images/boxes.png)
+
 The above image is a simple example of a nested box layout, which can be configured by the following JSON structure.
 
 ```
@@ -83,9 +86,13 @@ See also
  * [computeLayout module](http://curran.github.io/visEditor/docs/computeLayout.html) This implements the nested box layout algorithm.
  * [computeLayout module unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/computeLayoutTest.js)
 
+Status: completely implemented.
+
 ### JSON Editor
 
 The JSON Editor is an enhanced text editor for editing the configuration at runtime. Changes are propagated through the runtime environment to the instantiated plugins. When changes are made, only the differences are propagated through the system. This lays the foundation for undo/redo and real-time synchronization between many clients.
+
+Status: Prototype implemented in [dashboardScaffold](https://github.com/curran/dashboardScaffold), yet to be ported into visEditor.
 
 ### DummyVis
 
@@ -103,3 +110,27 @@ Features include:
    simulate asynchronous operations that may fetch data from a server.
  * Text in front of the X.
  * A progress indicator when a special property `pending` is set.
+
+Status: Prototype implemented in [Model-contrib](http://curran.github.io/model-contrib/#/examples/boxes), yet to be ported into visEditor.
+
+### Links
+
+The Links plugin is for establishing bindings between runtime components. By specifying a link using the Links plugin in a configuration, the output resulting from a user interaction in one view can be used as input to another view. This is the foundation for linked views.
+
+Plugins may be created for components that make requests to a server. The inputs and outputs of such components may also be bound to visualizations in order to establish linked views with an asynchronous step that leverages server-side capabilities.
+
+Status: Prototype implemented in [Ph. D. prototype](https://github.com/curran/phd/blob/gh-pages/prototype/src/links.js), yet to be ported into visEditor.
+
+## Visualization Plugins
+
+Targets for implementation as plugins include the following visualizations:
+
+ * Bar Chart
+ * Scatter Plot
+ * Table Preview
+ * Parallel Coordinates
+ * Line Chart
+ * Stacked Area Chart
+ * Choropleth Map (using Leaflet)
+
+Status: Several visualizations have been implemented using ModelJS in [model-contrib](http://curran.github.io/model-contrib/#/) and as examples in the [ModelJS project](https://github.com/curran/model/tree/gh-pages/examples). All of these are yet to be ported into visEditor.
