@@ -112,7 +112,8 @@ is excluded from the layout, if false the component is included.</li>
         wiggleRoom,
         sizeSum = <span class="hljs-number">0</span>,
         x,
-        y;
+        y,
+        visibleChildren;
 
     box.x = box.x || <span class="hljs-number">0</span>;
     box.y = box.y || <span class="hljs-number">0</span>;
@@ -136,12 +137,21 @@ is excluded from the layout, if false the component is included.</li>
       <span class="hljs-keyword">return</span> result;
     }
 
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isVisible</span><span class="hljs-params">(layout)</span> </span>{
+      <span class="hljs-keyword">if</span>(isLeafNode(layout) &amp;&amp; (layout <span class="hljs-keyword">in</span> sizes)){
+        <span class="hljs-keyword">return</span> !sizes[layout].hidden;
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+      }
+    }
+
     <span class="hljs-keyword">if</span>(isLeafNode(layout)){
       result[layout] = _.clone(box);
     } <span class="hljs-keyword">else</span> {
       isHorizontal = layout.orientation === <span class="hljs-string">"horizontal"</span>;
       wiggleRoom = isHorizontal ? box.width : box.height;
-      layout.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(child)</span> </span>{
+      visibleChildren = layout.children.filter(isVisible);
+      visibleChildren.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(child)</span> </span>{
         <span class="hljs-keyword">if</span>(isPixelCount(size(child))){
           wiggleRoom -= pixelCount(size(child));
         } <span class="hljs-keyword">else</span> {
@@ -150,7 +160,7 @@ is excluded from the layout, if false the component is included.</li>
       });
       x = box.x;
       y = box.y;
-      layout.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(child)</span> </span>{
+      visibleChildren.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(child)</span> </span>{
         <span class="hljs-keyword">var</span> childBox = { x: x, y: y},
             childSize = size(child),
             sizeInPixels;
@@ -179,7 +189,6 @@ is excluded from the layout, if false the component is included.</li>
         }
       });
     }
-
     <span class="hljs-keyword">return</span> result;
   };
 
@@ -211,6 +220,7 @@ is excluded from the layout, if false the component is included.</li>
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pixelCount</span><span class="hljs-params">(size)</span></span>{
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseInt</span>(size.substr(<span class="hljs-number">0</span>, size.length - <span class="hljs-number">2</span>));
   }
+
 });</pre></div></div>
             
         </li>

@@ -52,7 +52,8 @@ define(["lodash"], function (_) {
         wiggleRoom,
         sizeSum = 0,
         x,
-        y;
+        y,
+        visibleChildren;
 
     box.x = box.x || 0;
     box.y = box.y || 0;
@@ -76,12 +77,21 @@ define(["lodash"], function (_) {
       return result;
     }
 
+    function isVisible(layout) {
+      if(isLeafNode(layout) && (layout in sizes)){
+        return !sizes[layout].hidden;
+      } else {
+        return true;
+      }
+    }
+
     if(isLeafNode(layout)){
       result[layout] = _.clone(box);
     } else {
       isHorizontal = layout.orientation === "horizontal";
       wiggleRoom = isHorizontal ? box.width : box.height;
-      layout.children.forEach(function (child) {
+      visibleChildren = layout.children.filter(isVisible);
+      visibleChildren.forEach(function (child) {
         if(isPixelCount(size(child))){
           wiggleRoom -= pixelCount(size(child));
         } else {
@@ -90,7 +100,7 @@ define(["lodash"], function (_) {
       });
       x = box.x;
       y = box.y;
-      layout.children.forEach(function (child) {
+      visibleChildren.forEach(function (child) {
         var childBox = { x: x, y: y},
             childSize = size(child),
             sizeInPixels;
@@ -119,7 +129,6 @@ define(["lodash"], function (_) {
         }
       });
     }
-
     return result;
   };
 
@@ -139,4 +148,5 @@ define(["lodash"], function (_) {
   function pixelCount(size){
     return parseInt(size.substr(0, size.length - 2));
   }
+
 });

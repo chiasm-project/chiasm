@@ -386,4 +386,31 @@ describe("computeLayout", function () {
     expect(result.baz.x).to.equal(40);
     expect(result.baz.y).to.equal(75);
   });
+  it("three components, one hidden", function() {
+    var layout = {
+          orientation: "horizontal",
+          children: [
+            "foo",
+            {
+              orientation: "vertical",
+              children: ["bar", "baz"]
+            }
+          ]
+        },
+        sizes = { baz: { hidden: true }},
+        box = { width: 100, height: 100 },
+        result = computeLayout(layout, sizes, box);
+    
+    expect(result.foo.width).to.equal(50);
+    expect(result.foo.height).to.equal(100);
+    expect(result.foo.x).to.equal(0);
+    expect(result.foo.y).to.equal(0);
+
+    expect(result.bar.width).to.equal(50);
+    expect(result.bar.height).to.equal(100);
+    expect(result.bar.x).to.equal(50);
+    expect(result.bar.y).to.equal(0);
+
+    expect("baz" in result).to.equal(false);
+  });
 });
