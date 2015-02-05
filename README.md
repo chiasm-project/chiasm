@@ -2,7 +2,11 @@
 
 A pluggable interactive visualization runtime environment and configuration editor.
 
-The core concept of this project is that visualizations can be instantiated, configured with data, arranged on the screen, and coupled together to produce linked views. A JSON configuration structure defines the entire state of an application. The configuration refers to plugins by name, which are loaded at runtime and called upon to instantiate instances of visualizations and other components. Configuration changes can be made at runtime using an interactive JSON editor.
+The core concept of this project is that visualizations can be instantiated, configured with data, arranged on the screen, and coupled together to produce linked views. A JSON configuration structure defines the entire state of an application. The configuration refers to plugins by name, which are loaded at runtime and called upon to instantiate instances of visualizations and other components. Configuration changes can be made at runtime using an interactive JSON editor. The JSON configuration also updates in response to user interactions with visualizations.
+
+This system is intented to be embedded within larger Web applications to address interactive visualization needs. The JSON configuration can serve as the primary integration point. For example, the configuration could be automatically generated based on available data or user configurations. The configuration can also support collaboration, in that it can be stored to disk and restored at a later date (potentially by a user other than the original author).
+
+Long term goals also include undo/redo support and real-time collaboration between many users.
 
 ## Configuration Structure and Runtime Environment
 
