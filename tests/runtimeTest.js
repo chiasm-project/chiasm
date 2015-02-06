@@ -181,9 +181,7 @@ describe("runtime", function () {
   });
 
   it("use a DOM node within the runtime", function(done) {
-
     var runtime = Runtime(document.createElement("div"));
-
     runtime.plugins.domPlugin = DOMPlugin;
     
     runtime.config = {
@@ -208,9 +206,7 @@ describe("runtime", function () {
   });
 
   it("clean up DOM node when component destroyed", function(done) {
-
     var runtime = Runtime(document.createElement("div"));
-
     runtime.plugins.domPlugin = DOMPlugin;
     
     runtime.config = {
@@ -244,15 +240,36 @@ describe("runtime", function () {
 
           // Test that the component has been removed internally.
           expect(runtime.componentExists("foo")).to.equal(false);
+
           done();
         },0);
       }
     });
-
   });
-  // TODO
-  // destroy
+
+  it("do not propagate from component to config after component destroyed", function(done) {
+    var runtime = Runtime(document.createElement("div"));
+    runtime.plugins.simplePlugin = SimplePlugin;
+    
+    runtime.config = {
+      foo: {
+        plugin: "simplePlugin",
+        state: {
+          message: "Hello"
+        }
+      }
+    };
+
+    runtime.getComponent("foo", function(foo){
+      runtime.when("config", function(config){
+        if("foo" in config){
+          expect(config.foo.state.message).to.equal("Hello");
+          runtime.config = {};
+        } else {
+          foo.message = "World";
+          setTimeout(done, 0);
+        }
+      });
+    });
+  });
 });
-//var runtime = Runtime(createDiv());
-//function ExamplePlugin(runtime){
-//}

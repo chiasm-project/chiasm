@@ -74,6 +74,11 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
       methods[action.method](action, callback);
     }, 1);
 
+    // This object contains the listeners that respond to changes in
+    // public properties of components. These must be stored here so they
+    // can be removed from components when the components are destroyed.
+    var listeners = {};
+
     // Gets a component by alias, passes it to the callback.
     // If the component exists, the callback is called immediately.
     // If the component does not exist, this function waits until the
@@ -106,31 +111,35 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
         
         // Propagate changes from components to configuration.
         if("publicProperties" in component){
+          listeners[alias] = [];
           component.publicProperties.forEach(function(property){
+            listeners[alias].push(component.when(property, function(value){
 
-            /* TODO clean up these listeners on destroy, test for memory leak. */
+              // Handle the case that the property is changed after the component has
+              // been removed from the configuration but before the component's
+              // listeners have been removed.
+              if(alias in oldConfig){
 
-            component.when(property, function(value){
+                // Ignore changes that originated from the config.
+                // Use oldConfig rather than runtime.config to handle the case that
+                // runtime.config has been changed and its listener has not yet run.
+                if(oldConfig[alias].state[property] !== value){
 
-              // Ignore changes that originated from the config.
-              // Use oldConfig rather than runtime.config to handle the case that
-              // runtime.config has been changed and its listener has not yet run.
-              if(oldConfig[alias].state[property] !== value){
+                  // Apply the change from the component to a copy of the config.
+                  var newConfig = _.cloneDeep(oldConfig);
+                  newConfig[alias].state[property] = value;
 
-                // Apply the change from the component to a copy of the config.
-                var newConfig = _.cloneDeep(oldConfig);
-                newConfig[alias].state[property] = value;
+                  // Surgically change oldConfig so that the diff computation will yield
+                  // no actions. Without this line, the update would propagate from the 
+                  // component to the config and then back again unnecessarily.
+                  oldConfig[alias].state[property] = value;
 
-                // Surgically change oldConfig so that the diff computation will yield
-                // no actions. Without this line, the update would propagate from the 
-                // component to the config and then back again unnecessarily.
-                oldConfig[alias].state[property] = value;
-
-                // This assignment will notify any listeners that the config has changed.
-                runtime.config = newConfig;
+                  // This assignment will notify any listeners that the config has changed.
+                  runtime.config = newConfig;
+                }
               }
 
-            });
+            }));
           });
         }
 
@@ -141,10 +150,21 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
     // Applies a "destroy" action to the runtime.
     function destroy(alias, callback){
       getComponent(alias, function(component){
+
+        // Remove public property listeners.
+        if(alias in listeners){
+          listeners[alias].forEach(component.removeListener);
+          delete listeners[alias];
+        }
+
+        // Invoke component.destroy()
         if("destroy" in component){
           component.destroy();
         }
+
+        // Remove the internal reference to the component.
         delete components[alias];
+
         callback();
       });
     }
