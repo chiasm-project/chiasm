@@ -37,7 +37,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"model"</span>, <span class="hljs-string">"configDiff"</span>, <span class="hljs-string">"async"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(Model, configDiff, async)</span> </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"model"</span>, <span class="hljs-string">"configDiff"</span>, <span class="hljs-string">"async"</span>, <span class="hljs-string">"lodash"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(Model, configDiff, async, _)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -266,7 +266,11 @@ then uses RequireJS to load the plugin as an AMD module.</p>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadPlugin</span><span class="hljs-params">(plugin, callback)</span></span>{
       <span class="hljs-keyword">if</span>(plugin <span class="hljs-keyword">in</span> runtime.plugins){
         callback(runtime.plugins[plugin]);
-      } <span class="hljs-keyword">else</span> {</pre></div></div>
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">/* TODO test this path */</span>
+        <span class="hljs-built_in">require</span>([plugin], callback);
+      }
+    }</pre></div></div>
             
         </li>
         
@@ -277,13 +281,14 @@ then uses RequireJS to load the plugin as an AMD module.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>TODO test this path</p>
+              <p>Applies a “create” action to the runtime.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">require</span>([plugin], callback);
-      }
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">create</span><span class="hljs-params">(alias, plugin, callback)</span></span>{
+      loadPlugin(plugin, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(constructor)</span> </span>{
+        <span class="hljs-keyword">var</span> component = constructor(runtime);
+        components[alias] = component;</pre></div></div>
             
         </li>
         
@@ -294,16 +299,16 @@ then uses RequireJS to load the plugin as an AMD module.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Applies a “create” action to the runtime.</p>
+              <p>Propagate changes from components to configuration.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">create</span><span class="hljs-params">(alias, plugin, callback)</span></span>{
-      loadPlugin(plugin, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(constructor)</span> </span>{
-        components[alias] = constructor(runtime);
-        callback();
-      });
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(<span class="hljs-string">"publicProperties"</span> <span class="hljs-keyword">in</span> component){
+          component.publicProperties.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(property)</span></span>{
+
+            <span class="hljs-comment">/* TODO clean up these listeners on destroy, test for memory leak. */</span>
+
+            component.when(property, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span></span>{</pre></div></div>
             
         </li>
         
@@ -313,6 +318,78 @@ then uses RequireJS to load the plugin as an AMD module.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Ignore changes that originated from the config.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">if</span>(runtime.config[alias].state[property] !== value){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Apply the change from the component to a copy of the config.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">var</span> newConfig = _.cloneDeep(runtime.config);
+                newConfig[alias].state[property] = value;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Surgically change oldConfig so that the diff computation will yield
+no actions. Without this line, the update would propagate from the 
+component to the config and then back again unnecessarily.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                oldConfig[alias].state[property] = value;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>This assignment will notify any listeners that the config has changed.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                runtime.config = newConfig;
+              }
+
+            });
+          });
+        }
+
+        callback();
+      });
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Applies a “set” action to the runtime.</p>
 
@@ -328,11 +405,11 @@ then uses RequireJS to load the plugin as an AMD module.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Respond to changes in configuration.</p>
 
@@ -347,11 +424,11 @@ then uses RequireJS to load the plugin as an AMD module.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Expose getComponent as a public method.</p>
 

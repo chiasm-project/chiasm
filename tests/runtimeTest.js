@@ -85,7 +85,7 @@ describe("runtime", function () {
     });
   });
 
-  it("set configuration twice", function(done) {
+  it("propagate changes from config to components", function(done) {
     var runtime = Runtime();
     runtime.plugins.simplestPlugin = SimplestPlugin;
     
@@ -117,8 +117,37 @@ describe("runtime", function () {
       });
     });
   });
+
+  it("propagate changes from components to config", function(done) {
+    var runtime = Runtime();
+    runtime.plugins.simplePlugin = function(){
+      return Model({
+        publicProperties: ["message"]
+      });
+    };
+    
+    runtime.config = {
+      foo: {
+        plugin: "simplePlugin",
+        state: {
+          message: "Hello"
+        }
+      }
+    };
+
+    runtime.getComponent("foo", function(foo){
+      expect(foo).to.exist();
+      foo.when("message", function(message){
+        if(message === "Hello"){
+          foo.message = "World";
+        } else if(message === "World"){
+          expect(runtime.config.foo.state.message).to.equal("World");
+          done();
+        }
+      });
+    });
+  });
   // TODO
-  // updates propataging from components to config
   // div interactions
   // destroy
 });

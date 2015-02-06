@@ -6,7 +6,7 @@
 //  * https://github.com/curran/overseer/blob/master/src/overseer.js
 //
 // Created by Curran Kelleher Feb 2015
-define(["model", "configDiff", "async"], function (Model, configDiff, async) {
+define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, async, _) {
 
   // This module provides a runtime constructor function that returns a `runtime`
   // object with the following properties:
@@ -89,7 +89,7 @@ define(["model", "configDiff", "async"], function (Model, configDiff, async) {
       if(plugin in runtime.plugins){
         callback(runtime.plugins[plugin]);
       } else {
-        // TODO test this path
+        /* TODO test this path */
         require([plugin], callback);
       }
     }
@@ -97,7 +97,37 @@ define(["model", "configDiff", "async"], function (Model, configDiff, async) {
     // Applies a "create" action to the runtime.
     function create(alias, plugin, callback){
       loadPlugin(plugin, function (constructor) {
-        components[alias] = constructor(runtime);
+        var component = constructor(runtime);
+        components[alias] = component;
+        
+        // Propagate changes from components to configuration.
+        if("publicProperties" in component){
+          component.publicProperties.forEach(function(property){
+
+            /* TODO clean up these listeners on destroy, test for memory leak. */
+
+            component.when(property, function(value){
+
+              // Ignore changes that originated from the config.
+              if(runtime.config[alias].state[property] !== value){
+
+                // Apply the change from the component to a copy of the config.
+                var newConfig = _.cloneDeep(runtime.config);
+                newConfig[alias].state[property] = value;
+
+                // Surgically change oldConfig so that the diff computation will yield
+                // no actions. Without this line, the update would propagate from the 
+                // component to the config and then back again unnecessarily.
+                oldConfig[alias].state[property] = value;
+
+                // This assignment will notify any listeners that the config has changed.
+                runtime.config = newConfig;
+              }
+
+            });
+          });
+        }
+
         callback();
       });
     }
