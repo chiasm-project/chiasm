@@ -289,8 +289,7 @@ then uses RequireJS to load the plugin as an AMD module.</p>
       <span class="hljs-keyword">if</span>(plugin <span class="hljs-keyword">in</span> runtime.plugins){
         callback(runtime.plugins[plugin]);
       } <span class="hljs-keyword">else</span> {
-        <span class="hljs-comment">/* TODO test this path */</span>
-        <span class="hljs-built_in">require</span>([plugin], callback);
+        <span class="hljs-built_in">require</span>([<span class="hljs-string">"plugins/"</span> + plugin], callback);
       }
     }</pre></div></div>
             

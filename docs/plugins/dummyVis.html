@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>dummyVis.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>dummyVis.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This module implements a dummy visualization
+for testing the visualization dashboard framework.</p>
+<p>Draws from previous work found at
+<a href="https://github.com/curran/phd/blob/gh-pages/prototype/src/dummyVis.js">https://github.com/curran/phd/blob/gh-pages/prototype/src/dummyVis.js</a>
+<a href="https://github.com/curran/model-contrib/blob/gh-pages/modules/dummyVis.js">https://github.com/curran/model-contrib/blob/gh-pages/modules/dummyVis.js</a></p>
+<p>Created by Curran Kelleher Feb 2015</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>This module implements a dummy visualization
+demonstrating the API structure for authoring visualizations
+that work with the <code>overseer</code> framework and nested box layout.</p>
+<p>Curran Kelleher September 2014</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"d3"</span>, <span class="hljs-string">"model"</span>, <span class="hljs-string">"lodash"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d3, Model, _)</span> </span>{
+
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DummyVis</span><span class="hljs-params">(runtime)</span> </span>{
+
+    <span class="hljs-keyword">var</span> model = Model({
+      publicProperties: [</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>The background color, a CSS color string.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">"color"</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>The string that gets displayed in the center of the box.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">"text"</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>The width in pixels of lines for the X.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-string">"lineWidth"</span>
+      ],
+
+      color: <span class="hljs-string">"white"</span>,
+      text: <span class="hljs-string">""</span>,
+      lineWidth: <span class="hljs-number">8</span>
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Append an SVG to the runtime div.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> svg = d3.select(runtime.div).append(<span class="hljs-string">"svg"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Add a background rectangle to the SVG.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> rect = svg.append(<span class="hljs-string">"rect"</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>The location of the rect will be fixed at (0, 0)
+with respect to the containing SVG.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      .attr(<span class="hljs-string">"x"</span>, <span class="hljs-number">0</span>)
+      .attr(<span class="hljs-string">"y"</span>, <span class="hljs-number">0</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Add a text element to the SVG,
+which will render the <code>text</code> model property.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> text = svg.append(<span class="hljs-string">"text"</span>)
+      .attr(<span class="hljs-string">"font-size"</span>, <span class="hljs-string">"7em"</span>)
+      .attr(<span class="hljs-string">"text-anchor"</span>, <span class="hljs-string">"middle"</span>)
+      .attr(<span class="hljs-string">"alignment-baseline"</span>, <span class="hljs-string">"middle"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Make the X lines draggable. This shows how to add
+interaction to visualization modules.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> lineDrag = (<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">var</span> x1, x2;
+      <span class="hljs-keyword">return</span> d3.behavior.drag()
+        .on(<span class="hljs-string">"dragstart"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
+          x1 = d3.event.sourceEvent.pageX;
+        })
+        .on(<span class="hljs-string">"drag"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
+          <span class="hljs-keyword">var</span> x2 = d3.event.sourceEvent.pageX,
+              newLineWidth = model.lineWidth + x2 - x1;
+          newLineWidth = newLineWidth &lt; <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : newLineWidth;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>dragging updates the <code>lineWidth</code> model property,
+which is visible to other visualizations in the runtime.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          model.lineWidth = newLineWidth;
+          x1 = x2;
+        });
+    }());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Update the color and text based on the model.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"color"</span>, _.partial(rect.attr, <span class="hljs-string">"fill"</span>), rect);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Update the text based on the model.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"text"</span>, text.text, text);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>When the size of the visualization is set
+by the runtime layout engine,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"box"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(box)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>set the size of the SVG and background rect.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      svg
+        .attr(<span class="hljs-string">"width"</span>, box.width)
+        .attr(<span class="hljs-string">"height"</span>, box.height);
+      rect
+        .attr(<span class="hljs-string">"width"</span>, box.width)
+        .attr(<span class="hljs-string">"height"</span>, box.height);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Update the text label to be centered.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      text
+        .attr(<span class="hljs-string">"x"</span>, box.width / <span class="hljs-number">2</span>)
+        .attr(<span class="hljs-string">"y"</span>, box.height / <span class="hljs-number">2</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Update the X lines whenever either
+the <code>box</code> or <code>lineWidth</code> model properties change.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"box"</span>, <span class="hljs-string">"lineWidth"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(box, lineWidth)</span> </span>{
+      <span class="hljs-keyword">var</span> w = box.width,
+          h = box.height,
+          lines = svg.selectAll(<span class="hljs-string">"line"</span>).data([
+            {x1: <span class="hljs-number">0</span>, y1: <span class="hljs-number">0</span>, x2: w, y2: h},
+            {x1: <span class="hljs-number">0</span>, y1: h, x2: w, y2: <span class="hljs-number">0</span>}
+          ]);
+      lines.enter().append(<span class="hljs-string">"line"</span>);
+      lines
+        .attr(<span class="hljs-string">"x1"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.x1; })
+        .attr(<span class="hljs-string">"y1"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.y1; })
+        .attr(<span class="hljs-string">"x2"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.x2; })
+        .attr(<span class="hljs-string">"y2"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.y2; })
+        .style(<span class="hljs-string">"stroke-width"</span>, lineWidth)
+        .style(<span class="hljs-string">"stroke-opacity"</span>, <span class="hljs-number">0.2</span>)
+        .style(<span class="hljs-string">"stroke"</span>, <span class="hljs-string">"black"</span>)
+        .call(lineDrag);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Clean up the DOM elements when the component is destroyed.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.destroy = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>TODO test this.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      runtime.div.removeChild(svg.node());
+    };
+
+    <span class="hljs-keyword">return</span> model;
+  };
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -31,12 +31,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">require</span>([<span class="hljs-string">"d3"</span>, <span class="hljs-string">"lodash"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d3, _)</span> </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">require</span>([<span class="hljs-string">"d3"</span>, <span class="hljs-string">"runtime"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d3, Runtime)</span> </span>{
+  <span class="hljs-keyword">var</span> runtime = Runtime(<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"container"</span>));
   d3.json(<span class="hljs-string">"visConfig.json"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, config)</span> </span>{
     <span class="hljs-keyword">if</span>(err) {
       <span class="hljs-keyword">throw</span> err;
     }
     <span class="hljs-built_in">console</span>.log(config);
+    runtime.config = config;
   });
 });</pre></div></div>
             

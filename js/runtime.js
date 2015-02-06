@@ -98,8 +98,7 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
       if(plugin in runtime.plugins){
         callback(runtime.plugins[plugin]);
       } else {
-        /* TODO test this path */
-        require([plugin], callback);
+        require(["plugins/" + plugin], callback);
       }
     }
 
