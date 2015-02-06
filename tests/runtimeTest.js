@@ -17,14 +17,15 @@ var requirejs = require("./configureRequireJS.js");
 var Runtime = requirejs("runtime");
 var Model = requirejs("model");
 
+function SimplestPlugin(){
+  return Model();
+}
+
 describe("runtime", function () {
 
   it("create a component", function(done) {
     var runtime = Runtime();
-
-    runtime.plugins.simplestPlugin = function(runtime){
-      return Model();
-    }
+    runtime.plugins.simplestPlugin = SimplestPlugin;
     
     runtime.config = {
       foo: {
@@ -38,17 +39,13 @@ describe("runtime", function () {
     });
   });
 
-  it("create a component, set state single property", function(done) {
+  it("create a component, set state with a single property", function(done) {
     var runtime = Runtime();
-
-    runtime.plugins.simplePlugin = function(runtime){
-      return Model({
-      });
-    }
+    runtime.plugins.simplestPlugin = SimplestPlugin;
     
     runtime.config = {
       foo: {
-        plugin: "simplePlugin",
+        plugin: "simplestPlugin",
         state: {
           message: "Hello"
         }
@@ -63,14 +60,67 @@ describe("runtime", function () {
       });
     });
   });
-  // TODO
-  // set multiple properties
-  // config sequences
-  // destroy
-  // updates propataging from components to config
 
-      //expect(foo.publicProperties).to.contain("message");
-      //expect(foo.publicProperties.length).to.equal(1);
+  it("create a component, set state with two properties", function(done) {
+    var runtime = Runtime();
+    runtime.plugins.simplestPlugin = SimplestPlugin;
+    
+    runtime.config = {
+      foo: {
+        plugin: "simplestPlugin",
+        state: {
+          x: 5,
+          y: 10
+        }
+      }
+    };
+
+    runtime.getComponent("foo", function(foo){
+      expect(foo).to.exist();
+      foo.when(["x", "y"], function(x, y){
+        expect(x).to.equal(5);
+        expect(y).to.equal(10);
+        done();
+      });
+    });
+  });
+
+  it("set configuration twice", function(done) {
+    var runtime = Runtime();
+    runtime.plugins.simplestPlugin = SimplestPlugin;
+    
+    runtime.config = {
+      foo: {
+        plugin: "simplestPlugin",
+        state: {
+          x: 5
+        }
+      }
+    };
+
+    runtime.getComponent("foo", function(foo){
+      foo.when(["x"], function(x){
+        expect(x).to.equal(5);
+        runtime.config = {
+          foo: {
+            plugin: "simplestPlugin",
+            state: {
+              x: 5,
+              y: 10
+            }
+          }
+        };
+        foo.when(["y"], function(y){
+          expect(y).to.equal(10);
+          done();
+        });
+      });
+    });
+  });
+  // TODO
+  // updates propataging from components to config
+  // div interactions
+  // destroy
 });
 //var runtime = Runtime(createDiv());
 //function ExamplePlugin(runtime){
