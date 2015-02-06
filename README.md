@@ -138,3 +138,10 @@ Targets for implementation as plugins include the following visualizations:
  * Choropleth Map (using Leaflet)
 
 Status: Several visualizations have been implemented using ModelJS in [model-contrib](http://curran.github.io/model-contrib/#/) and as examples in the [ModelJS project](https://github.com/curran/model/tree/gh-pages/examples). All of these are yet to be ported into visEditor.
+
+## Proof of Concept Idea
+
+To demonstrate all essential features of the visualization editor, a proof of concept system could be devised that integrates with an analytics backend that allows exploration of a set of data tables using linked views.
+
+![Correlation](images/CorrelationAnalysis.png)
+
