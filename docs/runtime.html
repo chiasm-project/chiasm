@@ -53,7 +53,7 @@ object with the following properties:</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Runtime</span><span class="hljs-params">()</span></span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Runtime</span><span class="hljs-params">(div)</span></span>{
     <span class="hljs-keyword">var</span> runtime = Model({</pre></div></div>
             
         </li>
@@ -112,9 +112,7 @@ properties of the component.</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      config: {}
-
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      config: {},</pre></div></div>
             
         </li>
         
@@ -124,6 +122,27 @@ properties of the component.</li>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <ul>
+<li><code>div</code> The DOM container passed into the runtime constructor.
+Visible plugins should append their own DOM elements to this container
+(and remove them when destroyed).</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      div: div
+
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>This tracks the previous configuration state,
 necessary for computing configuration differences.</p>
@@ -135,11 +154,11 @@ necessary for computing configuration differences.</p>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>The runtime components.</p>
 <ul>
@@ -154,11 +173,11 @@ necessary for computing configuration differences.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>These methods unpack actions and invoke the corresponding functions.</p>
 
@@ -168,22 +187,8 @@ necessary for computing configuration differences.</p>
       create: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
         create(action.alias, action.plugin, callback);
       },
-      destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>TODO test</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        destroy(action.alias, callback);
+      destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
+        destroy(action.alias, callback);
       },
       set: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
         set(action.alias, action.property, action.value, callback);
@@ -319,11 +324,13 @@ then uses RequireJS to load the plugin as an AMD module.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Ignore changes that originated from the config.</p>
+              <p>Ignore changes that originated from the config.
+Use oldConfig rather than runtime.config to handle the case that
+runtime.config has been changed and its listener has not yet run.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">if</span>(runtime.config[alias].state[property] !== value){</pre></div></div>
+            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">if</span>(oldConfig[alias].state[property] !== value){</pre></div></div>
             
         </li>
         
@@ -338,7 +345,7 @@ then uses RequireJS to load the plugin as an AMD module.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">var</span> newConfig = _.cloneDeep(runtime.config);
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">var</span> newConfig = _.cloneDeep(oldConfig);
                 newConfig[alias].state[property] = value;</pre></div></div>
             
         </li>
@@ -391,6 +398,29 @@ component to the config and then back again unnecessarily.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
+              <p>Applies a “destroy” action to the runtime.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">destroy</span><span class="hljs-params">(alias, callback)</span></span>{
+      getComponent(alias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(component)</span></span>{
+        <span class="hljs-keyword">if</span>(<span class="hljs-string">"destroy"</span> <span class="hljs-keyword">in</span> component){
+          component.destroy();
+        }
+        <span class="hljs-keyword">delete</span> components[alias];
+        callback();
+      });
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
               <p>Applies a “set” action to the runtime.</p>
 
             </div>
@@ -405,11 +435,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Respond to changes in configuration.</p>
 
@@ -424,17 +454,35 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Expose getComponent as a public method.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    runtime.getComponent = getComponent;
+            <div class="content"><div class='highlight'><pre>    runtime.getComponent = getComponent;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>This function checks if a component exists.
+Necessary for complete code coverage in unit tests.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    runtime.componentExists = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(alias)</span></span>{
+      <span class="hljs-keyword">return</span> alias <span class="hljs-keyword">in</span> components;
+    };
 
     <span class="hljs-keyword">return</span> runtime;
   };

@@ -10,7 +10,7 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
 
   // This module provides a runtime constructor function that returns a `runtime`
   // object with the following properties:
-  return function Runtime(){
+  return function Runtime(div){
     var runtime = Model({
 
       // * `plugins` An object for setting up plugins before loading a configuration.
@@ -33,7 +33,12 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
       //       that instantiates the component (and later tears it down).
       //     * `state` - An object containing the serialized state of the public
       //       properties of the component.
-      config: {}
+      config: {},
+
+      // * `div` The DOM container passed into the runtime constructor.
+      //   Visible plugins should append their own DOM elements to this container
+      //   (and remove them when destroyed).
+      div: div
 
     });
 
@@ -53,7 +58,6 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
         create(action.alias, action.plugin, callback);
       },
       destroy: function (action, callback) {
-        // TODO test
         destroy(action.alias, callback);
       },
       set: function (action, callback) {
@@ -109,10 +113,12 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
             component.when(property, function(value){
 
               // Ignore changes that originated from the config.
-              if(runtime.config[alias].state[property] !== value){
+              // Use oldConfig rather than runtime.config to handle the case that
+              // runtime.config has been changed and its listener has not yet run.
+              if(oldConfig[alias].state[property] !== value){
 
                 // Apply the change from the component to a copy of the config.
-                var newConfig = _.cloneDeep(runtime.config);
+                var newConfig = _.cloneDeep(oldConfig);
                 newConfig[alias].state[property] = value;
 
                 // Surgically change oldConfig so that the diff computation will yield
@@ -128,6 +134,17 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
           });
         }
 
+        callback();
+      });
+    }
+
+    // Applies a "destroy" action to the runtime.
+    function destroy(alias, callback){
+      getComponent(alias, function(component){
+        if("destroy" in component){
+          component.destroy();
+        }
+        delete components[alias];
         callback();
       });
     }
@@ -149,6 +166,12 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
 
     // Expose getComponent as a public method.
     runtime.getComponent = getComponent;
+
+    // This function checks if a component exists.
+    // Necessary for complete code coverage in unit tests.
+    runtime.componentExists = function(alias){
+      return alias in components;
+    };
 
     return runtime;
   };

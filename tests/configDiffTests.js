@@ -30,6 +30,16 @@ describe("configDiff", function () {
   it("one added alias", function() {
     var actions = diff({}, {
       myFoo: {
+        plugin: "foo"
+      }
+    });
+    expect(actions).to.contain("create(myFoo, foo)");
+    expect(actions.length).to.equal(1);
+  });
+
+  it("one added alias with two properties", function() {
+    var actions = diff({}, {
+      myFoo: {
         plugin: "foo",
         state: {
           x: 50,

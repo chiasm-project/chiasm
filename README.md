@@ -46,8 +46,8 @@ This diagram illustrates that
  
 See also
 
- * [runtime module](http://curran.github.io/visEditor/docs/runtime.html)
- * [runtime module unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/runtimeTest.js)
+ * [runtime module](http://curran.github.io/visEditor/docs/runtime.html) Documents exact configuration structure.
+ * [runtime module unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/runtimeTest.js) Contains simple example plugins.
 
 Status: partially implemented.
 
