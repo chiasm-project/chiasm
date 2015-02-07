@@ -386,6 +386,7 @@ describe("computeLayout", function () {
     expect(result.baz.x).to.equal(40);
     expect(result.baz.y).to.equal(75);
   });
+
   it("three components, one hidden", function() {
     var layout = {
           orientation: "horizontal",
@@ -412,5 +413,29 @@ describe("computeLayout", function () {
     expect(result.bar.y).to.equal(0);
 
     expect("baz" in result).to.equal(false);
+  });
+
+  it("quantization from floats to ints for pixel dimensions", function() {
+    var layout = {
+          orientation: "horizontal",
+
+          // Using 3 children will induce 33.333333 widths,
+          // which should be quantized to integers and ensure no gaps.
+          children: ["a", "b","c"]
+        },
+        box = { width: 100, height: 100 },
+        result = computeLayout(layout, null, box);
+    
+    expect(result.a.x).to.equal(0);
+    expect(result.a.width).to.equal(33);
+
+    expect(result.b.x).to.equal(result.a.width);
+    expect(result.b.width).to.equal(34);
+
+    expect(result.c.x).to.equal(result.b.x + result.b.width);
+    expect(result.c.width).to.equal(33);
+
+    expect(result.a.width + result.b.width + result.c.width).to.equal(100);
+
   });
 });

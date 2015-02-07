@@ -45,6 +45,7 @@ define(["lodash"], function (_) {
   //   * `y` The Y offset of the box in pixels.
   //   * `width` The width of the box in pixels.
   //   * `height` The height of the box in pixels.
+  //   * These box dimensions are quantized from floats to ints such that there are no gaps.
   return function computeLayout (layout, sizes, box){
     var result = {},
         alias,
@@ -121,6 +122,8 @@ define(["lodash"], function (_) {
           y += childBox.height;
         }
 
+        quantize(childBox);
+
         if(isLeafNode(child)){
           alias = child;
           result[alias] = childBox;
@@ -147,6 +150,15 @@ define(["lodash"], function (_) {
 
   function pixelCount(size){
     return parseInt(size.substr(0, size.length - 2));
+  }
+
+  function quantize(box){
+    var x = Math.round(box.x),
+        y = Math.round(box.y);
+    box.width = Math.round(box.width + box.x - x);
+    box.height = Math.round(box.height + box.y - y);
+    box.x = x;
+    box.y = y;
   }
 
 });
