@@ -24,7 +24,7 @@ requirejs.config({
     async: "../bower_components/async/lib/async",
 
     // http://codemirror.net/
-    codemirror: "../bower_components/codemirror/lib/codemirror"
+    codemirror: "../bower_components/codemirror",
 
     // for future use
     // http://square.github.io/crossfilter/

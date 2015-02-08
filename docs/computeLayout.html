@@ -27,7 +27,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>This module provides a single function that computes a nested box layout.</p>
+              <p>This module provides a function that computes a nested box layout.</p>
 <p>Created by Curran Kelleher Feb 2015</p>
 
             </div>
@@ -57,7 +57,7 @@ with children placed from top to bottom.</li>
 </ul>
 </li>
 <li><code>children</code> An array of child node objects, each of which may be 
-either leaf nodes or internal nodes.</li>
+either a leaf node or internal node.</li>
 <li><code>size</code> The size of the internal node, with the same specifications
 as values within <code>sizes</code> (see next bullet point).</li>
 </ul>
@@ -68,12 +68,14 @@ as values within <code>sizes</code> (see next bullet point).</li>
 <li>Keys are component alias strings.</li>
 <li>Values are objects with the following properties:<ul>
 <li><code>size</code> the width (if the containing box is horizontal)
-or height (if the containing box is vertical) of the component. May be either:<ul>
-<li>a number (like “1.5” or “1”, expressed as a number or a string) that determines 
-size relative to siblings within the containing box, or</li>
-<li>a count of pixels (like “50px” or “200px” expressed as a string with “px” suffix)
-that determines an absolute fixed size. This is useful in cases where components 
-have fixed-size UI widgets rather than flexibly resizable visualizations.</li>
+or height (if the containing box is vertical) of the component.
+May be either:<ul>
+<li>a number (like “1.5” or “1”, expressed as a number or a string) that 
+determines size relative to siblings within the containing box, or</li>
+<li>a count of pixels (like “50px” or “200px” expressed as a string 
+with “px” suffix) that determines an absolute fixed size.
+This is useful in cases where components have fixed-size UI widgets 
+rather than flexibly resizable visualizations.</li>
 <li>If <code>size</code> is not specified, it is assigned a default value of 1.</li>
 </ul>
 </li>
@@ -83,18 +85,22 @@ is excluded from the layout, if false the component is included.</li>
 </li>
 </ul>
 </li>
-<li><code>box</code> An object describing the outermost box of the layout, with the following properties:<ul>
+<li><code>box</code> An object describing the outermost box of the layout,
+with the following properties:<ul>
 <li><code>width</code> The width of the box in pixels.</li>
 <li><code>height</code> The height of the box in pixels.</li>
-<li><code>x</code> The X offset of the box in pixels. If not specified, this defaults to zero.</li>
-<li><code>y</code> The Y offset of the box in pixels. If not specified, this defaults to zero.</li>
+<li><code>x</code> The X offset of the box in pixels.
+If not specified, this defaults to zero.</li>
+<li><code>y</code> The Y offset of the box in pixels.
+If not specified, this defaults to zero.</li>
 </ul>
 </li>
 </ul>
 <p>Returns an object where</p>
 <ul>
 <li>Keys are component aliases.</li>
-<li>Values are objects representing the computed box for the component, having the following properties:<ul>
+<li>Values are objects representing the computed box for the component,
+having the following integer properties:<ul>
 <li><code>x</code> The X offset of the box in pixels.</li>
 <li><code>y</code> The Y offset of the box in pixels.</li>
 <li><code>width</code> The width of the box in pixels.</li>
@@ -107,7 +113,6 @@ is excluded from the layout, if false the component is included.</li>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">computeLayout</span> <span class="hljs-params">(layout, sizes, box)</span></span>{
     <span class="hljs-keyword">var</span> result = {},
-        alias,
         isHorizontal,
         wiggleRoom,
         sizeSum = <span class="hljs-number">0</span>,
@@ -120,7 +125,7 @@ is excluded from the layout, if false the component is included.</li>
     sizes = sizes || {};
 
     <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">size</span><span class="hljs-params">(layout)</span></span>{
-      <span class="hljs-keyword">var</span> result;
+      <span class="hljs-keyword">var</span> result, alias;
       <span class="hljs-keyword">if</span>(isLeafNode(layout)){
         alias = layout;
         <span class="hljs-keyword">if</span>((alias <span class="hljs-keyword">in</span> sizes) &amp;&amp; (<span class="hljs-string">"size"</span> <span class="hljs-keyword">in</span> sizes[alias])){
@@ -182,8 +187,7 @@ is excluded from the layout, if false the component is included.</li>
         }
 
         <span class="hljs-keyword">if</span>(isLeafNode(child)){
-          alias = child;
-          result[alias] = childBox;
+          result[child] = childBox;
         } <span class="hljs-keyword">else</span> {
           _.extend(result, computeLayout(child, sizes, childBox));
         }

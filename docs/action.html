@@ -27,13 +27,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>This module provides methods for creating and serializing
-Action objects, which are used to express differences between 
-configurations.</p>
+              <p>This module provides methods for creating and serializing Action 
+objects, which are used to express differences between configurations.</p>
 <p>The primary purpose of Action objects is to support editing the
 JSON application configuration at runtime. To avoid reloading the
-entire configuration on each change, the difference is computed
-and expressed in terms of Action objects, then the Action objects
+entire configuration in response to each change, the difference is computed
+and expressed as an array of Action objects, then the Action objects
 are applied to the runtime.</p>
 <p>Based on previous work found at:
 <a href="https://github.com/curran/overseer/blob/master/src/action.js">https://github.com/curran/overseer/blob/master/src/action.js</a></p>
@@ -60,12 +59,14 @@ into ShareJS operations for JSON transformation, documented at
       <span class="hljs-keyword">return</span> { method: <span class="hljs-string">"unset"</span>, alias: alias, property: property};
     },
     toString: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action)</span> </span>{
-      <span class="hljs-keyword">return</span> action.method + <span class="hljs-string">"("</span> + [
+      <span class="hljs-keyword">return</span> [
+        action.method + <span class="hljs-string">"("</span>,
         action.alias,
         action.property !== <span class="hljs-literal">undefined</span> ? <span class="hljs-string">", "</span> + action.property : <span class="hljs-string">""</span>,
         action.value !== <span class="hljs-literal">undefined</span> ? <span class="hljs-string">", "</span> + action.value : <span class="hljs-string">""</span>,
-        action.plugin !== <span class="hljs-literal">undefined</span> ? <span class="hljs-string">", "</span> + action.plugin : <span class="hljs-string">""</span>
-      ].join(<span class="hljs-string">""</span>) + <span class="hljs-string">")"</span>;
+        action.plugin !== <span class="hljs-literal">undefined</span> ? <span class="hljs-string">", "</span> + action.plugin : <span class="hljs-string">""</span>,
+        <span class="hljs-string">")"</span>
+      ].join(<span class="hljs-string">""</span>);
     }
   };
 });</pre></div></div>

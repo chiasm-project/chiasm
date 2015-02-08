@@ -1,11 +1,10 @@
-// This module provides methods for creating and serializing
-// Action objects, which are used to express differences between 
-// configurations.
+// This module provides methods for creating and serializing Action 
+// objects, which are used to express differences between configurations.
 //
 // The primary purpose of Action objects is to support editing the
 // JSON application configuration at runtime. To avoid reloading the
-// entire configuration on each change, the difference is computed
-// and expressed in terms of Action objects, then the Action objects
+// entire configuration in response to each change, the difference is computed
+// and expressed as an array of Action objects, then the Action objects
 // are applied to the runtime.
 //
 // Based on previous work found at:
@@ -33,12 +32,14 @@ define([], function () {
       return { method: "unset", alias: alias, property: property};
     },
     toString: function (action) {
-      return action.method + "(" + [
+      return [
+        action.method + "(",
         action.alias,
         action.property !== undefined ? ", " + action.property : "",
         action.value !== undefined ? ", " + action.value : "",
-        action.plugin !== undefined ? ", " + action.plugin : ""
-      ].join("") + ")";
+        action.plugin !== undefined ? ", " + action.plugin : "",
+        ")"
+      ].join("");
     }
   };
 });

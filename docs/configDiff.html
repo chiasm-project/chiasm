@@ -28,14 +28,19 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <p>This module computes the difference (“diff”) between two configurations.
-The diff is expressed as an array of Action objects.</p>
+The diff is returned as an array of Action objects.</p>
 <p>Based on pervious work found at
 <a href="https://github.com/curran/overseer/blob/master/src/configDiff.js">https://github.com/curran/overseer/blob/master/src/configDiff.js</a></p>
 <p>Created by Curran Kelleher Feb 2015</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"lodash"</span>, <span class="hljs-string">"action"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_, Action)</span> </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"lodash"</span>, <span class="hljs-string">"action"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_, Action)</span> </span>{
+
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">configDiff</span><span class="hljs-params">(oldConfig, newConfig)</span></span>{
+    <span class="hljs-keyword">var</span> actions = [],
+        newAliases = _.keys(newConfig),
+        oldAliases = _.keys(oldConfig);</pre></div></div>
             
         </li>
         
@@ -45,25 +50,6 @@ The diff is expressed as an array of Action objects.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
-              </div>
-              <p>Computes the difference between two configuration objects,
-returns the difference as a sequence of actions to be executed.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">configDiff</span><span class="hljs-params">(oldConfig, newConfig)</span></span>{
-    <span class="hljs-keyword">var</span> actions = [],
-        newAliases = _.keys(newConfig),
-        oldAliases = _.keys(oldConfig);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
               <p>Handle removed aliases.</p>
 
@@ -76,18 +62,18 @@ returns the difference as a sequence of actions to be executed.</p>
         </li>
         
         
-        <li id="section-4">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
               <p>Handle updated aliases.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    newAliases.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(alias)</span> </span>{
-      <span class="hljs-keyword">var</span> oldModel = oldConfig[alias] ? (oldConfig[alias].state || {}) : <span class="hljs-literal">null</span>,
+      <span class="hljs-keyword">var</span> oldModel = alias <span class="hljs-keyword">in</span> oldConfig ? oldConfig[alias].state || {} : <span class="hljs-literal">null</span>,
           newModel = newConfig[alias].state || {},
           oldProperties = _.keys(oldModel),
           newProperties = _.keys(newModel);</pre></div></div>
@@ -95,11 +81,11 @@ returns the difference as a sequence of actions to be executed.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Handle added aliases.</p>
 
@@ -115,11 +101,11 @@ returns the difference as a sequence of actions to be executed.</p>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Handle added properties.</p>
 
@@ -132,11 +118,11 @@ returns the difference as a sequence of actions to be executed.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Handle removed properties.</p>
 
@@ -149,11 +135,11 @@ returns the difference as a sequence of actions to be executed.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Handle updated properties.</p>
 

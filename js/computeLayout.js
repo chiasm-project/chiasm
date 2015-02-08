@@ -1,4 +1,4 @@
-// This module provides a single function that computes a nested box layout.
+// This module provides a function that computes a nested box layout.
 //
 // Created by Curran Kelleher Feb 2015
 define(["lodash"], function (_) {
@@ -15,39 +15,44 @@ define(["lodash"], function (_) {
   //       * "vertical", meaning this node is subdivided vertically
   //         with children placed from top to bottom.
   //     * `children` An array of child node objects, each of which may be 
-  //       either leaf nodes or internal nodes.
+  //       either a leaf node or internal node.
   //     * `size` The size of the internal node, with the same specifications
   //       as values within `sizes` (see next bullet point).
   // * `sizes` An object that specifies component size options, where
   //   * Keys are component alias strings.
   //   * Values are objects with the following properties:
   //     * `size` the width (if the containing box is horizontal)
-  //       or height (if the containing box is vertical) of the component. May be either:
-  //       * a number (like "1.5" or "1", expressed as a number or a string) that determines 
-  //         size relative to siblings within the containing box, or
-  //       * a count of pixels (like "50px" or "200px" expressed as a string with "px" suffix)
-  //         that determines an absolute fixed size. This is useful in cases where components 
-  //         have fixed-size UI widgets rather than flexibly resizable visualizations.
+  //       or height (if the containing box is vertical) of the component.
+  //       May be either:
+  //       * a number (like "1.5" or "1", expressed as a number or a string) that 
+  //       determines size relative to siblings within the containing box, or
+  //       * a count of pixels (like "50px" or "200px" expressed as a string 
+  //         with "px" suffix) that determines an absolute fixed size.
+  //         This is useful in cases where components have fixed-size UI widgets 
+  //         rather than flexibly resizable visualizations.
   //       * If `size` is not specified, it is assigned a default value of 1.
   //     * `hidden` A boolean for hiding components. If true, the component
   //       is excluded from the layout, if false the component is included.
-  // * `box` An object describing the outermost box of the layout, with the following properties:
+  // * `box` An object describing the outermost box of the layout,
+  //   with the following properties:
   //   * `width` The width of the box in pixels.
   //   * `height` The height of the box in pixels.
-  //   * `x` The X offset of the box in pixels. If not specified, this defaults to zero.
-  //   * `y` The Y offset of the box in pixels. If not specified, this defaults to zero.
+  //   * `x` The X offset of the box in pixels.
+  //     If not specified, this defaults to zero.
+  //   * `y` The Y offset of the box in pixels.
+  //     If not specified, this defaults to zero.
   //
   // Returns an object where
   //
   //  * Keys are component aliases.
-  //  * Values are objects representing the computed box for the component, having the following properties:
+  //  * Values are objects representing the computed box for the component,
+  //    having the following integer properties:
   //   * `x` The X offset of the box in pixels.
   //   * `y` The Y offset of the box in pixels.
   //   * `width` The width of the box in pixels.
   //   * `height` The height of the box in pixels.
   return function computeLayout (layout, sizes, box){
     var result = {},
-        alias,
         isHorizontal,
         wiggleRoom,
         sizeSum = 0,
@@ -60,7 +65,7 @@ define(["lodash"], function (_) {
     sizes = sizes || {};
 
     function size(layout){
-      var result;
+      var result, alias;
       if(isLeafNode(layout)){
         alias = layout;
         if((alias in sizes) && ("size" in sizes[alias])){
@@ -122,8 +127,7 @@ define(["lodash"], function (_) {
         }
 
         if(isLeafNode(child)){
-          alias = child;
-          result[alias] = childBox;
+          result[child] = childBox;
         } else {
           _.extend(result, computeLayout(child, sizes, childBox));
         }
