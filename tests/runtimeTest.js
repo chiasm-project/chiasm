@@ -248,7 +248,7 @@ describe("runtime", function () {
   });
 
   it("do not propagate from component to config after component destroyed", function(done) {
-    var runtime = Runtime(document.createElement("div"));
+    var runtime = Runtime();
     runtime.plugins.simplePlugin = SimplePlugin;
     
     runtime.config = {
@@ -271,5 +271,32 @@ describe("runtime", function () {
         }
       });
     });
+  });
+
+  it("do not propagate from component to config if structure matches", function(done) {
+    // This tests that JSON.stringify is used to compare old and new values
+    // when propagating changes from components to the config.
+    var runtime = Runtime();
+    runtime.plugins.simplePlugin = SimplePlugin;
+    
+    runtime.config = {
+      foo: {
+        plugin: "simplePlugin",
+        state: {
+          message: {foo: ["a", "b"]}
+        }
+      }
+    };
+
+    runtime.getComponent("foo", function(foo){
+      var invocations = 0;
+      runtime.when("config", function(config){
+        invocations++;
+        expect(invocations).to.equal(1);
+        foo.message = {foo: ["a", "b"]};
+        setTimeout(done, 0);
+      });
+    });
+    
   });
 });

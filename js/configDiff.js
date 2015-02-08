@@ -21,8 +21,8 @@ define(["lodash", "action"], function (_, Action) {
 
     // Handle updated aliases.
     newAliases.forEach(function (alias) {
-      var oldModel = oldConfig[alias] ? oldConfig[alias].state : null,
-          newModel = newConfig[alias].state,
+      var oldModel = oldConfig[alias] ? (oldConfig[alias].state || {}) : null,
+          newModel = newConfig[alias].state || {},
           oldProperties = _.keys(oldModel),
           newProperties = _.keys(newModel);
 

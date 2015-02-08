@@ -16,7 +16,6 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
       // * `plugins` An object for setting up plugins before loading a configuration.
       //   The runtime first looks here for plugins, then if a plugin is not found here
       //   it is dynamically loaded at runtime using RequireJS where the plugin name 
-      //   is used as the AMD module name.
       //   * Keys are plugin names.
       //   * Values are plugin implementations, which are constructor functions for
       //     runtime components. A plugin constructor function takes as input a reference
@@ -105,33 +104,71 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
     // Applies a "create" action to the runtime.
     function create(alias, plugin, callback){
       loadPlugin(plugin, function (constructor) {
+
+        // Construct the component using the plugin.
         var component = constructor(runtime);
+
+        // Default values for public properties.
+        // TODO test
+        var defaults = {};
+
         components[alias] = component;
-        
+
         // Propagate changes from components to configuration.
         if("publicProperties" in component){
+        
           listeners[alias] = [];
           component.publicProperties.forEach(function(property){
-            listeners[alias].push(component.when(property, function(value){
+
+            // Store default values for public properties.
+            defaults[property] = component[property];
+
+            // Store the listener so it can be removed later,
+            // when the component is destroyed.
+            listeners[alias].push(component.when(property, function(newValue){
 
               // Handle the case that the property is changed after the component has
               // been removed from the configuration but before the component's
               // listeners have been removed.
               if(alias in oldConfig){
 
+                var oldValue;
+
+                if("state" in oldConfig[alias] && property in oldConfig[alias].state){
+                  oldValue = oldConfig[alias].state[property];
+                } else {
+                  // TODO test this case
+                  oldValue = defaults[property];
+                }
+
                 // Ignore changes that originated from the config.
                 // Use oldConfig rather than runtime.config to handle the case that
-                // runtime.config has been changed and its listener has not yet run.
-                if(oldConfig[alias].state[property] !== value){
+                // runtime.config has been changed and its listener that computes
+                // the diff and dispatches actions has not yet run.
+                // Use JSON.stringify so deep JSON structures are compared correctly.
+                if(JSON.stringify(oldValue) !== JSON.stringify(newValue)){
 
                   // Apply the change from the component to a copy of the config.
                   var newConfig = _.cloneDeep(oldConfig);
-                  newConfig[alias].state[property] = value;
+
+                  // If no state is tracked, create the state object.
+                  //
+                  // TODO test this case
+                  //if(!("state" in newConfig[alias])){
+                  //  newConfig[alias].state = {};
+                  //}
+                  //
+                  newConfig[alias].state[property] = newValue;
 
                   // Surgically change oldConfig so that the diff computation will yield
                   // no actions. Without this line, the update would propagate from the 
                   // component to the config and then back again unnecessarily.
-                  oldConfig[alias].state[property] = value;
+
+                  // TODO test this case
+                  //if("state" in oldConfig[alias] 
+                  //  && property in oldConfig[alias].state){
+                  oldConfig[alias].state[property] = newValue;
+                  //}
 
                   // This assignment will notify any listeners that the config has changed.
                   runtime.config = newConfig;
@@ -178,9 +215,11 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
 
     // Respond to changes in configuration.
     runtime.when("config", function(newConfig){
+
       var actions = configDiff(oldConfig, newConfig);
       actions.forEach(actionQueue.push);
-      oldConfig = newConfig;
+
+      oldConfig = _.cloneDeep(newConfig);
     });
 
     // Expose getComponent as a public method.

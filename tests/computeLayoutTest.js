@@ -386,6 +386,7 @@ describe("computeLayout", function () {
     expect(result.baz.x).to.equal(40);
     expect(result.baz.y).to.equal(75);
   });
+
   it("three components, one hidden", function() {
     var layout = {
           orientation: "horizontal",

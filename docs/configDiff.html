@@ -87,8 +87,8 @@ returns the difference as a sequence of actions to be executed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    newAliases.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(alias)</span> </span>{
-      <span class="hljs-keyword">var</span> oldModel = oldConfig[alias] ? oldConfig[alias].state : <span class="hljs-literal">null</span>,
-          newModel = newConfig[alias].state,
+      <span class="hljs-keyword">var</span> oldModel = oldConfig[alias] ? (oldConfig[alias].state || {}) : <span class="hljs-literal">null</span>,
+          newModel = newConfig[alias].state || {},
           oldProperties = _.keys(oldModel),
           newProperties = _.keys(newModel);</pre></div></div>
             

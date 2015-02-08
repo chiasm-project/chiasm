@@ -21,7 +21,10 @@ requirejs.config({
     lodash: "../bower_components/lodash/lodash.min",
 
     // https://github.com/caolan/async
-    async: "../bower_components/async/lib/async"
+    async: "../bower_components/async/lib/async",
+
+    // http://codemirror.net/
+    codemirror: "../bower_components/codemirror/lib/codemirror"
 
     // for future use
     // http://square.github.io/crossfilter/
