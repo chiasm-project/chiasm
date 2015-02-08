@@ -32,6 +32,15 @@ function SimplePlugin(){
   });
 };
 
+// Demonstrates having default values for public properties.
+function SimplePluginWithDefaults(){
+  return Model({
+    publicProperties: ["x", "y"],
+    x: 5,
+    y: 10
+  });
+};
+
 // This plugin demonstrates basic use of the DOM.
 // Notice that the runtime is passed into the plugin,
 // and the runtime has its own div that serves as the
@@ -297,6 +306,47 @@ describe("runtime", function () {
         setTimeout(done, 0);
       });
     });
+  });
+
+  it("propagate from component to config when config state is undefined", function(done) {
+    // This tests that the "state" property is automatically created in the config
+    // before it is populated with the updated state property
+    // when propagating changes from components to the config.
+    var runtime = Runtime();
+    runtime.plugins.simplePlugin = SimplePlugin;
     
+    runtime.config = {
+      foo: {
+        plugin: "simplePlugin"
+      }
+    };
+
+    runtime.getComponent("foo", function(foo){
+      foo.message = "Hello";
+
+      setTimeout(function(){
+        expect(runtime.config.foo.state.message).to.equal("Hello");
+        done();
+      }, 0);
+    });
+  });
+
+  it("should not propagate from component to config for defaults", function(done) {
+    var runtime = Runtime();
+
+    runtime.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
+    
+    runtime.config = {
+      foo: {
+        plugin: "simplePluginWithDefaults"
+      }
+    };
+
+    var invocations = 0;
+    runtime.when("config", function(config){
+      invocations++;
+      expect(invocations).to.equal(1);
+      setTimeout(done, 0);
+    });
   });
 });

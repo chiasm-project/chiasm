@@ -411,7 +411,9 @@ listeners have been removed.</p>
 
                 <span class="hljs-keyword">if</span>(<span class="hljs-string">"state"</span> <span class="hljs-keyword">in</span> oldConfig[alias] &amp;&amp; property <span class="hljs-keyword">in</span> oldConfig[alias].state){
                   oldValue = oldConfig[alias].state[property];
-                } <span class="hljs-keyword">else</span> {</pre></div></div>
+                } <span class="hljs-keyword">else</span> {
+                  oldValue = defaults[property];
+                }</pre></div></div>
             
         </li>
         
@@ -421,22 +423,6 @@ listeners have been removed.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>TODO test this case</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                  oldValue = defaults[property];
-                }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Ignore changes that originated from the config.
 Use oldConfig rather than runtime.config to handle the case that
@@ -451,17 +437,36 @@ Use JSON.stringify so deep JSON structures are compared correctly.</p>
         </li>
         
         
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Surgically change oldConfig so that the diff computation will yield
+no actions. Without this, the update would propagate from the 
+component to the config and then back again unnecessarily.</p>
+
+            </div>
+            
+        </li>
+        
+        
         <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>Apply the change from the component to a copy of the config.</p>
+              <p>If no state is tracked, create the state object.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                  <span class="hljs-keyword">var</span> newConfig = _.cloneDeep(oldConfig);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                  <span class="hljs-keyword">if</span>(!(<span class="hljs-string">"state"</span> <span class="hljs-keyword">in</span> oldConfig[alias])){
+                    oldConfig[alias].state = {};
+                  }
+
+                  oldConfig[alias].state[property] = newValue;</pre></div></div>
             
         </li>
         
@@ -472,75 +477,12 @@ Use JSON.stringify so deep JSON structures are compared correctly.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>If no state is tracked, create the state object.</p>
-<p>TODO test this case
-if(!(“state” in newConfig[alias])){
- newConfig[alias].state = {};
-}</p>
+              <p>This assignment will notify any listeners that the config has changed,
+(e.g. the config editor), but the config diff will yield no actions to execute.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                  newConfig[alias].state[property] = newValue;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>Surgically change oldConfig so that the diff computation will yield
-no actions. Without this line, the update would propagate from the 
-component to the config and then back again unnecessarily.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>TODO test this case
-if(“state” in oldConfig[alias] 
- &amp;&amp; property in oldConfig[alias].state){</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                  oldConfig[alias].state[property] = newValue;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>}</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>This assignment will notify any listeners that the config has changed.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                  runtime.config = newConfig;
+            <div class="content"><div class='highlight'><pre>                  runtime.config = oldConfig;
                 }
               }
 
@@ -555,11 +497,11 @@ if(“state” in oldConfig[alias]
         </li>
         
         
-        <li id="section-29">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Applies a “destroy” action to the runtime.</p>
 
@@ -571,11 +513,11 @@ if(“state” in oldConfig[alias]
         </li>
         
         
-        <li id="section-30">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Remove public property listeners.</p>
 
@@ -589,11 +531,11 @@ if(“state” in oldConfig[alias]
         </li>
         
         
-        <li id="section-31">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Invoke component.destroy()</p>
 
@@ -606,11 +548,11 @@ if(“state” in oldConfig[alias]
         </li>
         
         
-        <li id="section-32">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Remove the internal reference to the component.</p>
 
@@ -625,11 +567,11 @@ if(“state” in oldConfig[alias]
         </li>
         
         
-        <li id="section-33">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Applies a “set” action to the runtime.</p>
 
@@ -645,11 +587,11 @@ if(“state” in oldConfig[alias]
         </li>
         
         
-        <li id="section-34">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Respond to changes in configuration.</p>
 
@@ -666,11 +608,11 @@ if(“state” in oldConfig[alias]
         </li>
         
         
-        <li id="section-35">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Expose getComponent as a public method.</p>
 
@@ -681,11 +623,11 @@ if(“state” in oldConfig[alias]
         </li>
         
         
-        <li id="section-36">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>This function checks if a component exists.
 Necessary for complete code coverage in unit tests.</p>

@@ -137,7 +137,6 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
                 if("state" in oldConfig[alias] && property in oldConfig[alias].state){
                   oldValue = oldConfig[alias].state[property];
                 } else {
-                  // TODO test this case
                   oldValue = defaults[property];
                 }
 
@@ -148,30 +147,20 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
                 // Use JSON.stringify so deep JSON structures are compared correctly.
                 if(JSON.stringify(oldValue) !== JSON.stringify(newValue)){
 
-                  // Apply the change from the component to a copy of the config.
-                  var newConfig = _.cloneDeep(oldConfig);
-
-                  // If no state is tracked, create the state object.
-                  //
-                  // TODO test this case
-                  //if(!("state" in newConfig[alias])){
-                  //  newConfig[alias].state = {};
-                  //}
-                  //
-                  newConfig[alias].state[property] = newValue;
-
                   // Surgically change oldConfig so that the diff computation will yield
-                  // no actions. Without this line, the update would propagate from the 
+                  // no actions. Without this, the update would propagate from the 
                   // component to the config and then back again unnecessarily.
 
-                  // TODO test this case
-                  //if("state" in oldConfig[alias] 
-                  //  && property in oldConfig[alias].state){
-                  oldConfig[alias].state[property] = newValue;
-                  //}
+                  // If no state is tracked, create the state object.
+                  if(!("state" in oldConfig[alias])){
+                    oldConfig[alias].state = {};
+                  }
 
-                  // This assignment will notify any listeners that the config has changed.
-                  runtime.config = newConfig;
+                  oldConfig[alias].state[property] = newValue;
+
+                  // This assignment will notify any listeners that the config has changed,
+                  // (e.g. the config editor), but the config diff will yield no actions to execute.
+                  runtime.config = oldConfig;
                 }
               }
 
