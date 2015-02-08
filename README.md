@@ -137,6 +137,7 @@ Targets for implementation as plugins include the following visualizations:
  * [Parallel Coordinates](https://github.com/curran/model/tree/gh-pages/examples/d3ParallelCoordinates)
  * [Stacked Area Chart](https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea)[https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea]
  * [Choropleth Map (using Leaflet)](http://leafletjs.com/examples/choropleth.html)
+ * [Calendar View](http://bl.ocks.org/mbostock/4063318)
 
 The following features common to many D3-based visualizations can reside in a separate module (prototyped in the [Reactivis project](https://github.com/curran/reactivis)):
 
