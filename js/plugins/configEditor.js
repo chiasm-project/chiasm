@@ -1,5 +1,8 @@
 // A JSON configuration editor plugin.
 //
+// This uses CodeMirror to provide a live editing environment for the runtime configuration.
+// This allows users to edit the configuration JSON interactively and see it change while the system is running.
+//
 // Created by Curran Kelleher Feb 2015
 define(["d3", "model", "codemirror/lib/codemirror", "codemirror/mode/javascript/javascript"], function (d3, Model, CodeMirror) {
 
