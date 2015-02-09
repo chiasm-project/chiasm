@@ -1,7 +1,7 @@
 {
-  "layout":{
+  "layout": {
     "plugin": "layout",
-    "state":{
+    "state": {
       "layout": {
         "orientation": "horizontal",
         "children": [
@@ -10,8 +10,13 @@
             "orientation": "vertical",
             "children": [
               "A",
-              "B",
-              "C"
+              {
+                "orientation": "horizontal",
+                "children": [
+                  "B",
+                  "C"
+                ]
+              }
             ]
           }
         ]
@@ -23,23 +28,23 @@
   },
   "A": {
     "plugin": "dummyVis",
-    "state":{
+    "state": {
       "text": "A",
-      "color": "lightblue"
+      "color": "#a8ffd0"
     }
   },
   "B": {
     "plugin": "dummyVis",
-    "state":{
+    "state": {
       "text": "B",
-      "color": "pink"
+      "color": "#ffa8dd"
     }
   },
   "C": {
     "plugin": "dummyVis",
-    "state":{
+    "state": {
       "text": "C",
-      "color": "lightgreen"
+      "color": "#ffe2a8"
     }
   }
 }

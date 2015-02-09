@@ -30,11 +30,12 @@
               <p>A JSON configuration editor plugin.</p>
 <p>This uses CodeMirror to provide a live editing environment for the runtime configuration.
 This allows users to edit the configuration JSON interactively and see it change while the system is running.</p>
-<p>Created by Curran Kelleher Feb 2015</p>
+<p>Created by Curran Kelleher Feb 2015
+define([“d3”, “model”, “codemirror/lib/codemirror”, “codemirror/mode/javascript/javascript”, “inlet”], function (d3, Model, CodeMirror, Inlet) {</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"d3"</span>, <span class="hljs-string">"model"</span>, <span class="hljs-string">"codemirror/lib/codemirror"</span>, <span class="hljs-string">"codemirror/mode/javascript/javascript"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d3, Model, CodeMirror)</span> </span>{
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"d3"</span>, <span class="hljs-string">"model"</span>, <span class="hljs-string">"codemirror/lib/codemirror"</span>, <span class="hljs-string">"codemirror/mode/javascript/javascript"</span>, <span class="hljs-string">"inlet"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d3, Model, CodeMirror)</span> </span>{
 
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ConfigEditor</span><span class="hljs-params">(runtime)</span> </span>{
 
@@ -133,13 +134,12 @@ See <a href="http://codemirror.net/demo/resize.html">http://codemirror.net/demo/
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Respond to changes in the runtime config.</p>
+              <p>These flags are used to stop circular updates.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> configListener = runtime.when(<span class="hljs-string">"config"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(config)</span></span>{
-      editor.setValue(<span class="hljs-built_in">JSON</span>.stringify(config, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>));
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> ignoreChangeFromCodemirror = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">var</span> ignoreChangeFromRuntime = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -150,11 +150,17 @@ See <a href="http://codemirror.net/demo/resize.html">http://codemirror.net/demo/
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>When the size of the visualization is set by the layout plugin,</p>
+              <p>Respond to changes in the runtime config.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"box"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(box)</span> </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    runtime.when(<span class="hljs-string">"config"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(config)</span></span>{
+      <span class="hljs-keyword">if</span>(!ignoreChangeFromRuntime){
+        ignoreChangeFromCodemirror = <span class="hljs-literal">true</span>;
+        editor.setValue(<span class="hljs-built_in">JSON</span>.stringify(config, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>));
+        ignoreChangeFromCodemirror = <span class="hljs-literal">false</span>;
+      }
+    });</pre></div></div>
             
         </li>
         
@@ -164,6 +170,44 @@ See <a href="http://codemirror.net/demo/resize.html">http://codemirror.net/demo/
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Update the runtime config when text is edited.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    editor.on(<span class="hljs-string">"change"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+      <span class="hljs-keyword">if</span>(!ignoreChangeFromCodemirror){
+        ignoreChangeFromRuntime = <span class="hljs-literal">true</span>;
+        runtime.config = <span class="hljs-built_in">JSON</span>.parse(editor.getValue());
+        setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+          ignoreChangeFromRuntime = <span class="hljs-literal">false</span>;
+        }, <span class="hljs-number">0</span>);
+      }
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>When the size of the visualization is set by the layout plugin,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"box"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(box)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>set the CSS (left, top, width, height) properties to move and
 position the editor relative to the runtime div.</p>
@@ -179,11 +223,11 @@ position the editor relative to the runtime div.</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Update the height of the CodeMirror editor.</p>
 
@@ -196,19 +240,50 @@ position the editor relative to the runtime div.</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Clean up the DOM elements when the component is destroyed.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    model.destroy = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
-      runtime.div.removeChild(textarea.node());
-    };
+            <div class="content"><div class='highlight'><pre>    model.destroy = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>TODO test this
+TODO remove config listener</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      runtime.div.removeChild(textarea.node());
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Augment the editor using Inlet, which gives
+the user a color picker for colors and a slider for numbers.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    Inlet(editor);
 
     <span class="hljs-keyword">return</span> model;
   };

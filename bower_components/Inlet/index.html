@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Inlet.js</title>
+
+    <link rel="stylesheet" href="lib/CodeMirror3/lib/codemirror.css">
+    <link rel="stylesheet" href="lib/CodeMirror3/theme/monokai.css">
+
+    <link rel="stylesheet" href="inlet.css" type="text/css" media="screen"  title="no title" charset="utf-8">
+
+    <link rel="stylesheet" href="lib/index.css" type="text/css" media="screen"  title="no title" charset="utf-8">
+
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:900italic' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39184669-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+</head>
+
+<body>
+  <a href="https://github.com/enjalot/Inlet"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+  <div id="header">
+    <h1 id="title">Inlet</h1>
+  </div>
+  <div id="description">
+    Play with the code in CodeMirror just by clicking on numbers and colors!<br>
+
+    <strong><a href="https://github.com/enjalot/Inlet">check out the code</a></strong><br><br>
+    by <strong><a href="http://twitter.com/enjalot">@enjalot</a></strong> and <strong><a href="http://twitter.com/mrejfox">@mrejfox</a></strong>
+    
+    <span id="example">42 === The answer to life, the universe and everything.</div>
+  </div>
+  
+  <div id='editor'>
+  </div>
+
+  <script src="lib/CodeMirror3/lib/codemirror.js"></script>
+  <script src="lib/CodeMirror3/mode/javascript/javascript.js"></script>
+
+  <script src="inlet.js"></script>
+
+  <script>
+    var editor = CodeMirror(document.getElementById("editor"),{
+      //default code for example:
+      value: '//Click on the hex value or number below:\n\nvar color = "#D1FFDB"\n\nvar theAnswer = 42;\n\n//Usage looks like:\n//var editor = CodeMirror(...);\n//Inlet(editor);\n\n//You can also use hsl colors, try replacing #D1FFDB with hsl(133,100%,91%)',
+      mode:  "javascript",
+      theme: "monokai",
+      lineNumbers: true,
+    });
+    editor.on("change", changeFunction)
+    function changeFunction() {
+      //let's affect the page when the code changes!
+      eval(editor.getValue());
+      var example = document.getElementById("example");
+      example.innerHTML = theAnswer + " === The answer to life, the universe and everything.";
+      //example.style.left = x+"px";
+      //example.style.top = y+"px";
+      document.body.style['background-color'] = color;
+    };
+    changeFunction();
+
+    var inlet = Inlet(editor);
+  </script>
+    
+    <!--<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>-->
+</body>
+

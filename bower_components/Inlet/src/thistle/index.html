@@ -1,0 +1,40 @@
+<!doctype html>
+<style>
+  .swatch {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 1px solid rgba(20,20,20,0.3);
+    vertical-align: text-bottom;
+  }
+  .name {
+    font-family: monospace;
+  }
+  .color {
+    cursor: pointer;
+    display: inline-block;
+  }
+</style>
+<body>
+  <div class='color' id='color'>
+    <div class='swatch' style='background-color: beige'></div>
+    <span class='name'></span>
+  </div>
+<script src='thistle.js'></script>
+<script>
+  color.onclick = function(e) {
+    var swatch = color.querySelector('.swatch')
+    var picker = (new thistle.Picker(swatch.style.backgroundColor)).presentModalBeneath(swatch)
+    picker.on('changed', function() {
+      swatch.style.backgroundColor = picker.getCSS()
+      color.querySelector('.name').textContent = picker.getCSS()
+    })
+  }
+
+  var h = Math.floor(Math.random()*360)
+  var s = Math.random()*0.4+0.5
+  var l = Math.random()*0.6+0.3
+  var c = 'hsl('+h+', '+Math.round(s*100)+'%, '+Math.round(l*100)+'%)'
+  document.querySelector('.swatch').style.backgroundColor = c
+  document.querySelector('.name').textContent = c
+</script>

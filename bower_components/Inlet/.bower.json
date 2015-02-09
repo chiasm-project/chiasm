@@ -1,0 +1,14 @@
+{
+  "name": "Inlet",
+  "homepage": "https://github.com/enjalot/Inlet",
+  "_release": "8afb1099c4",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "8afb1099c48716010809d2ad2800034723840dd3"
+  },
+  "_source": "https://github.com/enjalot/Inlet.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/enjalot/Inlet.git",
+  "_direct": true
+}
