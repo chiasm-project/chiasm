@@ -35,7 +35,7 @@ to assign sizes to visible components.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"computeLayout"</span>, <span class="hljs-string">"model"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(computeLayout, Model)</span></span>{
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"computeLayout"</span>, <span class="hljs-string">"model"</span>, <span class="hljs-string">"async"</span>, <span class="hljs-string">"lodash"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(computeLayout, Model, async, _)</span></span>{
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Layout</span><span class="hljs-params">(runtime)</span></span>{
 
     <span class="hljs-keyword">var</span> model = Model({
@@ -107,7 +107,7 @@ to assign sizes to visible components.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"layout"</span>, <span class="hljs-string">"box"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(layout, box)</span></span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"layout"</span>, <span class="hljs-string">"sizes"</span>, <span class="hljs-string">"box"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(layout, sizes, box)</span></span>{</pre></div></div>
             
         </li>
         
@@ -122,7 +122,7 @@ to assign sizes to visible components.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> boxes = computeLayout(layout, runtime.config, box);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> boxes = computeLayout(layout, sizes, box);</pre></div></div>
             
         </li>
         
@@ -142,7 +142,65 @@ to assign sizes to visible components.</p>
           component.box = boxes[alias];
         });
       });
-    });
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Compute <code>sizes</code> from runtime components.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"layout"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(layout, box)</span></span>{
+      <span class="hljs-keyword">var</span> aliases = aliasesInLayout(layout),
+          sizes = {};
+      async.each(
+        aliases,
+        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(alias, callback)</span></span>{
+          runtime.getComponent(alias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(component)</span></span>{
+            sizes[alias] = _.pick(component, <span class="hljs-string">"size"</span>, <span class="hljs-string">"hidden"</span>);
+            callback();
+          });
+        },<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
+          model.sizes = sizes;
+        }
+      );
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Computes which aliases are referenced in the given layout.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">aliasesInLayout</span><span class="hljs-params">(layout)</span></span>{
+      <span class="hljs-keyword">var</span> aliases = [];
+      <span class="hljs-keyword">if</span>(isLeafNode(layout)){
+        aliases.push(layout);
+      } <span class="hljs-keyword">else</span> {
+        layout.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(child)</span></span>{
+          aliases.push.apply(aliases, aliasesInLayout(child));
+        });
+      }
+      <span class="hljs-keyword">return</span> aliases;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isLeafNode</span><span class="hljs-params">(layout)</span></span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> layout === <span class="hljs-string">"string"</span>;
+    }
 
     <span class="hljs-keyword">return</span> model;
   };

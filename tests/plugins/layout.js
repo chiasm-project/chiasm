@@ -13,8 +13,30 @@ window = document.parentWindow;
 
 var requirejs = require("../configureRequireJS.js");
 
+var async = requirejs("async");
+
 var Runtime = requirejs("runtime");
 var Model = requirejs("model");
+
+// A utility function for asserting component property values.
+function expectValues(runtime, values, callback){
+  async.each(Object.keys(values), function(key, cb){
+    var path = key.split("."),
+        alias = path[0],
+        property = path[1],
+        propertyPath = path.slice(2),
+        expectedValue = values[key];
+    runtime.getComponent(alias, function(component){
+      component.when(property, function(value){
+        propertyPath.forEach(function(key){
+          value = value[key]
+        });
+        expect(value).to.equal(expectedValue);
+        cb();
+      });
+    });
+  }, callback);
+}
 
 describe("plugins/layout", function () {
   it("should compute size for a single dummyVis", function(done) {
@@ -36,14 +58,83 @@ describe("plugins/layout", function () {
       }
     };
 
-    runtime.getComponent("a", function(a){
-      a.when("box", function(box){
-        expect(box.x).to.equal(0);
-        expect(box.y).to.equal(0);
-        expect(box.width).to.equal(100);
-        expect(box.height).to.equal(100);
-        done();
-      });
-    });
+    expectValues(runtime, {
+      "a.box.x": 0,
+      "a.box.y": 0,
+      "a.box.width": 100,
+      "a.box.height": 100,
+    }, done);
+  });
+
+  it("should compute size for a 2 instances of dummyVis", function(done) {
+    var div = document.createElement("div");
+    var runtime = Runtime(div);
+
+    // Set the width and height that the layout will use.
+    div.clientHeight = div.clientWidth = 100;
+    
+    runtime.config = {
+      layout: {
+        plugin: "layout",
+        state: {
+          layout: {
+            orientation: "horizontal",
+            children: ["a", "b"]
+          }
+        }
+      },
+      a: {
+        plugin: "dummyVis"
+      },
+      b: {
+        plugin: "dummyVis"
+      }
+    };
+
+    expectValues(runtime, {
+      "a.box.x": 0,
+      "a.box.y": 0,
+      "a.box.width": 50,
+      "a.box.height": 100,
+      "b.box.x": 50,
+      "b.box.y": 0,
+      "b.box.width": 50,
+      "b.box.height": 100,
+    }, done);
+  });
+
+  it("should compute size from layout specification", function(done) {
+    var div = document.createElement("div");
+    var runtime = Runtime(div);
+
+    // Set the width and height that the layout will use.
+    div.clientHeight = div.clientWidth = 100;
+    
+    runtime.config = {
+      layout: {
+        plugin: "layout",
+        state: {
+          layout: {
+            orientation: "horizontal",
+            children: ["a", "b"]
+          }
+        }
+      },
+      a: {
+        plugin: "dummyVis",
+        state: {
+          size: "40px"
+        }
+      },
+      b: {
+        plugin: "dummyVis"
+      }
+    };
+
+    expectValues(runtime, {
+      "a.box.width": 40,
+      "b.box.width": 60
+    }, done);
+
   });
 });
