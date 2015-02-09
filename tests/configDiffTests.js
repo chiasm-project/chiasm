@@ -197,4 +197,17 @@ describe("configDiff", function () {
     expect(actions).to.contain("destroy(myFoo)");
     expect(actions.length).to.equal(1);
   });
+
+  it("no change with missing state", function() {
+    var actions = diff({
+      myfoo: {
+        plugin: "foo"
+      }
+    }, {
+      myfoo: {
+        plugin: "foo"
+      }
+    });
+    expect(actions.length).to.equal(0);
+  });
 });

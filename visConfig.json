@@ -3,12 +3,13 @@
     "plugin": "layout",
     "state":{
       "layout": {
-        "orientation": "vertical",
+        "orientation": "horizontal",
         "children": [
-          "A",
+          "editor",
           {
-            "orientation": "horizontal",
+            "orientation": "vertical",
             "children": [
+              "A",
               "B",
               "C"
             ]
@@ -16,6 +17,9 @@
         ]
       }
     }
+  },
+  "editor": {
+    "plugin": "configEditor"
   },
   "A": {
     "plugin": "dummyVis",

@@ -28,8 +28,6 @@ define(["computeLayout", "model"], function (computeLayout, Model){
     // Update `model.box` on resize
     window.addEventListener("resize", setBox);
 
-    console.log("here");
-
     // Respond to changes is box and layout.
     model.when(["layout", "box"], function(layout, box){
 

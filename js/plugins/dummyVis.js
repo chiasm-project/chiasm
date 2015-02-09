@@ -6,13 +6,7 @@
 // https://github.com/curran/model-contrib/blob/gh-pages/modules/dummyVis.js
 //
 // Created by Curran Kelleher Feb 2015
-
-// This module implements a dummy visualization
-// demonstrating the API structure for authoring visualizations
-// that work with the `overseer` framework and nested box layout.
-//
-// Curran Kelleher September 2014
-define(["d3", "model", "lodash"], function (d3, Model, _) {
+define(["d3", "model"], function (d3, Model) {
 
   return function DummyVis(runtime) {
 
@@ -35,13 +29,15 @@ define(["d3", "model", "lodash"], function (d3, Model, _) {
     });
 
     // Append an SVG to the runtime div.
-    var svg = d3.select(runtime.div).append("svg");
+    // Use CSS `position: absolute;` so setting `left` and `top` CSS
+    // properties later will position the SVG relative to containing div.
+    var svg = d3.select(runtime.div).append("svg")
+      .style("position", "absolute");
 
     // Add a background rectangle to the SVG.
+    // The location of the rect will be fixed at (0, 0)
+    // with respect to the containing SVG.
     var rect = svg.append("rect")
-
-      // The location of the rect will be fixed at (0, 0)
-      // with respect to the containing SVG.
       .attr("x", 0)
       .attr("y", 0);
 
@@ -73,7 +69,9 @@ define(["d3", "model", "lodash"], function (d3, Model, _) {
     }());
 
     // Update the color and text based on the model.
-    model.when("color", _.partial(rect.attr, "fill"), rect);
+    model.when("color", function(color){
+      rect.attr("fill", color);
+    });
 
     // Update the text based on the model.
     model.when("text", text.text, text);
@@ -82,7 +80,13 @@ define(["d3", "model", "lodash"], function (d3, Model, _) {
     // by the runtime layout engine,
     model.when("box", function (box) {
 
-      // set the size of the SVG and background rect.
+      // Set the CSS `left` and `top` properties to move the
+      // SVG to `(box.x, box.y)` relative to its paren div.
+      svg
+        .style("left", box.x + "px")
+        .style("top", box.y + "px");
+
+      // Set the size of the SVG and background rect.
       svg
         .attr("width", box.width)
         .attr("height", box.height);
@@ -94,6 +98,7 @@ define(["d3", "model", "lodash"], function (d3, Model, _) {
       text
         .attr("x", box.width / 2)
         .attr("y", box.height / 2);
+
     });
 
     // Update the X lines whenever either

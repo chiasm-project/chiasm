@@ -68,8 +68,7 @@ object with the following properties:</p>
               <ul>
 <li><code>plugins</code> An object for setting up plugins before loading a configuration.
 The runtime first looks here for plugins, then if a plugin is not found here
-it is dynamically loaded at runtime using RequireJS where the plugin name 
-is used as the AMD module name.<ul>
+it is dynamically loaded at runtime using RequireJS where the plugin name <ul>
 <li>Keys are plugin names.</li>
 <li>Values are plugin implementations, which are constructor functions for
 runtime components. A plugin constructor function takes as input a reference
@@ -307,9 +306,7 @@ then uses RequireJS to load the plugin as an AMD module.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">create</span><span class="hljs-params">(alias, plugin, callback)</span></span>{
-      loadPlugin(plugin, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(constructor)</span> </span>{
-        <span class="hljs-keyword">var</span> component = constructor(runtime);
-        components[alias] = component;</pre></div></div>
+      loadPlugin(plugin, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(constructor)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -320,14 +317,11 @@ then uses RequireJS to load the plugin as an AMD module.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Propagate changes from components to configuration.</p>
+              <p>Construct the component using the plugin.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(<span class="hljs-string">"publicProperties"</span> <span class="hljs-keyword">in</span> component){
-          listeners[alias] = [];
-          component.publicProperties.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(property)</span></span>{
-            listeners[alias].push(component.when(property, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span></span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> component = constructor(runtime);</pre></div></div>
             
         </li>
         
@@ -338,13 +332,14 @@ then uses RequireJS to load the plugin as an AMD module.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Handle the case that the property is changed after the component has
-been removed from the configuration but before the component’s
-listeners have been removed.</p>
+              <p>Default values for public properties.
+TODO test</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">if</span>(alias <span class="hljs-keyword">in</span> oldConfig){</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> defaults = {};
+
+        components[alias] = component;</pre></div></div>
             
         </li>
         
@@ -355,13 +350,14 @@ listeners have been removed.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>Ignore changes that originated from the config.
-Use oldConfig rather than runtime.config to handle the case that
-runtime.config has been changed and its listener has not yet run.</p>
+              <p>Propagate changes from components to configuration.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span>(oldConfig[alias].state[property] !== value){</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(<span class="hljs-string">"publicProperties"</span> <span class="hljs-keyword">in</span> component){
+        
+          listeners[alias] = [];
+          component.publicProperties.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(property)</span></span>{</pre></div></div>
             
         </li>
         
@@ -372,12 +368,11 @@ runtime.config has been changed and its listener has not yet run.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Apply the change from the component to a copy of the config.</p>
+              <p>Store default values for public properties.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                  <span class="hljs-keyword">var</span> newConfig = _.cloneDeep(oldConfig);
-                  newConfig[alias].state[property] = value;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            defaults[property] = component[property];</pre></div></div>
             
         </li>
         
@@ -388,13 +383,12 @@ runtime.config has been changed and its listener has not yet run.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Surgically change oldConfig so that the diff computation will yield
-no actions. Without this line, the update would propagate from the 
-component to the config and then back again unnecessarily.</p>
+              <p>Store the listener so it can be removed later,
+when the component is destroyed.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                  oldConfig[alias].state[property] = value;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            listeners[alias].push(component.when(property, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue)</span></span>{</pre></div></div>
             
         </li>
         
@@ -405,11 +399,90 @@ component to the config and then back again unnecessarily.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>This assignment will notify any listeners that the config has changed.</p>
+              <p>Handle the case that the property is changed after the component has
+been removed from the configuration but before the component’s
+listeners have been removed.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                  runtime.config = newConfig;
+            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">if</span>(alias <span class="hljs-keyword">in</span> oldConfig){
+
+                <span class="hljs-keyword">var</span> oldValue;
+
+                <span class="hljs-keyword">if</span>(<span class="hljs-string">"state"</span> <span class="hljs-keyword">in</span> oldConfig[alias] &amp;&amp; property <span class="hljs-keyword">in</span> oldConfig[alias].state){
+                  oldValue = oldConfig[alias].state[property];
+                } <span class="hljs-keyword">else</span> {
+                  oldValue = defaults[property];
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Ignore changes that originated from the config.
+Use oldConfig rather than runtime.config to handle the case that
+runtime.config has been changed and its listener that computes
+the diff and dispatches actions has not yet run.
+Use JSON.stringify so deep JSON structures are compared correctly.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span>(<span class="hljs-built_in">JSON</span>.stringify(oldValue) !== <span class="hljs-built_in">JSON</span>.stringify(newValue)){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Surgically change oldConfig so that the diff computation will yield
+no actions. Without this, the update would propagate from the 
+component to the config and then back again unnecessarily.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>If no state is tracked, create the state object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                  <span class="hljs-keyword">if</span>(!(<span class="hljs-string">"state"</span> <span class="hljs-keyword">in</span> oldConfig[alias])){
+                    oldConfig[alias].state = {};
+                  }
+
+                  oldConfig[alias].state[property] = newValue;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>This assignment will notify any listeners that the config has changed,
+(e.g. the config editor), but the config diff will yield no actions to execute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                  runtime.config = oldConfig;
                 }
               }
 
@@ -424,11 +497,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Applies a “destroy” action to the runtime.</p>
 
@@ -440,11 +513,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Remove public property listeners.</p>
 
@@ -458,11 +531,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Invoke component.destroy()</p>
 
@@ -475,11 +548,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Remove the internal reference to the component.</p>
 
@@ -494,11 +567,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Applies a “set” action to the runtime.</p>
 
@@ -514,30 +587,32 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Respond to changes in configuration.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    runtime.when(<span class="hljs-string">"config"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newConfig)</span></span>{
+
       <span class="hljs-keyword">var</span> actions = configDiff(oldConfig, newConfig);
       actions.forEach(actionQueue.push);
-      oldConfig = newConfig;
+
+      oldConfig = _.cloneDeep(newConfig);
     });</pre></div></div>
             
         </li>
         
         
-        <li id="section-27">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Expose getComponent as a public method.</p>
 
@@ -548,11 +623,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>This function checks if a component exists.
 Necessary for complete code coverage in unit tests.</p>

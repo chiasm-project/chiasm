@@ -129,15 +129,27 @@ Status: Prototype implemented in [Ph. D. prototype](https://github.com/curran/ph
 
 Targets for implementation as plugins include the following visualizations:
 
- * Bar Chart
- * Scatter Plot
- * Table Preview
- * Parallel Coordinates
- * Line Chart
- * Stacked Area Chart
- * Choropleth Map (using Leaflet)
+ * [Bar Chart](http://curran.github.io/model-contrib/#/examples/barChart)
+ * [Scatter Plot](http://curran.github.io/model-contrib/#/examples/scatterPlot)
+ * [Table](http://curran.github.io/model-contrib/#/examples/table)
+ * [Crossfilter](http://curran.github.io/model-contrib/#/examples/linkedViews)
+ * [Line Chart](http://curran.github.io/model-contrib/#/examples/lineChart)
+ * [Parallel Coordinates](https://github.com/curran/model/tree/gh-pages/examples/d3ParallelCoordinates)
+ * [Stacked Area Chart](https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea)[https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea]
+ * [Choropleth Map (using Leaflet)](http://leafletjs.com/examples/choropleth.html)
+ * [Calendar View](http://bl.ocks.org/mbostock/4063318)
 
-Status: Several visualizations have been implemented using ModelJS in [model-contrib](http://curran.github.io/model-contrib/#/) and as examples in the [ModelJS project](https://github.com/curran/model/tree/gh-pages/examples). All of these are yet to be ported into visEditor.
+The following features common to many D3-based visualizations can reside in a separate module (prototyped in the [Reactivis project](https://github.com/curran/reactivis)):
+
+ * Margins
+ * Scales (X, Y, color)
+ * Axes
+ * Color Legend
+ * [Brushing (draw a rectangle to select many records)](http://curran.github.io/model-contrib/#/examples/linkedViews)
+ * [Selecting (click/tap to select a single value)](http://curran.github.io/model/examples/d3LinkedChoropleth/)
+ * [Hovering](http://curran.github.io/model/examples/d3LinkedChoropleth/)
+
+Status: Several visualizations have been implemented using ModelJS in [model-contrib](http://curran.github.io/model-contrib/#/) and as examples in the [ModelJS project](https://github.com/curran/model/tree/gh-pages/examples). All of these are yet to be ported into the VisEditor project.
 
 ## Proof of Concept Idea
 
