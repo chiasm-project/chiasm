@@ -43,7 +43,7 @@ gulp.task("lint", function () {
 
 // Run unit tests.
 gulp.task("test", ["lint"], function () {
-  return gulp.src(["tests/*.js"])
+  return gulp.src(["tests/**/*.js"])
     .pipe(mocha({ reporter: "spec" }));
 });
 

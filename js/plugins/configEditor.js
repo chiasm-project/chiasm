@@ -11,7 +11,8 @@ define(["d3", "model", "codemirror/lib/codemirror", "codemirror/mode/javascript/
     var model = Model({
       // The `hidden` boolean property triggers the layout
       // to recalculate to show and hide the editor.
-      //publicProperties: [ "hidden" ]
+      // publicProperties: [ "hidden" ]
+      size: "400px"
     });
 
     // Append a div to contain the editor to the runtime div.
