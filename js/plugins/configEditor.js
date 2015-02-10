@@ -60,6 +60,7 @@ define(["d3", "model", "codemirror/lib/codemirror", "codemirror/mode/javascript/
     // When the size of the visualization is set by the layout plugin,
     model.when("box", function (box) {
 
+
       // set the CSS (left, top, width, height) properties to move and
       // position the editor relative to the runtime div.
       div
