@@ -4,7 +4,6 @@
 // This allows users to edit the configuration JSON interactively and see it change while the system is running.
 //
 // Created by Curran Kelleher Feb 2015
-//define(["d3", "model", "codemirror/lib/codemirror", "codemirror/mode/javascript/javascript", "inlet"], function (d3, Model, CodeMirror, Inlet) {
 define(["d3", "model", "codemirror/lib/codemirror", "codemirror/mode/javascript/javascript", "inlet"], function (d3, Model, CodeMirror) {
 
   return function ConfigEditor(runtime) {
