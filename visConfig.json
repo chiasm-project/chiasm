@@ -37,7 +37,7 @@
     "plugin": "dummyVis",
     "state": {
       "text": "B",
-      "color": "#ffa8dd"
+      "color": "#ffa8dd",
       "size": 2
     }
   },
