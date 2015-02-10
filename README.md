@@ -92,18 +92,21 @@ The following features are also present:
  * Specifying relative (proportions to siblings) or absolute (fixed number of pixels) size of any node in the layout tree. Relative size makes sense for resizable visualizations, while absolute size makes sense for conventional UI widgets that only look good at a specific size in terms of pixels.
  * Toggling visibility of components. When a component is marked as "hidden", it is excluded from the layout algorithm. This could be used to, for example, hide and show the JSON configuration editor when the user clicks on a "settings" button.
 
-See also
+Status: implemented.
 
  * [computeLayout module](http://curran.github.io/visEditor/docs/computeLayout.html) This implements the nested box layout algorithm.
  * [computeLayout module unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/computeLayoutTest.js)
+ * [layout plugin](https://github.com/curran/visEditor/blob/gh-pages/js/plugins/layout.js)
+ * [layout plugin unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/plugins/layout.js)
 
-Status: completely implemented.
 
 ### JSON Editor
 
 The JSON Editor is an enhanced text editor for editing the configuration at runtime. Changes are propagated through the runtime environment to the instantiated plugins. When changes are made, only the differences are propagated through the system. This lays the foundation for undo/redo and real-time synchronization between many clients.
 
-Status: Prototype implemented in [dashboardScaffold](https://github.com/curran/dashboardScaffold), yet to be ported into visEditor.
+Status: implemented, leveraging [CodeMirror](http://codemirror.net/) and [Inlet](http://enjalot.github.io/Inlet/).
+
+ * [configEditor plugin](https://github.com/curran/visEditor/blob/gh-pages/js/plugins/configEditor.js)
 
 ### DummyVis
 
@@ -122,7 +125,9 @@ Features include:
  * Text in front of the X.
  * A progress indicator when a special property `pending` is set.
 
-Status: Prototype implemented in [Model-contrib](http://curran.github.io/model-contrib/#/examples/boxes), yet to be ported into visEditor.
+Status: implemented.
+
+ * [dummyVis plugin](https://github.com/curran/visEditor/blob/gh-pages/js/plugins/dummyVis.js)
 
 ### Links
 
