@@ -157,21 +157,11 @@ to assign sizes to visible components.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"layout"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(layout, box)</span></span>{
-      <span class="hljs-keyword">var</span> aliases = aliasesInLayout(layout),
-          sizes = {};
-      async.each(
-        aliases,
-        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(alias, callback)</span></span>{
-          runtime.getComponent(alias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(component)</span></span>{
-            sizes[alias] = _.pick(component, <span class="hljs-string">"size"</span>, <span class="hljs-string">"hidden"</span>);
-            callback();
-          });
-        },<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
-          model.sizes = sizes;
-        }
-      );
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"layout"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(layout)</span></span>{
+      <span class="hljs-keyword">var</span> aliases = aliasesInLayout(layout);
+
+      aliases.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(alias)</span></span>{
+        runtime.getComponent(alias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(component)</span></span>{</pre></div></div>
             
         </li>
         
@@ -181,6 +171,123 @@ to assign sizes to visible components.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>TODO clean up listeners, test for leaks.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          component.when(<span class="hljs-string">"size"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(size)</span></span>{
+            extractSizes(aliases);
+          });
+        });
+      });
+      extractSizes(aliases);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Sets <code>model.sizes</code> by extracting the “size” and “hidden”
+properties component corresponding to each alias in <code>aliases</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">extractSizes</span><span class="hljs-params">(aliases)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Compute which component aliases are referenced.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> sizes = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>For each alias referenced in the layout,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      async.each(
+        aliases,
+        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(alias, callback)</span></span>{
+          runtime.getComponent(alias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(component)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>store its “size” and “hidden” properties.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>(component.size || component.hidden){
+              sizes[alias] = {};
+              <span class="hljs-keyword">if</span>(component.size){
+                sizes[alias].size = component.size;
+              }
+              <span class="hljs-keyword">if</span>(component.hidden){
+                sizes[alias].hidden = component.size;
+              }
+            }
+            callback();
+          });
+        }, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Set the stored “size” and “hidden” properties
+on the model to trigger the layout computation.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span>(!_.isEqual(model.sizes, sizes)){
+            model.sizes = sizes;
+          }
+        }
+      );
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Computes which aliases are referenced in the given layout.</p>
 

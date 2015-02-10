@@ -43,21 +43,55 @@ define(["computeLayout", "model", "async", "lodash"], function (computeLayout, M
     });
 
     // Compute `sizes` from runtime components.
-    model.when(["layout"], function(layout, box){
-      var aliases = aliasesInLayout(layout),
-          sizes = {};
+    model.when(["layout"], function(layout){
+      var aliases = aliasesInLayout(layout);
+
+      aliases.forEach(function(alias){
+        runtime.getComponent(alias, function(component){
+          // TODO clean up listeners, test for leaks.
+          component.when("size", function(size){
+            extractSizes(aliases);
+          });
+        });
+      });
+      extractSizes(aliases);
+    });
+
+    // Sets `model.sizes` by extracting the "size" and "hidden"
+    // properties component corresponding to each alias in `aliases`.
+    function extractSizes(aliases){
+
+      // Compute which component aliases are referenced.
+      var sizes = {};
+
+      // For each alias referenced in the layout,
       async.each(
         aliases,
         function(alias, callback){
           runtime.getComponent(alias, function(component){
-            sizes[alias] = _.pick(component, "size", "hidden");
+
+            // store its "size" and "hidden" properties.
+            if(component.size || component.hidden){
+              sizes[alias] = {};
+              if(component.size){
+                sizes[alias].size = component.size;
+              }
+              if(component.hidden){
+                sizes[alias].hidden = component.size;
+              }
+            }
             callback();
           });
-        },function(){
-          model.sizes = sizes;
+        }, function(){
+
+          // Set the stored "size" and "hidden" properties
+          // on the model to trigger the layout computation.
+          if(!_.isEqual(model.sizes, sizes)){
+            model.sizes = sizes;
+          }
         }
       );
-    });
+    }
 
     // Computes which aliases are referenced in the given layout.
     function aliasesInLayout(layout){
