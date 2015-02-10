@@ -96,7 +96,7 @@ Status: implemented.
 
  * [computeLayout module](http://curran.github.io/visEditor/docs/computeLayout.html) This implements the nested box layout algorithm.
  * [computeLayout module unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/computeLayoutTest.js)
- * [layout plugin](https://github.com/curran/visEditor/blob/gh-pages/js/plugins/layout.js)
+ * [layout plugin](http://curran.github.io/visEditor/docs/plugins/layout.html) This provides the interface between the runtime and nested box layout algorithm.
  * [layout plugin unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/plugins/layout.js)
 
 
@@ -106,7 +106,7 @@ The JSON Editor is an enhanced text editor for editing the configuration at runt
 
 Status: implemented, leveraging [CodeMirror](http://codemirror.net/) and [Inlet](http://enjalot.github.io/Inlet/).
 
- * [configEditor plugin](https://github.com/curran/visEditor/blob/gh-pages/js/plugins/configEditor.js)
+ * [configEditor plugin](http://curran.github.io/visEditor/docs/plugins/configEditor.html)
 
 ### DummyVis
 
@@ -127,7 +127,7 @@ Features include:
 
 Status: implemented.
 
- * [dummyVis plugin](https://github.com/curran/visEditor/blob/gh-pages/js/plugins/dummyVis.js)
+ * [dummyVis plugin](http://curran.github.io/visEditor/docs/plugins/dummyVis.html)
 
 ### Links
 
