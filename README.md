@@ -3,7 +3,7 @@
 A pluggable interactive visualization runtime environment and configuration editor.
 
 [Try it out!](http://curran.github.io/visEditor/)
-![Config Editor Demo](http://curran.github.io/images/visEditor/configEditorDemo.png)
+[![Config Editor Demo](http://curran.github.io/images/visEditor/configEditorDemo.png)](http://curran.github.io/visEditor/)
 
 Installable via [Bower](http://bower.io/):
 
