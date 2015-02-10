@@ -36,7 +36,7 @@ The runtime environment is responsible for synchronizing the JSON configuration 
 
 This organization allows a dynamic configuration structure to drive the state of the application, and also allows changes resulting from user interactions with runtime components to be propagated to the configuration.
 
-![Runtime Diagram](images/Runtime.png)
+![Runtime Diagram](http://curran.github.io/images/visEditor/Runtime.png)
 
 This diagram illustrates that
 
@@ -59,7 +59,7 @@ Since the architecture for this visualization editor is based on plugins, severa
 
 The `layout` module provides tiled visualization containers using a nested box layout, computed by the [computeLayout module](http://curran.github.io/visEditor/docs/computeLayout.html).
 
-![Boxes](images/boxes.png)
+![Boxes](http://curran.github.io/images/visEditor/boxes.png)
 
 The above image is a simple example of a nested box layout, which can be configured by the following JSON structure.
 
@@ -102,7 +102,7 @@ Status: Prototype implemented in [dashboardScaffold](https://github.com/curran/d
 
 The DummyVis plugin is a simple example that demonstrates basic plugin structure and functionality. This plugin serves as a placeholder for real visualizations.
 
-![DummyVis](images/dummyVis.png)
+![DummyVis](http://curran.github.io/images/visEditor/dummyVis.png)
 
 Features include:
 
@@ -155,5 +155,5 @@ Status: Several visualizations have been implemented using ModelJS in [model-con
 
 To demonstrate all essential features of the visualization editor, a proof of concept system could be devised that integrates with an analytics backend that allows exploration of a set of data tables using linked views.
 
-![Correlation](images/CorrelationAnalysis.png)
+![Correlation](http://curran.github.io/images/visEditor/CorrelationAnalysis.png)
 
