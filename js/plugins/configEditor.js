@@ -37,10 +37,6 @@ define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/j
     // that was the last to be parsed and set as the runtime config.
     var oldConfigStr;
 
-    // These flags are used to stop circular updates.
-    //var ignoreChangeFromCodemirror = false;
-    //var ignoreChangeFromRuntime = false;
-
     // Edit the text when the runtime config updates.
     runtime.when("config", function(config){
       var newConfigStr = JSON.stringify(config, null, 2);
