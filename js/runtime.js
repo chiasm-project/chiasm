@@ -204,11 +204,11 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
 
     // Respond to changes in configuration.
     runtime.when("config", function(newConfig){
-
       var actions = configDiff(oldConfig, newConfig);
-      actions.forEach(actionQueue.push);
-
-      oldConfig = _.cloneDeep(newConfig);
+      if(actions.length > 0){
+        actions.forEach(actionQueue.push);
+        oldConfig = _.cloneDeep(newConfig);
+      }
     });
 
     // Expose getComponent as a public method.

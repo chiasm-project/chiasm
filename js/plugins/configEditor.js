@@ -4,14 +4,14 @@
 // This allows users to edit the configuration JSON interactively and see it change while the system is running.
 //
 // Created by Curran Kelleher Feb 2015
-define(["d3", "model", "codemirror/lib/codemirror", "codemirror/mode/javascript/javascript", "inlet"], function (d3, Model, CodeMirror) {
+define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/javascript/javascript", "inlet"], function (d3, Model, _, CodeMirror) {
 
   return function ConfigEditor(runtime) {
 
     var model = Model({
       // The `hidden` boolean property triggers the layout
       // to recalculate to show and hide the editor.
-      // publicProperties: [ "hidden" ]
+      publicProperties: [ "hidden" , "size"],
       size: "400px"
     });
 
@@ -33,29 +33,30 @@ define(["d3", "model", "codemirror/lib/codemirror", "codemirror/mode/javascript/
       mode:  "javascript"
     });
 
-    // These flags are used to stop circular updates.
-    var ignoreChangeFromCodemirror = false;
-    var ignoreChangeFromRuntime = false;
+    // Keeps track of the config string from the CodeMirror editor
+    // that was the last to be parsed and set as the runtime config.
+    var oldConfigStr;
 
-    // Respond to changes in the runtime config.
+    // These flags are used to stop circular updates.
+    //var ignoreChangeFromCodemirror = false;
+    //var ignoreChangeFromRuntime = false;
+
+    // Edit the text when the runtime config updates.
     runtime.when("config", function(config){
-      if(!ignoreChangeFromRuntime){
-        ignoreChangeFromCodemirror = true;
-        editor.setValue(JSON.stringify(config, null, 2));
-        ignoreChangeFromCodemirror = false;
-      }
+      var newConfigStr = JSON.stringify(config, null, 2);
+      if(newConfigStr !== oldConfigStr){
+        editor.setValue(newConfigStr);
+      } 
     });
 
     // Update the runtime config when text is edited.
-    editor.on("change", function(){
-      if(!ignoreChangeFromCodemirror){
-        ignoreChangeFromRuntime = true;
-        runtime.config = JSON.parse(editor.getValue());
-        setTimeout(function(){
-          ignoreChangeFromRuntime = false;
-        }, 0);
-      }
-    });
+    editor.on("change", _.throttle(function(){
+      oldConfigStr = editor.getValue();
+      runtime.config = JSON.parse(oldConfigStr);
+
+      // Throttle by 33 ms so the frequent updates induced by Inlet widgets
+      // propagates through the system at most 30 frames per second (1000 / 30 = 33.333).
+    }, 33));
 
     // When the size of the visualization is set by the layout plugin,
     model.when("box", function (box) {

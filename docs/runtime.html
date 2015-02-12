@@ -598,11 +598,11 @@ component to the config and then back again unnecessarily.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    runtime.when(<span class="hljs-string">"config"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newConfig)</span></span>{
-
       <span class="hljs-keyword">var</span> actions = configDiff(oldConfig, newConfig);
-      actions.forEach(actionQueue.push);
-
-      oldConfig = _.cloneDeep(newConfig);
+      <span class="hljs-keyword">if</span>(actions.length &gt; <span class="hljs-number">0</span>){
+        actions.forEach(actionQueue.push);
+        oldConfig = _.cloneDeep(newConfig);
+      }
     });</pre></div></div>
             
         </li>

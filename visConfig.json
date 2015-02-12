@@ -24,7 +24,10 @@
     }
   },
   "editor": {
-    "plugin": "configEditor"
+    "plugin": "configEditor",
+    "state": {
+      "size": "400px"
+    }
   },
   "A": {
     "plugin": "dummyVis",
@@ -37,7 +40,7 @@
     "plugin": "dummyVis",
     "state": {
       "text": "B",
-      "color": "#ffa8dd",
+      "color": "#a8f0ff",
       "size": 2
     }
   },
