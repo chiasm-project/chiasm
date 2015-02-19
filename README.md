@@ -2,7 +2,7 @@
 
 A pluggable interactive visualization runtime environment and configuration editor.
 
-[Try it out!](http://curran.github.io/visEditor/)
+[Try it out!](http://curran.github.io/visEditor/) Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
 [![Config Editor Demo](http://curran.github.io/images/visEditor/configEditorDemo.png)](http://curran.github.io/visEditor/)
 
 Installable via [Bower](http://bower.io/):
