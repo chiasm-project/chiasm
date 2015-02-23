@@ -72,3 +72,5 @@ println(cube)
 // (List(Female, Asian-Pac-Islander),List(346.0, 269339.0)), 
 // (List(Male, White),List(19174.0, 2.6242964E7)), 
 // (List(Male, Other),List(162.0, 225534.0)))
+
+// Looks like white males have the highest income.
