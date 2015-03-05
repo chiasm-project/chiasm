@@ -1,7 +1,7 @@
 require 'net/http'
 module VisEngine
   class ApplicationController < ActionController::Base
-    def reduceData
+    def reduce_data
 
       #options = params[:options] 
 
@@ -12,7 +12,8 @@ module VisEngine
       uri = URI('http://localhost:8090/jobs')
       params = {
         'appName' => 'test',
-        'classPath' => 'spark.jobserver.WordCountExample'
+        'classPath' => 'spark.jobserver.WordCountExample',
+        'sync' => 'true'
       }
       uri.query = URI.encode_www_form(params)
       req = Net::HTTP::Post.new(uri)

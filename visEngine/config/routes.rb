@@ -1,3 +1,3 @@
 VisEngine::Engine.routes.draw do
-  root 'application#reduceData'
+  get '/reduce_data', to: 'application#reduce_data'
 end
