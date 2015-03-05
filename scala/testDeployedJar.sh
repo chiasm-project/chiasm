@@ -1,1 +1,1 @@
-curl -d 'options = " {\"dataset\":\"adult\",\"cube\":{\"dimensions\":[{\"name\":\"race\"}],\"measures\":[{\"aggregationOp\":\"count\"}]}} "' 'localhost:8090/jobs?appName=test&classPath=visEditor.DataReductionJob&sync=true'
+curl -d '{"options":"fds"}' 'localhost:8090/jobs?appName=DataReduction&classPath=visEditor.DataReductionJob&sync=true'
