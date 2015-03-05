@@ -9,22 +9,24 @@
     <script>
 
     function reduceData(dataset, dimension, callback){
+        var options = {
+            dataset: dataset,
+            cube: {
+                dimensions: [
+                    { name: dimension }
+                ],
+                measures: [
+                    { aggregationOp: "count" }
+                ]
+            }
+        };
+        console.log(JSON.stringify(options));
         // Invoke the API for computing data cubes with Spark.
         $.ajax({
             type: "GET",
             url: "reduce_data",
             data: {
-                options: JSON.stringify({
-                    dataset: dataset,
-                    cube: {
-                        dimensions: [
-                            { name: dimension }
-                        ],
-                        measures: [
-                            { aggregationOp: "count" }
-                        ]
-                    }
-                })
+                options: JSON.stringify(options)
             },
             success: function(data){
                 //callback(JSON.parse(data));

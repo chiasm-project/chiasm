@@ -16,7 +16,7 @@ module VisEngine
       }
       uri.query = URI.encode_www_form(params)
       req = Net::HTTP::Post.new(uri)
-      req.body = "input.string = a b c a b see"
+      req.body = "options = " + options
       res = Net::HTTP.start(uri.host, uri.port) {|http|
         http.request(req)
       }
