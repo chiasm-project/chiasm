@@ -12,6 +12,10 @@ val schema = sc.textFile("/Users/Kelleher/repos/data/uci_ml/adult/schema.csv").c
 // Values are integer indices for use with parsed CSV rows.
 val attributeIndices = schema.map(_.split(",")(0).trim).zipWithIndex.toMap
 
+//case class Sample(n: Int, withReplacement: Boolean = true, seed: Int = 0)
+//case class Filter(name: String)
+//case class Aggregate(dimensions: List[Dimension], measures: List[Measure])
+
 // Define types for options arguments.
 // name is the attribute name.
 // i is the index of this attribute in rows.
