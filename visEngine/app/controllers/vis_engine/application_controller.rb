@@ -3,8 +3,7 @@ module VisEngine
   class ApplicationController < ActionController::Base
     def reduce_data
 
-      #options = params[:options] 
-
+      options = params[:options] 
 
       # This connects to a local Spark-Jobserver to run the
       # data reduction service. See
