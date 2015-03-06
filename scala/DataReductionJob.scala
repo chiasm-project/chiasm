@@ -98,12 +98,12 @@ object DataReductionJob extends SparkJob {
     ).collect()
 
     // Return the cube to the client as nicely formatted JSON.
-    write(cube.map( observation =>
+    cube.map( observation =>
       (
         dimensions.map(_.name).zip(observation._1) :::
         measures.map(_.name).zip(observation._2)
       ).toMap
-    ))
+    )
   }
 
   override def validate(sc:SparkContext, config: Config): SparkJobValidation = {
