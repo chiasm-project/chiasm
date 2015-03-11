@@ -39,7 +39,7 @@ The runtime environment is responsible for synchronizing the JSON configuration 
 
 This organization allows a dynamic configuration structure to drive the state of the application, and also allows changes resulting from user interactions with runtime components to be propagated to the configuration.
 
-![Runtime Diagram](http://curran.github.io/images/visEditor/Runtime.png)
+![Runtime Diagram](http://curran.github.io/images/chiasm/Runtime.png)
 
 This diagram illustrates that
 
@@ -49,8 +49,8 @@ This diagram illustrates that
  
 See also
 
- * [runtime module](http://curran.github.io/visEditor/docs/runtime.html) Documents exact configuration structure.
- * [runtime module unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/runtimeTest.js) Contains simple example plugins.
+ * [runtime module](http://curran.github.io/chiasm/docs/runtime.html) Documents exact configuration structure.
+ * [runtime module unit tests](https://github.com/curran/chiasm/blob/gh-pages/tests/runtimeTest.js) Contains simple example plugins.
 
 Status: partially implemented.
 
@@ -60,9 +60,9 @@ Since the architecture for this visualization editor is based on plugins, severa
 
 ### Layout
 
-The `layout` module provides tiled visualization containers using a nested box layout, computed by the [computeLayout module](http://curran.github.io/visEditor/docs/computeLayout.html).
+The `layout` module provides tiled visualization containers using a nested box layout, computed by the [computeLayout module](http://curran.github.io/chiasm/docs/computeLayout.html).
 
-![Boxes](http://curran.github.io/images/visEditor/boxes.png)
+![Boxes](http://curran.github.io/images/chiasm/boxes.png)
 
 The above image is a simple example of a nested box layout, which can be configured by the following JSON structure.
 
@@ -90,10 +90,10 @@ The following features are also present:
 
 Status: implemented.
 
- * [computeLayout module](http://curran.github.io/visEditor/docs/computeLayout.html) This implements the nested box layout algorithm.
- * [computeLayout module unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/computeLayoutTest.js)
- * [layout plugin](http://curran.github.io/visEditor/docs/plugins/layout.html) This provides the interface between the runtime and nested box layout algorithm.
- * [layout plugin unit tests](https://github.com/curran/visEditor/blob/gh-pages/tests/plugins/layout.js)
+ * [computeLayout module](http://curran.github.io/chiasm/docs/computeLayout.html) This implements the nested box layout algorithm.
+ * [computeLayout module unit tests](https://github.com/curran/chiasm/blob/gh-pages/tests/computeLayoutTest.js)
+ * [layout plugin](http://curran.github.io/chiasm/docs/plugins/layout.html) This provides the interface between the runtime and nested box layout algorithm.
+ * [layout plugin unit tests](https://github.com/curran/chiasm/blob/gh-pages/tests/plugins/layout.js)
 
 
 ### JSON Editor
@@ -102,13 +102,13 @@ The JSON Editor is an enhanced text editor for editing the configuration at runt
 
 Status: implemented, leveraging [CodeMirror](http://codemirror.net/) and [Inlet](http://enjalot.github.io/Inlet/).
 
- * [configEditor plugin](http://curran.github.io/visEditor/docs/plugins/configEditor.html)
+ * [configEditor plugin](http://curran.github.io/chiasm/docs/plugins/configEditor.html)
 
 ### DummyVis
 
 The DummyVis plugin is a simple example that demonstrates basic plugin structure and functionality. This plugin serves as a placeholder for real visualizations.
 
-![DummyVis](http://curran.github.io/images/visEditor/dummyVis.png)
+![DummyVis](http://curran.github.io/images/chiasm/dummyVis.png)
 
 Features include:
 
@@ -123,7 +123,7 @@ Features include:
 
 Status: implemented.
 
- * [dummyVis plugin](http://curran.github.io/visEditor/docs/plugins/dummyVis.html)
+ * [dummyVis plugin](http://curran.github.io/chiasm/docs/plugins/dummyVis.html)
 
 ### Links
 
@@ -131,7 +131,7 @@ The Links plugin is for establishing bindings between runtime components. By spe
 
 Plugins may be created for components that make requests to a server. The inputs and outputs of such components may also be bound to visualizations in order to establish linked views with an asynchronous step that leverages server-side capabilities.
 
-Status: Prototype implemented in [Ph. D. prototype](https://github.com/curran/phd/blob/gh-pages/prototype/src/links.js), yet to be ported into visEditor.
+Status: Prototype implemented in [Ph. D. prototype](https://github.com/curran/phd/blob/gh-pages/prototype/src/links.js), yet to be ported into chiasm.
 
 ## Visualization Plugins
 
