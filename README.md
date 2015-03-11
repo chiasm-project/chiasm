@@ -39,7 +39,7 @@ The runtime environment is responsible for synchronizing the JSON configuration 
 
 This organization allows a dynamic configuration structure to drive the state of the application, and also allows changes resulting from user interactions with runtime components to be propagated to the configuration.
 
-![Runtime Diagram](http://curran.github.io/images/chiasm/Runtime.png)
+![Runtime Diagram](http://curran.github.io/images/visEditor/Runtime.png)
 
 This diagram illustrates that
 
@@ -62,7 +62,7 @@ Since the architecture for this visualization editor is based on plugins, severa
 
 The `layout` module provides tiled visualization containers using a nested box layout, computed by the [computeLayout module](http://curran.github.io/chiasm/docs/computeLayout.html).
 
-![Boxes](http://curran.github.io/images/chiasm/boxes.png)
+![Boxes](http://curran.github.io/images/visEditor/boxes.png)
 
 The above image is a simple example of a nested box layout, which can be configured by the following JSON structure.
 
@@ -108,7 +108,7 @@ Status: implemented, leveraging [CodeMirror](http://codemirror.net/) and [Inlet]
 
 The DummyVis plugin is a simple example that demonstrates basic plugin structure and functionality. This plugin serves as a placeholder for real visualizations.
 
-![DummyVis](http://curran.github.io/images/chiasm/dummyVis.png)
+![DummyVis](http://curran.github.io/images/visEditor/dummyVis.png)
 
 Features include:
 
