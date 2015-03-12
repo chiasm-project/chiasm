@@ -2,16 +2,23 @@
 
 An interactive visualization platform.
 
+![](http://curran.github.io/images/chiasm/chiasm_architecture.png)
+![](http://curran.github.io/images/chiasm/vis_flow.png)
+
+## Client
+
+The Chiasm client side is a runtime environment for interactive visualizations.
+
 [Try it out!](http://curran.github.io/chiasm/client/) Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
 [![Config Editor Demo](http://curran.github.io/images/visEditor/configEditorDemo.png)](http://curran.github.io/chiasm/client/)
 
-The core concept of this project is that visualizations can be instantiated, configured with data, arranged on the screen, and coupled together to produce linked views. A JSON configuration structure defines the entire state of an application. The configuration refers to plugins by name, which are loaded at runtime and called upon to instantiate instances of visualizations and other components. Configuration changes can be made at runtime using an interactive JSON editor. The JSON configuration also updates in response to user interactions with visualizations.
+The core concept is that visualizations can be instantiated, configured with data, arranged on the screen, and coupled together to produce linked views. A JSON configuration structure defines the entire state of an application. The configuration refers to plugins by name, which are loaded at runtime and called upon to instantiate instances of visualizations and other components. Configuration changes can be made at runtime using an interactive JSON editor. The JSON configuration also updates in response to user interactions with visualizations.
 
 This system is intented to be embedded within larger Web applications to address interactive visualization needs. The JSON configuration can serve as the primary integration point. For example, the configuration could be automatically generated based on available data or user configurations. The configuration can also support collaboration, in that it can be stored to disk and restored at a later date (potentially by a user other than the original author).
 
 Long term goals also include undo/redo support and real-time collaboration between many users.
 
-## Configuration Structure and Runtime Environment
+### Configuration Structure and Runtime Environment
 
 A configuration is a JSON object encapsulating an application state. This configuration contains specifications for a set of runtime components, each of which has:
 
