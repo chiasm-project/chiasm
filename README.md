@@ -2,8 +2,17 @@
 
 An interactive visualization platform.
 
-![](http://curran.github.io/images/chiasm/chiasm_architecture.png)
 ![](http://curran.github.io/images/chiasm/vis_flow.png)
+The overall system design for interactive Big Data visualization.
+
+Chiasm is a standalone system with client side and server side components, but is also designed such that it can integrated with [Chorus](https://github.com/Chorus/chorus), a collaboration platform for Big Data.
+
+The project directory structure is as follows:
+
+ * `client` The client-side visualization environment.
+ * `server`
+   * `dataReductionService` The [Spark](https://spark.apache.org/)-based data reduction service.
+   * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with Chorus.
 
 ## Client
 
@@ -165,3 +174,27 @@ The following features common to many D3-based visualizations can reside in a se
  * [Hovering](http://curran.github.io/model/examples/d3LinkedChoropleth/)
 
 Status: Several visualizations have been implemented using ModelJS in [model-contrib](http://curran.github.io/model-contrib/#/) and as examples in the [ModelJS project](https://github.com/curran/model/tree/gh-pages/examples). All of these are yet to be ported into the Chiasm project.
+
+## Server
+
+Chorus is designed to handle large data sets that reside in clusters and may be terabytes in size. It is not feasible to transfer the entire data set to the client for visualization. It would be possible to render the visualization on the server side, however with this approach interactive response times would be lost. Also, the argument could be made that a human could not perceive all the data points anyway, and there are not enough pixels to represent every point. Therefore the visualizations will reside entirely on the client side, and data reduction methods must be employed on the server side. Data reduction methods are surveyed nicely in the paper [imMens: Real‐time Visual Querying of Big Data](https://www.google.com/url?q=https%3A%2F%2Fidl.cs.washington.edu%2Ffiles%2F2013-imMens-EuroVis.pdf&sa=D&sntz=1&usg=AFQjCNH5qDFCuBGeAKXLiTYUXK5SJZI1VQ).
+
+Chiasm will support three data reduction methods that visualizations will sit on top of:
+
+ * Sampling
+ * Filtering
+ * Aggregation
+
+Sampling involves selecting a random subset of rows from the table to be visualized. This is great for preserving the distribution, but may remove outliers that are important to retain for certain analyses.
+
+Filtering involves including only rows that meet certain criteria. For example, if a data set contains rows covering an entire year, a filter might choose to only view rows for a single day. Multiple columns can be filtered simultaneously.
+
+Aggregation involves on-demand data cube computation. This can compute counts, sums, and averages over multidimensional groupings. For example, rows with timestamps can be binned into hours or days, or rows with location information can be binned into geographic regions. Also, any categorical field can be used to compute counts or sums to, for example, power a Bar Chart.
+
+![](http://curran.github.io/images/chiasm/data_reduction_detail.png)
+The data reduction service pipeline, implemented in Scala using Apache Spark, found in `chiasm/server/dataReductionService`.
+
+This data reduction service runs within an instance of [Spark-Jobserver](https://github.com/spark-jobserver/spark-jobserver). The VisEngine Ruby middleware provides a REST API for the Chiasm client to access the data reduction service.
+
+![](http://curran.github.io/images/chiasm/chiasm_architecture.png)
+The system architecture connecting interactive visualizations to "Big Data" residing in HDFS.
