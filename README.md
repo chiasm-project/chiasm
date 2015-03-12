@@ -6,6 +6,7 @@ An interactive visualization platform.
 ![](http://curran.github.io/images/chiasm/vis_flow.png)
 
 The overall system design for interactive Big Data visualization.
+
 ---------------------------------------
 
 Chiasm is a standalone system with client side and server side components, but is also designed such that it can integrated with [Chorus](https://github.com/Chorus/chorus), a collaboration platform for Big Data.
@@ -198,6 +199,7 @@ Aggregation involves on-demand data cube computation. This can compute counts, s
 ![](http://curran.github.io/images/chiasm/data_reduction_detail.png)
 
 The data reduction service pipeline, implemented in Scala using Apache Spark, found in `chiasm/server/dataReductionService`.
+
 ---------------------------------------
 
 This data reduction service runs within an instance of [Spark-Jobserver](https://github.com/spark-jobserver/spark-jobserver). The VisEngine Ruby middleware provides a REST API for the Chiasm client to access the data reduction service.
@@ -206,4 +208,5 @@ This data reduction service runs within an instance of [Spark-Jobserver](https:/
 ![](http://curran.github.io/images/chiasm/chiasm_architecture.png)
 
 The system architecture connecting interactive visualizations to "Big Data" residing in HDFS.
+
 ---------------------------------------
