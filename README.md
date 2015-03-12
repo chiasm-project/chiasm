@@ -49,7 +49,7 @@ This diagram illustrates that
  
 See also
 
- * [runtime module](http://curran.github.io/chiasm/docs/runtime.html) Documents exact configuration structure.
+ * [runtime module](http://curran.github.io/chiasm/visEngine/public/vis_engine/docs/runtime.html) Documents exact configuration structure.
  * [runtime module unit tests](https://github.com/curran/chiasm/blob/gh-pages/tests/runtimeTest.js) Contains simple example plugins.
 
 Status: partially implemented.

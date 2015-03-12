@@ -1,4 +1,8 @@
-// This script uses Gulp to run unit tests.
+// This script uses Gulp to
+//
+//  * run unit tests
+//  * generate documentation using Docco
+//  * copy client-side files into the Rails engine
 //
 // Draws from previous work found at
 // https://github.com/curran/JSProjectTemplate/blob/master/gulpfile.js
@@ -55,4 +59,10 @@ gulp.task("docs", ["docs-clean", "test"], function () {
 });
 gulp.task("docs-clean", function (cb) {
   del("docs", cb);
+});
+
+// Copy client-side files into the Rails Engine.
+gulp.task("copy-to-engine", function (){
+  // TODO implement this
+  // TODO bundle and minify AMD modules
 });
