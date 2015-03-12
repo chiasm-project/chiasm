@@ -2,7 +2,7 @@
 
 An interactive visualization platform.
 
-[Try it out!](http://curran.github.io/chiasm/visEngine/public/vis_engine/) Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
+[Try it out!](http://curran.github.io/chiasm/client/) Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
 [![Config Editor Demo](http://curran.github.io/images/visEditor/configEditorDemo.png)](http://curran.github.io/chiasm/visEngine/public/vis_engine/)
 
 The core concept of this project is that visualizations can be instantiated, configured with data, arranged on the screen, and coupled together to produce linked views. A JSON configuration structure defines the entire state of an application. The configuration refers to plugins by name, which are loaded at runtime and called upon to instantiate instances of visualizations and other components. Configuration changes can be made at runtime using an interactive JSON editor. The JSON configuration also updates in response to user interactions with visualizations.
@@ -49,8 +49,8 @@ This diagram illustrates that
  
 See also
 
- * [runtime module](http://curran.github.io/chiasm/visEngine/public/vis_engine/docs/runtime.html) Documents exact configuration structure.
- * [runtime module unit tests](https://github.com/curran/chiasm/blob/gh-pages/tests/runtimeTest.js) Contains simple example plugins.
+ * [runtime module](http://curran.github.io/chiasm/client/docs/runtime.html) Documents exact configuration structure.
+ * [runtime module unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/runtimeTest.js) Contains simple example plugins.
 
 Status: partially implemented.
 
@@ -60,7 +60,7 @@ Since the architecture for this visualization editor is based on plugins, severa
 
 ### Layout
 
-The `layout` module provides tiled visualization containers using a nested box layout, computed by the [computeLayout module](http://curran.github.io/chiasm/docs/computeLayout.html).
+The `layout` module provides tiled visualization containers using a nested box layout, computed by the [computeLayout module](http://curran.github.io/chiasm/client/docs/computeLayout.html).
 
 ![Boxes](http://curran.github.io/images/visEditor/boxes.png)
 
@@ -90,10 +90,10 @@ The following features are also present:
 
 Status: implemented.
 
- * [computeLayout module](http://curran.github.io/chiasm/docs/computeLayout.html) This implements the nested box layout algorithm.
- * [computeLayout module unit tests](https://github.com/curran/chiasm/blob/gh-pages/tests/computeLayoutTest.js)
- * [layout plugin](http://curran.github.io/chiasm/docs/plugins/layout.html) This provides the interface between the runtime and nested box layout algorithm.
- * [layout plugin unit tests](https://github.com/curran/chiasm/blob/gh-pages/tests/plugins/layout.js)
+ * [computeLayout module](http://curran.github.io/chiasm/client/docs/computeLayout.html) This implements the nested box layout algorithm.
+ * [computeLayout module unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/computeLayoutTest.js)
+ * [layout plugin](http://curran.github.io/chiasm/client/docs/plugins/layout.html) This provides the interface between the runtime and nested box layout algorithm.
+ * [layout plugin unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/plugins/layout.js)
 
 
 ### JSON Editor
@@ -102,7 +102,7 @@ The JSON Editor is an enhanced text editor for editing the configuration at runt
 
 Status: implemented, leveraging [CodeMirror](http://codemirror.net/) and [Inlet](http://enjalot.github.io/Inlet/).
 
- * [configEditor plugin](http://curran.github.io/chiasm/docs/plugins/configEditor.html)
+ * [configEditor plugin](http://curran.github.io/chiasm/client/docs/plugins/configEditor.html)
 
 ### DummyVis
 
@@ -123,7 +123,7 @@ Features include:
 
 Status: implemented.
 
- * [dummyVis plugin](http://curran.github.io/chiasm/docs/plugins/dummyVis.html)
+ * [dummyVis plugin](http://curran.github.io/chiasm/client/docs/plugins/dummyVis.html)
 
 ### Links
 
