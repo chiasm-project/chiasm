@@ -143,7 +143,7 @@ Targets for implementation as plugins include the following visualizations:
  * [Crossfilter](http://curran.github.io/model-contrib/#/examples/linkedViews)
  * [Line Chart](http://curran.github.io/model-contrib/#/examples/lineChart)
  * [Parallel Coordinates](https://github.com/curran/model/tree/gh-pages/examples/d3ParallelCoordinates)
- * [Stacked Area Chart](https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea)[https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea]
+ * [Stacked Area Chart](https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea)
  * [Choropleth Map (using Leaflet)](http://leafletjs.com/examples/choropleth.html)
  * [Calendar View](http://bl.ocks.org/mbostock/4063318)
 
