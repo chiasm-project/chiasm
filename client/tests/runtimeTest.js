@@ -30,7 +30,7 @@ function SimplePlugin(){
   return Model({
     publicProperties: ["message"]
   });
-};
+}
 
 // Demonstrates having default values for public properties.
 function SimplePluginWithDefaults(){
@@ -39,7 +39,7 @@ function SimplePluginWithDefaults(){
     x: 5,
     y: 10
   });
-};
+}
 
 // This plugin demonstrates basic use of the DOM.
 // Notice that the runtime is passed into the plugin,
@@ -62,7 +62,7 @@ function DOMPlugin(runtime){
   };
   
   return model;
-};
+}
 
 describe("runtime", function () {
 

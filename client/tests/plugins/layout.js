@@ -29,7 +29,7 @@ function expectValues(runtime, values, callback){
     runtime.getComponent(alias, function(component){
       component.when(property, function(value){
         propertyPath.forEach(function(key){
-          value = value[key]
+          value = value[key];
         });
         expect(value).to.equal(expectedValue);
         cb();

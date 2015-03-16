@@ -12,7 +12,7 @@ var computeLayout = requirejs("computeLayout");
 describe("computeLayout", function () {
 
   it("single component", function() {
-    var layout = "foo"
+    var layout = "foo",
         box = { width: 100, height: 100 },
         result = computeLayout(layout, null, box);
 
