@@ -9,14 +9,8 @@
           {
             "orientation": "vertical",
             "children": [
-              "A",
-              {
-                "orientation": "horizontal",
-                "children": [
-                  "B",
-                  "C"
-                ]
-              }
+              "barChart",
+              "lineChart"
             ]
           }
         ]
@@ -29,7 +23,7 @@
       "size": "400px"
     }
   },
-  "A": {
+  "barChart": {
     "plugin": "barChart",
     "state": {
       "xColumn": "letter",
@@ -49,33 +43,45 @@
       "colorDefault": "#000000"
     }
   },
-  "B": {
-    "plugin": "dummyVis",
+  "lineChart": {
+    "plugin": "lineChart",
     "state": {
-      "text": "B",
-      "color": "#a8f0ff",
-      "size": 2
+      "xColumn": "timestamp",
+      "xAxisLabel": "Time",
+      "yColumn": "temperature",
+      "yAxisLabel": "Temperature",
+      "margin": {
+        "top": 10,
+        "right": 10,
+        "bottom": 60,
+        "left": 70
+      },
+      "xAxisLabelOffset": 1.9,
+      "yAxisLabelOffset": 1.4,
+      "colorDefault": "#000000"
     }
   },
-  "C": {
-    "plugin": "dummyVis",
-    "state": {
-      "text": "C",
-      "color": "#ffe2a8"
-    }
-  },
-  "dataLoader": {
+  "barChartCSVLoader": {
     "plugin": "csvLoader",
     "state": {
       "csvPath": "testData/simpleBars.csv",
       "numericColumns": ["frequency"]
     }
   },
+  "lineChartCSVLoader": {
+    "plugin": "csvLoader",
+    "state": {
+      "csvPath": "testData/simpleTime.csv",
+      "numericColumns": ["temperature"],
+      "timeColumns": ["timestamp"]
+    }
+  },
   "links": {
     "plugin": "links",
     "state": {
       "bindings": [
-        "dataLoader.data -> A.data"
+        "barChartCSVLoader.data -> barChart.data",
+        "lineChartCSVLoader.data -> lineChart.data"
       ]
     }
   }

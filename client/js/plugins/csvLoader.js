@@ -6,15 +6,23 @@ define(["d3", "model"], function (d3, Model) {
 
     var model = Model({
       publicProperties: [ "csvPath" ],
-      numericColumns: []
+      numericColumns: [],
+      timeColumns: []
     });
 
-    model.when(["csvPath", "numericColumns"], function (csvPath, numericColumns){
+    model.when(["csvPath", "numericColumns", "timeColumns"], function (csvPath, numericColumns, timeColumns){
       d3.csv(csvPath, function(d){
+
         // Parse strings into numbers for numeric columns.
         numericColumns.forEach(function(column){
           d[column] = +d[column];
         });
+
+        // Parse strings into dates for time columns.
+        timeColumns.forEach(function(column){
+          d[column] = new Date(d[column]);
+        });
+
         return d;
       },function(err, data){
         console.log(data);
