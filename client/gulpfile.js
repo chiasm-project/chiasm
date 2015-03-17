@@ -41,8 +41,11 @@ var del = require("del");
 var srcCode = "js/**/*.js",
     testCode = "tests/**/*.js";
 
+// Client side files are built into this directory.
+var visEnginePublicDir = "../server/visEngine/public/vis_engine/js/";
+
 // This task runs when the "gulp" command is executed with no arguments.
-gulp.task("default", ["lint", "test", "docs"]);
+gulp.task("default", ["lint", "test", "docs", "copy-to-engine"]);
 
 // Run JSHint.
 gulp.task("lint", function () {
@@ -69,6 +72,9 @@ gulp.task("docs-clean", function (cb) {
 
 // Copy client-side files into the Rails Engine.
 gulp.task("copy-to-engine", function (){
+  return gulp.src(srcCode)
+    .pipe(gulp.dest(visEnginePublicDir));
+  
   // TODO implement this
   // TODO bundle and minify AMD modules
 });

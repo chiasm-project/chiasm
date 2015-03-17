@@ -30,10 +30,20 @@
     }
   },
   "A": {
-    "plugin": "dummyVis",
+    "plugin": "barChart",
     "state": {
-      "text": "A",
-      "color": "#a8ffd0"
+      "xColumn": "letter",
+      "xAxisLabel": "Letter",
+      "yColumn": "frequency",
+      "yAxisLabel": "Frequency",
+      "sortColumn": "frequency",
+      "sortOrder": "descending",
+      "margin": {
+        "top": 10,
+        "right": 10,
+        "bottom": 60,
+        "left": 70
+      }
     }
   },
   "B": {
@@ -49,6 +59,21 @@
     "state": {
       "text": "C",
       "color": "#ffe2a8"
+    }
+  },
+  "dataLoader": {
+    "plugin": "csvLoader",
+    "state": {
+      "csvPath": "testData/simpleBars.csv",
+      "numericColumns": ["frequency"]
+    }
+  },
+  "links": {
+    "plugin": "links",
+    "state": {
+      "bindings": [
+        "dataLoader.data -> A.data"
+      ]
     }
   }
 }

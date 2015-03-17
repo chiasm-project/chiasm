@@ -2,66 +2,53 @@
   "layout": {
     "plugin": "layout",
     "state": {
-      "layout": [
-        "horizontal",
-        "editor",
-        [
-          "vertical",
-          "datasetPicker",
-          "correlationMatrix",
-          "scatterPlot"
+      "layout": {
+        "orientation": "horizontal",
+        "children": [
+          "editor",
+          {
+            "orientation": "vertical",
+            "children": [
+              "A",
+              {
+                "orientation": "horizontal",
+                "children": [
+                  "B",
+                  "C"
+                ]
+              }
+            ]
+          }
         ]
-      ]
-    }
-  },
-  "links": {
-    "plugin": "links",
-    "state": {
-      "links": [
-        [
-          "datasetPicker.lineWidth",
-          "correlationMatrix.lineWidth"
-        ],
-        [
-          "datasetPicker.loading",
-          "correlationMatrix.pending"
-        ],
-        [
-          "correlationMatrix.lineWidth",
-          "scatterPlot.lineWidth"
-        ]
-      ]
+      }
     }
   },
   "editor": {
-    "plugin": "dummyVis",
+    "plugin": "configEditor",
     "state": {
-      "text": "Editor",
-      "color": "rgb(237,72,174)",
-      "size": "100px"
+      "size": "400px"
     }
   },
-  "datasetPicker": {
+  "A": {
     "plugin": "dummyVis",
     "state": {
-      "text": "Dataset Picker",
-      "color": "rgb(237,72,174)",
-      "size": "150px"
+      "text": "A",
+      "color": "#a8ffd0"
     }
   },
-  "correlationMatrix": {
+  "B": {
     "plugin": "dummyVis",
     "state": {
-      "text": "Correlation Matrix",
-      "color": "rgb(147,123,191)",
-      "size": "1.5"
+      "text": "B",
+      "color": "#a8f0ff",
+      "size": 2
     }
   },
-  "scatterPlot": {
+  "C": {
     "plugin": "dummyVis",
     "state": {
-      "text": "Scatter Plot",
-      "color": "rgb(19,231,214)"
+      "text": "C",
+      "color": "#ffe2a8"
     }
   }
 }

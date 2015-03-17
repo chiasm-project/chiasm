@@ -81,7 +81,7 @@ define(["d3", "model"], function (d3, Model) {
     model.when("box", function (box) {
 
       // Set the CSS `left` and `top` properties to move the
-      // SVG to `(box.x, box.y)` relative to its paren div.
+      // SVG to `(box.x, box.y)` relative to its container.
       svg
         .style("left", box.x + "px")
         .style("top", box.y + "px");

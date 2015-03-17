@@ -1,4 +1,3 @@
-
 // A simple Node.js static file server for development use.
 //
 // To run, first install Node.js and Express, then run the shell command
