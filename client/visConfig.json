@@ -43,7 +43,10 @@
         "right": 10,
         "bottom": 60,
         "left": 70
-      }
+      },
+      "xAxisLabelOffset": 1.9,
+      "yAxisLabelOffset": 1.4,
+      "colorDefault": "#000000"
     }
   },
   "B": {
