@@ -74,7 +74,7 @@ This diagram illustrates that
  
 See also
 
- * [runtime module](http://curran.github.io/chiasm/client/docs/runtime.html) Documents exact configuration structure.
+ * [runtime module](http://curran.github.io/chiasm/client/docs/core/runtime.html) Documents exact configuration structure.
  * [runtime module unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/runtimeTest.js) Contains simple example plugins.
 
 Status: partially implemented.
@@ -85,7 +85,7 @@ Since the architecture for this visualization editor is based on plugins, severa
 
 ### Layout
 
-The `layout` module provides tiled visualization containers using a nested box layout, computed by the [computeLayout module](http://curran.github.io/chiasm/client/docs/computeLayout.html).
+The `layout` module provides tiled visualization containers using a nested box layout.
 
 ![Boxes](http://curran.github.io/images/visEditor/boxes.png)
 
@@ -115,7 +115,7 @@ The following features are also present:
 
 Status: implemented.
 
- * [computeLayout module](http://curran.github.io/chiasm/client/docs/computeLayout.html) This implements the nested box layout algorithm.
+ * [computeLayout module](http://curran.github.io/chiasm/client/docs/plugins/computeLayout.html) This implements the nested box layout algorithm.
  * [computeLayout module unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/computeLayoutTest.js)
  * [layout plugin](http://curran.github.io/chiasm/client/docs/plugins/layout.html) This provides the interface between the runtime and nested box layout algorithm.
  * [layout plugin unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/plugins/layout.js)
@@ -156,17 +156,22 @@ The Links plugin is for establishing bindings between runtime components. By spe
 
 Plugins may be created for components that make requests to a server. The inputs and outputs of such components may also be bound to visualizations in order to establish linked views with an asynchronous step that leverages server-side capabilities.
 
-Status: Prototype implemented in [Ph. D. prototype](https://github.com/curran/phd/blob/gh-pages/prototype/src/links.js), yet to be ported into chiasm.
+Status: implemented.
+
+ * [links plugin](http://curran.github.io/chiasm/client/docs/plugins/links.html)
 
 ## Visualization Plugins
 
+Implemented visualization plugins:
+
+ * [bar chart](http://curran.github.io/chiasm/client/docs/plugins/barChart.html)
+ * [line chart](http://curran.github.io/chiasm/client/docs/plugins/lineChart.html)
+
 Targets for implementation as plugins include the following visualizations:
 
- * [Bar Chart](http://curran.github.io/model-contrib/#/examples/barChart)
  * [Scatter Plot](http://curran.github.io/model-contrib/#/examples/scatterPlot)
  * [Table](http://curran.github.io/model-contrib/#/examples/table)
  * [Crossfilter](http://curran.github.io/model-contrib/#/examples/linkedViews)
- * [Line Chart](http://curran.github.io/model-contrib/#/examples/lineChart)
  * [Parallel Coordinates](https://github.com/curran/model/tree/gh-pages/examples/d3ParallelCoordinates)
  * [Stacked Area Chart](https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea)
  * [Choropleth Map (using Leaflet)](http://leafletjs.com/examples/choropleth.html)
@@ -181,8 +186,6 @@ The following features common to many D3-based visualizations can reside in a se
  * [Brushing (draw a rectangle to select many records)](http://curran.github.io/model-contrib/#/examples/linkedViews)
  * [Selecting (click/tap to select a single value)](http://curran.github.io/model/examples/d3LinkedChoropleth/)
  * [Hovering](http://curran.github.io/model/examples/d3LinkedChoropleth/)
-
-Status: Several visualizations have been implemented using ModelJS in [model-contrib](http://curran.github.io/model-contrib/#/) and as examples in the [ModelJS project](https://github.com/curran/model/tree/gh-pages/examples). All of these are yet to be ported into the Chiasm project.
 
 ## Server
 
@@ -213,5 +216,3 @@ This data reduction service runs within an instance of [Spark-Jobserver](https:/
 ![](http://curran.github.io/images/chiasm/chiasm_architecture.png)
 
 The system architecture connecting interactive visualizations to "Big Data" residing in HDFS.
-
----------------------------------------
