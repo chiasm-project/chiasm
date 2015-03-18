@@ -1,0 +1,54 @@
+{
+  "layout": {
+    "plugin": "layout",
+    "state": {
+      "layout": {
+        "orientation": "horizontal",
+        "children": [
+          "editor",
+          {
+            "orientation": "vertical",
+            "children": [
+              "A",
+              {
+                "orientation": "horizontal",
+                "children": [
+                  "B",
+                  "C"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "editor": {
+    "plugin": "configEditor",
+    "state": {
+      "size": "400px"
+    }
+  },
+  "A": {
+    "plugin": "dummyVis",
+    "state": {
+      "text": "A",
+      "color": "#a8ffd0"
+    }
+  },
+  "B": {
+    "plugin": "dummyVis",
+    "state": {
+      "text": "B",
+      "color": "#a8f0ff",
+      "size": 2
+    }
+  },
+  "C": {
+    "plugin": "dummyVis",
+    "state": {
+      "text": "C",
+      "color": "#ffe2a8"
+    }
+  }
+}
