@@ -6,7 +6,7 @@
 //  * https://github.com/curran/overseer/blob/master/src/overseer.js
 //
 // Created by Curran Kelleher Feb 2015
-define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, async, _) {
+define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model, async, _) {
 
   // This module provides a runtime constructor function that returns a `runtime`
   // object with the following properties:
@@ -97,7 +97,7 @@ define(["model", "configDiff", "async", "lodash"], function (Model, configDiff, 
       if(plugin in runtime.plugins){
         callback(runtime.plugins[plugin]);
       } else {
-        require(["plugins/" + plugin], callback);
+        requirejs(["plugins/" + plugin], callback);
       }
     }
 

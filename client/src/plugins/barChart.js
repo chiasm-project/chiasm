@@ -1,7 +1,7 @@
-// A reusable line chart module.
-// Draws from D3 line chart example http://bl.ocks.org/mbostock/3883245
+// A reusable bar chart module.
+// Draws from D3 bar chart example http://bl.ocks.org/mbostock/3885304
 // Curran Kelleher March 2015
-define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
+define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _) {
 
   // A representation for an optional Model property that is not specified.
   // This allows the "when" approach to support optional properties.
@@ -10,10 +10,10 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
   var None = "__none__";
 
   // The constructor function, accepting default values.
-  return function LineChart(runtime) {
+  return function BarChart(runtime) {
 
-    // Create a Model instance for the line chart.
-    // This will serve as the line chart's public API.
+    // Create a Model instance for the bar chart.
+    // This will serve as the public API for the visualization.
     var model = Model({
       publicProperties: [
         "xColumn",
@@ -35,14 +35,24 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
       model.getX = function (d) { return d[xColumn]; };
     });
 
+    // Handle sorting.
+    model.when(["sortColumn", "sortOrder", "data"], function (sortColumn, sortOrder, data){
+      var sortedData = _.sortBy(data, sortColumn);
+      if(sortOrder === "descending"){
+        sortedData.reverse();
+      }
+      model.sortedData = sortedData;
+    });
+
     // Compute the domain of the X attribute.
-    model.when(["data", "getX"], function (data, getX) {
-      model.xDomain = d3.extent(data, getX);
+    model.when(["sortedData", "getX"], function (sortedData, getX) {
+      model.xDomain = sortedData.map(getX);
     });
 
     // Compute the X scale.
-    model.when(["data", "xDomain", "width"], function (data, xDomain, width) {
-      model.xScale = d3.time.scale().domain(xDomain).range([0, width]);
+    model.barPadding = 0.1;
+    model.when(["xDomain", "width", "barPadding"], function (xDomain, width, padding) {
+      model.xScale = d3.scale.ordinal().domain(xDomain).rangeRoundBands([0, width], padding);
     });
 
     // Generate a function for getting the scaled X value.
@@ -57,6 +67,7 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     });
 
     // Move the X axis label based on its specified offset.
+    model.xAxisLabelOffset = 1.9;
     model.when(["xAxisText", "xAxisLabelOffset"], function (xAxisText, xAxisLabelOffset){
       xAxisText.attr("dy", xAxisLabelOffset + "em");
     });
@@ -87,8 +98,24 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     });
 
     // Compute the domain of the Y attribute.
-    model.when(["data", "getY"], function (data, getY) {
-      model.yDomain = d3.extent(data, getY);
+
+    // Allow the API client to optionally specify fixed min and max values.
+    model.yDomainMin = None;
+    model.yDomainMax = None;
+    model.when(["data", "getY", "yDomainMin", "yDomainMax"],
+        function (data, getY, yDomainMin, yDomainMax) {
+
+      if(yDomainMin === None && yDomainMax === None){
+        model.yDomain = d3.extent(data, getY);
+      } else {
+        if(yDomainMin === None){
+          yDomainMin = d3.min(data, getY);
+        }
+        if(yDomainMax === None){
+          yDomainMax = d3.max(data, getY);
+        }
+        model.yDomain = [yDomainMin, yDomainMax];
+      }
     });
 
     // Compute the Y scale.
@@ -111,6 +138,7 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     });
     
     // Move the Y axis label based on its specified offset.
+    model.yAxisLabelOffset = 1.4; // Unit is CSS "em"s
     model.when(["yAxisText", "yAxisLabelOffset"], function (yAxisText, yAxisLabelOffset){
       yAxisText.attr("dy", "-" + yAxisLabelOffset + "em");
     });
@@ -129,11 +157,7 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     model.when(["yAxisG", "yScale"], function (yAxisG, yScale) {
       yAxisG.call(d3.svg.axis().orient("left").scale(yScale));
     });
-
-    // Add an SVG group to contain the line.
-    model.when("g", function (g) {
-      model.lineG = g.append("g");
-    });
+    
 
     // Allow the API client to optionally specify a color column.
     model.colorColumn = None;
@@ -156,27 +180,21 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
       }
     });
 
-    // Draw the lines.
-    model.lineColumn = None;
-    model.when(["lineG", "data", "lineColumn", "getXScaled", "getYScaled", "getColorScaled"],
-        function (lineG, data, lineColumn, getXScaled, getYScaled, getColorScaled){
-      var linesData = d3.nest()
-            .key(function(d){ 
-              if(lineColumn !== None){
-                return d[lineColumn]; // Have multiple lines.
-              } else {
-                return "X";// have only a single line.
-              }
-            })
-            .entries(data),
-          line = d3.svg.line().x(getXScaled).y(getYScaled),
-          lines = lineG.selectAll(".line").data(linesData);
+    // Add an SVG group to contain the line.
+    model.when("g", function (g) {
+      model.barsG = g.append("g");
+    });
 
-      lines.enter().append("path").attr("class", "line");
-      lines
-        .attr("d", function(d){ return line(d.values); })
-        .style("stroke", getColorScaled);
-      lines.exit().remove();
+    // Draw the bars.
+    model.when(["barsG", "sortedData", "getXScaled", "getYScaled", "xScale", "height", "getColorScaled"],
+        function (barsG, sortedData, getXScaled, getYScaled, xScale, height, getColorScaled){
+      var bars = barsG.selectAll("rect").data(sortedData);
+      bars.enter().append("rect");
+      bars.attr("x", getXScaled).attr("y", getYScaled)
+        .attr("width", xScale.rangeBand())
+        .attr("height", function(d) { return height - getYScaled(d); })
+        .attr("fill", getColorScaled);
+      bars.exit().remove();
     });
 
     return model;

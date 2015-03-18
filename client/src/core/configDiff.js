@@ -5,7 +5,7 @@
 // https://github.com/curran/overseer/blob/master/src/configDiff.js
 //
 // Created by Curran Kelleher Feb 2015
-define(["lodash", "action"], function (_, Action) {
+define(["./action", "lodash"], function (Action, _) {
 
   return function configDiff(oldConfig, newConfig){
     var actions = [],
