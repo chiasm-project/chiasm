@@ -19,15 +19,16 @@ The project directory structure is as follows:
    * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with Chorus.
 
 ## Examples
+[![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1)
 [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
 
 ## Client
 
 The Chiasm client side is a runtime environment for interactive visualizations.
 
-[Try it out!](http://curran.github.io/chiasm/client/) Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
+[Try it out!](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/) Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
 
-[![Config Editor Demo](http://curran.github.io/images/visEditor/configEditorDemo.png)](http://curran.github.io/chiasm/client/)
+[![Config Editor Demo](http://curran.github.io/images/visEditor/configEditorDemo.png)](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/)
 
 The core concept is that visualizations can be instantiated, configured with data, arranged on the screen, and coupled together to produce linked views. A JSON configuration structure defines the entire state of an application. The configuration refers to plugins by name, which are loaded at runtime and called upon to instantiate instances of visualizations and other components. Configuration changes can be made at runtime using an interactive JSON editor. The JSON configuration also updates in response to user interactions with visualizations.
 
