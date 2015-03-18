@@ -1,7 +1,7 @@
 // A reusable line chart module.
 // Draws from D3 line chart example http://bl.ocks.org/mbostock/3883245
 // Curran Kelleher March 2015
-define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
+define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
 
   // A representation for an optional Model property that is not specified.
   // This allows the "when" approach to support optional properties.

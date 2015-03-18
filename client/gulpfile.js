@@ -38,7 +38,7 @@ var docco = require("gulp-docco");
 var del = require("del");
 
 // Source code glob expressions for /src and /test.
-var srcCode = "js/**/*.js",
+var srcCode = "src/**/*.js",
     testCode = "tests/**/*.js";
 
 // Client side files are built into this directory.

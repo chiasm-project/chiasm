@@ -3,7 +3,11 @@
 
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
-var expect = require("chai").expect;
+var expect = require("chai").expect,
+    requirejs = require("../configureRequireJS.js"),
+    async = requirejs("async"),
+    Model = requirejs("model"),
+    Runtime = requirejs("chiasm/runtime");
 
 // Use JSDOM for DOM manipulation in Node.
 // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
@@ -11,12 +15,6 @@ var expect = require("chai").expect;
 document = require("jsdom").jsdom();
 window = document.parentWindow;
 
-var requirejs = require("../configureRequireJS.js");
-
-var async = requirejs("async");
-
-var Runtime = requirejs("runtime");
-var Model = requirejs("model");
 
 // A utility function for asserting component property values.
 function expectValues(runtime, values, callback){

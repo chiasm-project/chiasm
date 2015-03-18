@@ -10,7 +10,9 @@ define(["d3", "model"], function (d3, Model) {
       timeColumns: []
     });
 
-    model.when(["csvPath", "numericColumns", "timeColumns"], function (csvPath, numericColumns, timeColumns){
+    model.when(["csvPath", "numericColumns", "timeColumns"],
+        function (csvPath, numericColumns, timeColumns){
+
       d3.csv(csvPath, function(d){
 
         // Parse strings into numbers for numeric columns.
@@ -25,7 +27,6 @@ define(["d3", "model"], function (d3, Model) {
 
         return d;
       },function(err, data){
-        console.log(data);
         model.data = data;
       });
     });

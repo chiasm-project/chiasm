@@ -1,14 +1,7 @@
 {
-  "name": "visEditor",
+  "name": "chiasm",
   "version": "1.0.0",
   "description": "A pluggable interactive visualization runtime environment.",
-  "main": "js/main.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/curran/visEditor.git"
@@ -18,10 +11,6 @@
   ],
   "author": "Curran Kelleher",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/curran/visEditor/issues"
-  },
-  "homepage": "https://github.com/curran/visEditor",
   "devDependencies": {
     "chai": "^1.10.0",
     "del": "^1.1.1",

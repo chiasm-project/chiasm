@@ -178,7 +178,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
 
         // Remove public property listeners.
         if(alias in listeners){
-          listeners[alias].forEach(component.removeListener);
+          listeners[alias].forEach(component.cancel);
           delete listeners[alias];
         }
 

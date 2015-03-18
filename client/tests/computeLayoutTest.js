@@ -3,11 +3,9 @@
 
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
-var expect = require("chai").expect;
-
-var requirejs = require("./configureRequireJS.js");
-
-var computeLayout = requirejs("computeLayout");
+var expect = require("chai").expect,
+    requirejs = require("./configureRequireJS.js"),
+    computeLayout = requirejs("plugins/computeLayout");
 
 describe("computeLayout", function () {
 

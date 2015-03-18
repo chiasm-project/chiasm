@@ -3,12 +3,10 @@
 
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
-var expect = require("chai").expect;
-
-var requirejs = require("./configureRequireJS.js");
-
-var configDiff = requirejs("configDiff");
-var Action = requirejs("action");
+var expect = require("chai").expect,
+    requirejs = require("./configureRequireJS.js"),
+    configDiff = requirejs("chiasm/configDiff"),
+    Action = requirejs("chiasm/action");
 
 // Calls configDiff and converts the returned actions to strings,
 // for clean looking tests.

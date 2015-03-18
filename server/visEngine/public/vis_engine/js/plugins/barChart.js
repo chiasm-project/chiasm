@@ -1,7 +1,7 @@
 // A reusable bar chart module.
 // Draws from D3 bar chart example http://bl.ocks.org/mbostock/3885304
 // Curran Kelleher March 2015
-define(["d3", "model", "reactivis", "lodash"], function (d3, Model, reactivis, _) {
+define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _) {
 
   // A representation for an optional Model property that is not specified.
   // This allows the "when" approach to support optional properties.

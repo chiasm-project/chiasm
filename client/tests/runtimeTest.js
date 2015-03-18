@@ -8,16 +8,14 @@
 
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
-var expect = require("chai").expect;
+var expect = require("chai").expect,
 
 // Use JSDOM for DOM manipulation in Node.
 // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
-var document = require("jsdom").jsdom();
-
-var requirejs = require("./configureRequireJS.js");
-
-var Runtime = requirejs("runtime");
-var Model = requirejs("model");
+    document = require("jsdom").jsdom(),
+    requirejs = require("./configureRequireJS.js"),
+    Runtime = requirejs("chiasm/runtime"),
+    Model = requirejs("model");
 
 // The simplest possible plugin just returns a ModelJS model.
 function SimplestPlugin(){

@@ -42,7 +42,9 @@ Created by Curran Kelleher Mar 2015</p>
       timeColumns: []
     });
 
-    model.when([<span class="hljs-string">"csvPath"</span>, <span class="hljs-string">"numericColumns"</span>, <span class="hljs-string">"timeColumns"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(csvPath, numericColumns, timeColumns)</span></span>{
+    model.when([<span class="hljs-string">"csvPath"</span>, <span class="hljs-string">"numericColumns"</span>, <span class="hljs-string">"timeColumns"</span>],
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(csvPath, numericColumns, timeColumns)</span></span>{
+
       d3.csv(csvPath, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{</pre></div></div>
             
         </li>
@@ -81,7 +83,6 @@ Created by Curran Kelleher Mar 2015</p>
 
         <span class="hljs-keyword">return</span> d;
       },<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, data)</span></span>{
-        <span class="hljs-built_in">console</span>.log(data);
         model.data = data;
       });
     });
