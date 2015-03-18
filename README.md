@@ -18,6 +18,9 @@ The project directory structure is as follows:
    * `dataReductionService` The [Spark](https://spark.apache.org/)-based data reduction service.
    * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with Chorus.
 
+## Examples
+[![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
+
 ## Client
 
 The Chiasm client side is a runtime environment for interactive visualizations.
