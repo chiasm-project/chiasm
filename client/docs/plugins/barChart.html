@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>barChart.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>barChart.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>A reusable bar chart module.
+Draws from D3 bar chart example <a href="http://bl.ocks.org/mbostock/3885304">http://bl.ocks.org/mbostock/3885304</a>
+Curran Kelleher March 2015</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">"d3"</span>, <span class="hljs-string">"model"</span>, <span class="hljs-string">"reactivis"</span>, <span class="hljs-string">"lodash"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d3, Model, reactivis, _)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>A representation for an optional Model property that is not specified.
+This allows the “when” approach to support optional properties.
+Inspired by Scala”s Option type.
+See <a href="http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null">http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> None = <span class="hljs-string">"__none__"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>The constructor function, accepting default values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">BarChart</span><span class="hljs-params">(runtime)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Create a Model instance for the bar chart.
+This will serve as the public API for the visualization.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> model = Model({
+      publicProperties: [
+        <span class="hljs-string">"xColumn"</span>,
+        <span class="hljs-string">"yColumn"</span>,
+        <span class="hljs-string">"xAxisLabel"</span>,
+        <span class="hljs-string">"yAxisLabel"</span>,
+        <span class="hljs-string">"xAxisLabelOffset"</span>,
+        <span class="hljs-string">"yAxisLabelOffset"</span>
+      ],
+      container: runtime.div
+    });
+
+    reactivis.svg(model);
+    reactivis.title(model);
+    reactivis.margin(model);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Generate a function for getting the X value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"data"</span>, <span class="hljs-string">"xColumn"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data, xColumn)</span> </span>{
+      model.getX = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d[xColumn]; };
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Handle sorting.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"sortColumn"</span>, <span class="hljs-string">"sortOrder"</span>, <span class="hljs-string">"data"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(sortColumn, sortOrder, data)</span></span>{
+      <span class="hljs-keyword">var</span> sortedData = _.sortBy(data, sortColumn);
+      <span class="hljs-keyword">if</span>(sortOrder === <span class="hljs-string">"descending"</span>){
+        sortedData.reverse();
+      }
+      model.sortedData = sortedData;
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Compute the domain of the X attribute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"sortedData"</span>, <span class="hljs-string">"getX"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(sortedData, getX)</span> </span>{
+      model.xDomain = sortedData.map(getX);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Compute the X scale.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.barPadding = <span class="hljs-number">0.1</span>;
+    model.when([<span class="hljs-string">"xDomain"</span>, <span class="hljs-string">"width"</span>, <span class="hljs-string">"barPadding"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(xDomain, width, padding)</span> </span>{
+      model.xScale = d3.scale.ordinal().domain(xDomain).rangeRoundBands([<span class="hljs-number">0</span>, width], padding);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Generate a function for getting the scaled X value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"data"</span>, <span class="hljs-string">"xScale"</span>, <span class="hljs-string">"getX"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data, xScale, getX)</span> </span>{
+      model.getXScaled = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> xScale(getX(d)); };
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Set up the X axis.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"g"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(g)</span> </span>{
+      model.xAxisG = g.append(<span class="hljs-string">"g"</span>).attr(<span class="hljs-string">"class"</span>, <span class="hljs-string">"x axis"</span>);
+      model.xAxisText = model.xAxisG.append(<span class="hljs-string">"text"</span>).style(<span class="hljs-string">"text-anchor"</span>, <span class="hljs-string">"middle"</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Move the X axis label based on its specified offset.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.xAxisLabelOffset = <span class="hljs-number">1.9</span>;
+    model.when([<span class="hljs-string">"xAxisText"</span>, <span class="hljs-string">"xAxisLabelOffset"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(xAxisText, xAxisLabelOffset)</span></span>{
+      xAxisText.attr(<span class="hljs-string">"dy"</span>, xAxisLabelOffset + <span class="hljs-string">"em"</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Update the X axis transform when height changes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"xAxisG"</span>, <span class="hljs-string">"height"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(xAxisG, height)</span> </span>{
+      xAxisG.attr(<span class="hljs-string">"transform"</span>, <span class="hljs-string">"translate(0,"</span> + height + <span class="hljs-string">")"</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Center the X axis label when width changes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"xAxisText"</span>, <span class="hljs-string">"width"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(xAxisText, width)</span> </span>{
+      xAxisText.attr(<span class="hljs-string">"x"</span>, width / <span class="hljs-number">2</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Update the X axis based on the X scale.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"xAxisG"</span>, <span class="hljs-string">"xScale"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(xAxisG, xScale)</span> </span>{
+      xAxisG.call(d3.svg.axis().orient(<span class="hljs-string">"bottom"</span>).scale(xScale));
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Update X axis label.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"xAxisText"</span>, <span class="hljs-string">"xAxisLabel"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(xAxisText, xAxisLabel)</span> </span>{
+      xAxisText.text(xAxisLabel);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Generate a function for getting the Y value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"data"</span>, <span class="hljs-string">"yColumn"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data, yColumn)</span> </span>{
+      model.getY = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d[yColumn]; };
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Compute the domain of the Y attribute.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Allow the API client to optionally specify fixed min and max values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.yDomainMin = None;
+    model.yDomainMax = None;
+    model.when([<span class="hljs-string">"data"</span>, <span class="hljs-string">"getY"</span>, <span class="hljs-string">"yDomainMin"</span>, <span class="hljs-string">"yDomainMax"</span>],
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data, getY, yDomainMin, yDomainMax)</span> </span>{
+
+      <span class="hljs-keyword">if</span>(yDomainMin === None &amp;&amp; yDomainMax === None){
+        model.yDomain = d3.extent(data, getY);
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span>(yDomainMin === None){
+          yDomainMin = d3.min(data, getY);
+        }
+        <span class="hljs-keyword">if</span>(yDomainMax === None){
+          yDomainMax = d3.max(data, getY);
+        }
+        model.yDomain = [yDomainMin, yDomainMax];
+      }
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Compute the Y scale.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"data"</span>, <span class="hljs-string">"yDomain"</span>, <span class="hljs-string">"height"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data, yDomain, height)</span> </span>{
+      model.yScale = d3.scale.linear().domain(yDomain).range([height, <span class="hljs-number">0</span>]);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Generate a function for getting the scaled Y value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"data"</span>, <span class="hljs-string">"yScale"</span>, <span class="hljs-string">"getY"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data, yScale, getY)</span> </span>{
+      model.getYScaled = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> yScale(getY(d)); };
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Set up the Y axis.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"g"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(g)</span> </span>{
+      model.yAxisG = g.append(<span class="hljs-string">"g"</span>).attr(<span class="hljs-string">"class"</span>, <span class="hljs-string">"y axis"</span>);
+      model.yAxisText = model.yAxisG.append(<span class="hljs-string">"text"</span>)
+        .style(<span class="hljs-string">"text-anchor"</span>, <span class="hljs-string">"middle"</span>)
+        .attr(<span class="hljs-string">"transform"</span>, <span class="hljs-string">"rotate(-90)"</span>)
+        .attr(<span class="hljs-string">"y"</span>, <span class="hljs-number">0</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Move the Y axis label based on its specified offset.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.yAxisLabelOffset = <span class="hljs-number">1.4</span>; <span class="hljs-comment">// Unit is CSS "em"s</span>
+    model.when([<span class="hljs-string">"yAxisText"</span>, <span class="hljs-string">"yAxisLabelOffset"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(yAxisText, yAxisLabelOffset)</span></span>{
+      yAxisText.attr(<span class="hljs-string">"dy"</span>, <span class="hljs-string">"-"</span> + yAxisLabelOffset + <span class="hljs-string">"em"</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Center the Y axis label when height changes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"yAxisText"</span>, <span class="hljs-string">"height"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(yAxisText, height)</span> </span>{
+      yAxisText.attr(<span class="hljs-string">"x"</span>, -height / <span class="hljs-number">2</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Update Y axis label.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"yAxisText"</span>, <span class="hljs-string">"yAxisLabel"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(yAxisText, yAxisLabel)</span> </span>{
+      yAxisText.text(yAxisLabel);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Update the Y axis based on the Y scale.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"yAxisG"</span>, <span class="hljs-string">"yScale"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(yAxisG, yScale)</span> </span>{
+      yAxisG.call(d3.svg.axis().orient(<span class="hljs-string">"left"</span>).scale(yScale));
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Allow the API client to optionally specify a color column.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.colorColumn = None;
+    model.colorRange = None;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>The default color of circles (CSS color string).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.colorDefault = <span class="hljs-string">"black"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Set up the color scale.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"colorColumn"</span>, <span class="hljs-string">"data"</span>, <span class="hljs-string">"colorDefault"</span>, <span class="hljs-string">"colorRange"</span>],
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(colorColumn, data, colorDefault, colorRange)</span></span>{
+      <span class="hljs-keyword">if</span>(colorColumn !== None &amp;&amp; colorRange !== None){
+        <span class="hljs-keyword">var</span> getColor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> d[colorColumn]; },
+            colorScale = d3.scale.ordinal()
+              .domain(data.map(getColor))
+              .range(colorRange);
+        model.getColorScaled = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> colorScale(getColor(d)); };
+      } <span class="hljs-keyword">else</span> {
+        model.getColorScaled = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> colorDefault; };
+      }
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Add an SVG group to contain the line.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"g"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(g)</span> </span>{
+      model.barsG = g.append(<span class="hljs-string">"g"</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Draw the bars.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"barsG"</span>, <span class="hljs-string">"sortedData"</span>, <span class="hljs-string">"getXScaled"</span>, <span class="hljs-string">"getYScaled"</span>, <span class="hljs-string">"xScale"</span>, <span class="hljs-string">"height"</span>, <span class="hljs-string">"getColorScaled"</span>],
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(barsG, sortedData, getXScaled, getYScaled, xScale, height, getColorScaled)</span></span>{
+      <span class="hljs-keyword">var</span> bars = barsG.selectAll(<span class="hljs-string">"rect"</span>).data(sortedData);
+      bars.enter().append(<span class="hljs-string">"rect"</span>);
+      bars.attr(<span class="hljs-string">"x"</span>, getXScaled).attr(<span class="hljs-string">"y"</span>, getYScaled)
+        .attr(<span class="hljs-string">"width"</span>, xScale.rangeBand())
+        .attr(<span class="hljs-string">"height"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> height - getYScaled(d); })
+        .attr(<span class="hljs-string">"fill"</span>, getColorScaled);
+      bars.exit().remove();
+    });
+
+    <span class="hljs-keyword">return</span> model;
+  };
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

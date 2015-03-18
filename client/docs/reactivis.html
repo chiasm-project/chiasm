@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>reactivis.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>reactivis.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span></span>{
+  <span class="hljs-keyword">var</span> reactivis = {};
+
+  reactivis.svg = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Create the SVG element from the container DOM element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"container"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(container)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Use CSS <code>position: absolute;</code> so setting <code>left</code> and <code>top</code> CSS
+properties later will position the SVG relative to containing div.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      model.svg = d3.select(container).append(<span class="hljs-string">"svg"</span>)
+        .style(<span class="hljs-string">"position"</span>, <span class="hljs-string">"absolute"</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Adjust the SVG based on the <code>box</code> property.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"svg"</span>, <span class="hljs-string">"box"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(svg, box)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Set the CSS <code>left</code> and <code>top</code> properties to move the
+SVG to <code>(box.x, box.y)</code> relative to its container.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      svg
+        .style(<span class="hljs-string">"left"</span>, box.x + <span class="hljs-string">"px"</span>)
+        .style(<span class="hljs-string">"top"</span>, box.y + <span class="hljs-string">"px"</span>);
+
+      svg.attr(<span class="hljs-string">"width"</span>, box.width).attr(<span class="hljs-string">"height"</span>, box.height);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Create the SVG group that will contain the visualization.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"svg"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(svg)</span> </span>{
+      model.g = svg.append(<span class="hljs-string">"g"</span>);
+    });
+  };
+
+  reactivis.title = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Create the title text element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"g"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(g)</span></span>{
+      model.titleText = g.append(<span class="hljs-string">"text"</span>).attr(<span class="hljs-string">"class"</span>, <span class="hljs-string">"title-text"</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Center the title text when width changes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"titleText"</span>, <span class="hljs-string">"width"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(titleText, width)</span> </span>{
+      titleText.attr(<span class="hljs-string">"x"</span>, width / <span class="hljs-number">2</span>);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Update the title text based on the <code>title</code> property.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"titleText"</span>, <span class="hljs-string">"title"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(titleText, title)</span></span>{
+      titleText.text(title);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Update the title text offset.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.titleOffset = <span class="hljs-number">1</span>;
+    model.when([<span class="hljs-string">"titleText"</span>, <span class="hljs-string">"titleOffset"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(titleText, titleOffset)</span></span>{
+      titleText.attr(<span class="hljs-string">"dy"</span>, titleOffset + <span class="hljs-string">"em"</span>);
+    });
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Encapsulates conventional D3 margins.
+See <a href="http://bl.ocks.org/mbostock/3019563">http://bl.ocks.org/mbostock/3019563</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  reactivis.margin = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Compute the inner box from the outer box and margin.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"box"</span>, <span class="hljs-string">"margin"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(box, margin)</span> </span>{
+      model.width = box.width - margin.left - margin.right;
+      model.height = box.height - margin.top - margin.bottom;
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Adjust the translation of the group based on the margin.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"g"</span>, <span class="hljs-string">"margin"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(g, margin)</span> </span>{
+      g.attr(<span class="hljs-string">"transform"</span>, <span class="hljs-string">"translate("</span> + margin.left + <span class="hljs-string">","</span> + margin.top + <span class="hljs-string">")"</span>);
+    });
+  };
+
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+
+  <span class="hljs-keyword">return</span> reactivis;
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -33,14 +33,17 @@
       "sortColumn": "frequency",
       "sortOrder": "descending",
       "margin": {
-        "top": 10,
+        "top": 45,
         "right": 10,
         "bottom": 60,
         "left": 70
       },
       "xAxisLabelOffset": 1.9,
       "yAxisLabelOffset": 1.4,
-      "colorDefault": "#000000"
+      "colorDefault": "#000000",
+      "title": "Bar Chart",
+      "titleOffset": -0.269568,
+      "yDomainMin": 0
     }
   },
   "lineChart": {
@@ -51,29 +54,37 @@
       "yColumn": "temperature",
       "yAxisLabel": "Temperature",
       "margin": {
-        "top": 10,
+        "top": 45,
         "right": 10,
         "bottom": 60,
         "left": 70
       },
       "xAxisLabelOffset": 1.9,
       "yAxisLabelOffset": 1.4,
-      "colorDefault": "#000000"
+      "colorDefault": "#000000",
+      "title": "Line Chart",
+      "titleOffset": -0.271724544
     }
   },
   "barChartCSVLoader": {
     "plugin": "csvLoader",
     "state": {
       "csvPath": "testData/simpleBars.csv",
-      "numericColumns": ["frequency"]
+      "numericColumns": [
+        "frequency"
+      ]
     }
   },
   "lineChartCSVLoader": {
     "plugin": "csvLoader",
     "state": {
       "csvPath": "testData/simpleTime.csv",
-      "numericColumns": ["temperature"],
-      "timeColumns": ["timestamp"]
+      "numericColumns": [
+        "temperature"
+      ],
+      "timeColumns": [
+        "timestamp"
+      ]
     }
   },
   "links": {
