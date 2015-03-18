@@ -1,6 +1,6 @@
 {
   "name": "visEditor",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "homepage": "https://github.com/curran/visEditor",
   "authors": [
     "Curran <curran.kelleher@gmail.com>"
@@ -11,7 +11,13 @@
     "LICENSE",
     "README.md",
     "bower.json",
-    "server"
+    "server",
+    "client/docs",
+    "client/gulpfile.js",
+    "client/node_modules",
+    "client/package.json",
+    "client/tests",
+    "client/visConfig.json"
   ],
   "dependencies": {
   }
