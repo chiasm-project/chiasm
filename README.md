@@ -169,7 +169,7 @@ Implemented visualization plugins:
 
 Targets for implementation as plugins include the following visualizations:
 
- * [Scatter Plot](http://curran.github.io/model-contrib/#/examples/scatterPlot)
+ * [Scatter Plot](http://bl.ocks.org/curran/9e04ccfebeb84bcdc76c)
  * [Table](http://curran.github.io/model-contrib/#/examples/table)
  * [Crossfilter](http://curran.github.io/model-contrib/#/examples/linkedViews)
  * [Parallel Coordinates](https://github.com/curran/model/tree/gh-pages/examples/d3ParallelCoordinates)
@@ -187,11 +187,13 @@ The following features common to many D3-based visualizations can reside in a se
  * [Selecting (click/tap to select a single value)](http://curran.github.io/model/examples/d3LinkedChoropleth/)
  * [Hovering](http://curran.github.io/model/examples/d3LinkedChoropleth/)
 
+If you're interested in contributing plugins, please get in touch! Feel free to email me at curran.kelleher@gmail.com or send a pull request with your work.
+
 ## Server
 
 Chorus is designed to handle large data sets that reside in clusters and may be terabytes in size. It is not feasible to transfer the entire data set to the client for visualization. It would be possible to render the visualization on the server side, however with this approach interactive response times would be lost. Also, the argument could be made that a human could not perceive all the data points anyway, and there are not enough pixels to represent every point. Therefore the visualizations will reside entirely on the client side, and data reduction methods must be employed on the server side. Data reduction methods are surveyed nicely in the paper [imMens: Real‐time Visual Querying of Big Data](https://www.google.com/url?q=https%3A%2F%2Fidl.cs.washington.edu%2Ffiles%2F2013-imMens-EuroVis.pdf&sa=D&sntz=1&usg=AFQjCNH5qDFCuBGeAKXLiTYUXK5SJZI1VQ).
 
-Chiasm will support three data reduction methods that visualizations will sit on top of:
+Chiasm supports three data reduction methods that visualizations will sit on top of:
 
  * Sampling
  * Filtering
@@ -216,3 +218,24 @@ This data reduction service runs within an instance of [Spark-Jobserver](https:/
 ![](http://curran.github.io/images/chiasm/chiasm_architecture.png)
 
 The system architecture connecting interactive visualizations to "Big Data" residing in HDFS.
+---------------------------------------
+
+The process for running the server for development mode is as follows:
+
+ * Start [spark-jobserver](https://github.com/spark-jobserver/spark-jobserver).
+ * Use the scripts under `server/dataReductionService` to build and deploy the data reduction service JAR:
+
+```
+cd server/dataReductionService
+sh deployJarToJobserver.sh
+```
+
+ * Start the dummy Rails application that mounts the visEngine Rails Engine:
+
+```
+cd server/visEngine/test/dummy/
+bundle # Necessary for installing Gems before first run only.
+bin/rails server
+```
+
+ * Access the demo at [localhost:3000/vis_engine/bar_chart_demo](localhost:3000/vis_engine/bar_chart_demo)
