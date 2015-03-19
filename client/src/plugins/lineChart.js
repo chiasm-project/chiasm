@@ -32,16 +32,18 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
     reactivis.color(model);
 
     // Append a mouse target for intercepting mouse hover events.
-    model.when("g", function(g){
-      model.mouseTarget = g.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .style("fill", "none")
-        .style("pointer-events", "all");
-
-      model.selectedXLine = g.append("line")
-        .attr("class", "hover-line")
-
+    model.enableHoverLine = false;
+    model.when(["enableHoverLine", "g"], function(enableHoverLine, g){
+      if(enableHoverLine){
+        model.mouseTarget = g.append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .style("fill", "none")
+          .style("pointer-events", "all");
+  
+        model.selectedXLine = g.append("line")
+          .attr("class", "hover-line")
+      }
     });
 
     model.when(["mouseTarget", "xScale"], function(mouseTarget, xScale){
