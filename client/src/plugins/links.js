@@ -20,6 +20,8 @@ define(["d3", "model"], function (d3, Model) {
             targetProperty = target[1];
         runtime.getComponent(sourceAlias, function(sourceComponent){
           runtime.getComponent(targetAlias, function(targetComponent){
+
+            // TODO keep track of listeners and remove old ones when bindings change.
             sourceComponent.when(sourceProperty, function(value){
               targetComponent[targetProperty] = value;
             });

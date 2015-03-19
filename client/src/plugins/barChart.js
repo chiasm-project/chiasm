@@ -7,7 +7,7 @@ define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model,
   // This allows the "when" approach to support optional properties.
   // Inspired by Scala"s Option type.
   // See http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null
-  var None = "__none__";
+  var None = reactivis.None;
 
   // The constructor function, accepting default values.
   return function BarChart(runtime) {
@@ -29,6 +29,7 @@ define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model,
     reactivis.svg(model);
     reactivis.title(model);
     reactivis.margin(model);
+    reactivis.color(model);
 
     // Generate a function for getting the X value.
     model.when(["data", "xColumn"], function (data, xColumn) {
@@ -157,40 +158,28 @@ define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model,
     model.when(["yAxisG", "yScale"], function (yAxisG, yScale) {
       yAxisG.call(d3.svg.axis().orient("left").scale(yScale));
     });
-    
 
-    // Allow the API client to optionally specify a color column.
-    model.colorColumn = None;
-    model.colorRange = None;
-    
-    // The default color of circles (CSS color string).
-    model.colorDefault = "black";
-
-    // Set up the color scale.
-    model.when(["colorColumn", "data", "colorDefault", "colorRange"],
-        function (colorColumn, data, colorDefault, colorRange){
-      if(colorColumn !== None && colorRange !== None){
-        var getColor = function (d){ return d[colorColumn]; },
-            colorScale = d3.scale.ordinal()
-              .domain(data.map(getColor))
-              .range(colorRange);
-        model.getColorScaled = function (d){ return colorScale(getColor(d)); };
-      } else {
-        model.getColorScaled = function (d){ return colorDefault; };
-      }
-    });
 
     // Add an SVG group to contain the line.
     model.when("g", function (g) {
       model.barsG = g.append("g");
     });
 
+    // For a bar chart, use the X column for color.
+    model.when(["xColumn", "colorScale"], function(xColumn, colorScale){
+      model.getColorScaled = function(d){ return colorScale(d[xColumn]); };
+    });
+
     // Draw the bars.
-    model.when(["barsG", "sortedData", "getXScaled", "getYScaled", "xScale", "height", "getColorScaled"],
-        function (barsG, sortedData, getXScaled, getYScaled, xScale, height, getColorScaled){
-      var bars = barsG.selectAll("rect").data(sortedData);
+    model.when(["barsG", "sortedData", "getXScaled", "getYScaled", "xScale", "height", "getColorScaled", "getX"],
+        function (barsG, sortedData, getXScaled, getYScaled, xScale, height, getColorScaled, getX){
+      var bars = barsG.selectAll("rect").data(sortedData, getX);
       bars.enter().append("rect");
-      bars.attr("x", getXScaled).attr("y", getYScaled)
+      bars
+        // TODO generalize transitions
+        .transition().ease("linear").duration(200)
+        .attr("x", getXScaled)
+        .attr("y", getYScaled)
         .attr("width", xScale.rangeBand())
         .attr("height", function(d) { return height - getYScaled(d); })
         .attr("fill", getColorScaled);

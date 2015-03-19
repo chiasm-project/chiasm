@@ -7,7 +7,7 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
   // This allows the "when" approach to support optional properties.
   // Inspired by Scala"s Option type.
   // See http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null
-  var None = "__none__";
+  var None = reactivis.None;
 
   // The constructor function, accepting default values.
   return function LineChart(runtime) {
@@ -29,6 +29,45 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
     reactivis.svg(model);
     reactivis.title(model);
     reactivis.margin(model);
+    reactivis.color(model);
+
+    // Append a mouse target for intercepting mouse hover events.
+    model.when("g", function(g){
+      model.mouseTarget = g.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .style("fill", "none")
+        .style("pointer-events", "all");
+
+      model.selectedXLine = g.append("line")
+        .attr("class", "hover-line")
+
+    });
+
+    model.when(["mouseTarget", "xScale"], function(mouseTarget, xScale){
+      mouseTarget.on("mousemove", function () {
+        var mouseX = d3.mouse(mouseTarget.node())[0];
+        model.selectedX = xScale.invert(mouseX);
+      });
+    });
+
+    model.when(["selectedX", "selectedXLine", "xScale", "height"],
+        function (selectedX, selectedXLine, xScale, height) {
+      var xPixel = xScale(selectedX);
+      selectedXLine
+        .attr("x1", xPixel)
+        .attr("x2", xPixel)
+        .attr("y1", 0)
+        .attr("y2", height);
+    });
+
+    model.when(["mouseTarget", "width"], function (mouseTarget, width) {
+      mouseTarget.attr("width", width);
+    });
+
+    model.when(["mouseTarget", "height"], function (mouseTarget, height) {
+      mouseTarget.attr("height", height);
+    });
 
     // Generate a function for getting the X value.
     model.when(["data", "xColumn"], function (data, xColumn) {
@@ -135,31 +174,11 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
       model.lineG = g.append("g");
     });
 
-    // Allow the API client to optionally specify a color column.
-    model.colorColumn = None;
-    model.colorRange = None;
-    
-    // The default color of circles (CSS color string).
-    model.colorDefault = "black";
-
-    // Set up the color scale.
-    model.when(["colorColumn", "data", "colorDefault", "colorRange"],
-        function (colorColumn, data, colorDefault, colorRange){
-      if(colorColumn !== None && colorRange !== None){
-        var getColor = function (d){ return d[colorColumn]; },
-            colorScale = d3.scale.ordinal()
-              .domain(data.map(getColor))
-              .range(colorRange);
-        model.getColorScaled = function (d){ return colorScale(getColor(d)); };
-      } else {
-        model.getColorScaled = function (d){ return colorDefault; };
-      }
-    });
 
     // Draw the lines.
     model.lineColumn = None;
-    model.when(["lineG", "data", "lineColumn", "getXScaled", "getYScaled", "getColorScaled"],
-        function (lineG, data, lineColumn, getXScaled, getYScaled, getColorScaled){
+    model.when(["lineG", "data", "lineColumn", "getXScaled", "getYScaled", "colorScale"],
+        function (lineG, data, lineColumn, getXScaled, getYScaled, colorScale){
       var linesData = d3.nest()
             .key(function(d){ 
               if(lineColumn !== None){
@@ -175,7 +194,7 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
       lines.enter().append("path").attr("class", "line");
       lines
         .attr("d", function(d){ return line(d.values); })
-        .style("stroke", getColorScaled);
+        .style("stroke", function(d){ return colorScale(d.key); });
       lines.exit().remove();
     });
 
