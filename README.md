@@ -223,6 +223,7 @@ This data reduction service runs within an instance of [Spark-Jobserver](https:/
 ![](http://curran.github.io/images/chiasm/chiasm_architecture.png)
 
 The system architecture connecting interactive visualizations to "Big Data" residing in HDFS.
+
 ---------------------------------------
 
 The process for running the server for development mode is as follows:
