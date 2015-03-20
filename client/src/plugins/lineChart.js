@@ -171,7 +171,7 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
       yAxisG.call(d3.svg.axis().orient("left").scale(yScale));
     });
 
-    // Add an SVG group to contain the line.
+    // Add an SVG group to contain the lines.
     model.when("g", function (g) {
       model.lineG = g.append("g");
     });
