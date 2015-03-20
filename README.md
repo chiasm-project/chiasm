@@ -1,4 +1,4 @@
-# Chiasm
+# [Chiasm](http://www.merriam-webster.com/audio.php?file=chiasm02&word=chiasm&text=)
 
 > The optic nerve fibres on the nasal sides of each retina cross over to the opposite side of the brain via the optic nerve at the optic **chiasm**. -- [Wikipedia](http://en.wikipedia.org/wiki/Optic_chiasm)
 
