@@ -1,11 +1,15 @@
 # Chiasm
 
-An interactive visualization platform.
+The optic nerve fibres on the nasal sides of each retina cross over to the opposite side of the brain via the optic nerve at the optic **chiasm**. -- [Wikipedia](http://en.wikipedia.org/wiki/Optic_chiasm)
+
+The **Chiasm** was a junction of interdimensional networks and corridors that allowed for instantaneous travel over long distances of space. - [Dr. Who](http://tardis.wikia.com/wiki/Chiasm)
+
+**Chiasm**, this project, connects the "brain" of Big Data and cluster computing to the eyes of users through interactive data visualization, allowing them to travel long distances in multidimensional data space instantaneously.
 
 ---------------------------------------
 ![](http://curran.github.io/images/chiasm/vis_flow.png)
 
-The overall system design for interactive Big Data visualization.
+The overall system design for interactive Big Data visualization with Chiasm.
 
 ---------------------------------------
 
