@@ -1,11 +1,15 @@
-# Chiasm
+# [Chiasm](http://www.merriam-webster.com/audio.php?file=chiasm02&word=chiasm&text=)
 
-An interactive visualization platform.
+> The optic nerve fibres on the nasal sides of each retina cross over to the opposite side of the brain via the optic nerve at the optic **chiasm**. -- [Wikipedia](http://en.wikipedia.org/wiki/Optic_chiasm)
+
+> The **Chiasm** was a junction of interdimensional networks and corridors that allowed for instantaneous travel over long distances of space. - [Dr. Who](http://tardis.wikia.com/wiki/Chiasm)
+
+**Chiasm**, this project, connects the "brain" of Big Data and cluster computing to the eyes of users through interactive data visualization, allowing them to travel long distances in multidimensional data space instantaneously.
 
 ---------------------------------------
 ![](http://curran.github.io/images/chiasm/vis_flow.png)
 
-The overall system design for interactive Big Data visualization.
+The overall system design for interactive Big Data visualization with Chiasm.
 
 ---------------------------------------
 
@@ -21,6 +25,7 @@ The project directory structure is as follows:
 ## Examples
 [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1)
 [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
+[![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632)
 
 ## Client
 
@@ -217,20 +222,38 @@ This data reduction service runs within an instance of [Spark-Jobserver](https:/
 ---------------------------------------
 ![](http://curran.github.io/images/chiasm/chiasm_architecture.png)
 
-The system architecture connecting interactive visualizations to "Big Data" residing in HDFS.
+The system architecture connecting interactive visualizations to "Big Data" residing in HDFS or S3.
+
 ---------------------------------------
 
-The process for running the server for development mode is as follows:
+The process for running the server for development mode is as follows.
 
- * Start [spark-jobserver](https://github.com/spark-jobserver/spark-jobserver).
- * Use the scripts under `server/dataReductionService` to build and deploy the data reduction service JAR:
+Install [SBT](http://www.scala-sbt.org/release/tutorial/Setup.html). For Ubuntu Linux, the process looks like this ([source](http://stackoverflow.com/questions/28543911/sbt-install-failure-with-aptitude-on-ubuntu-14-04)):
 
 ```
-cd server/dataReductionService
+wget https://dl.bintray.com/sbt/debian/sbt-0.13.7.deb
+sudo apt-get update
+sudo dpkg -i sbt-0.13.7.deb
+```
+
+Install and start [spark-jobserver](https://github.com/spark-jobserver/spark-jobserver).
+
+```
+git clone https://github.com/spark-jobserver/spark-jobserver.git
+cd spark-jobserver/
+git checkout v0.5.0
+sbt
+> reStart
+```
+
+Use the scripts under `server/dataReductionService` to build and deploy the data reduction service JAR:
+
+```
+cd chiasm/server/dataReductionService
 sh deployJarToJobserver.sh
 ```
 
- * Start the dummy Rails application that mounts the visEngine Rails Engine:
+Start the dummy Rails application that mounts the visEngine Rails Engine:
 
 ```
 cd server/visEngine/test/dummy/
@@ -238,4 +261,4 @@ bundle # Necessary for installing Gems before first run only.
 bin/rails server
 ```
 
- * Access the demo at [localhost:3000/vis_engine/bar_chart_demo](localhost:3000/vis_engine/bar_chart_demo)
+Access the demo at [localhost:3000/vis_engine/bar_chart_demo](localhost:3000/vis_engine/bar_chart_demo)
