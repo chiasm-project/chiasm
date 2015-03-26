@@ -26,9 +26,9 @@ define([], function (){
       // SVG to `(box.x, box.y)` relative to its container.
       svg
         .style("left", box.x + "px")
-        .style("top", box.y + "px");
-
-      svg.attr("width", box.width).attr("height", box.height);
+        .style("top", box.y + "px")
+        .attr("width", box.width)
+        .attr("height", box.height);
     });
 
     // Create the SVG group that will contain the visualization.
