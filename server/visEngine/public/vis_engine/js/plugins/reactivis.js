@@ -1,6 +1,13 @@
 define([], function (){
   var reactivis = {};
 
+  // A representation for an optional Model property that is not specified.
+  // This allows the "when" approach to support optional properties.
+  // Inspired by Scala"s Option type.
+  // See http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null
+  var None = "__none__";
+  reactivis.None = None;
+
   reactivis.svg = function(model){
 
     // Create the SVG element from the container DOM element.
@@ -19,9 +26,9 @@ define([], function (){
       // SVG to `(box.x, box.y)` relative to its container.
       svg
         .style("left", box.x + "px")
-        .style("top", box.y + "px");
-
-      svg.attr("width", box.width).attr("height", box.height);
+        .style("top", box.y + "px")
+        .attr("width", box.width)
+        .attr("height", box.height);
     });
 
     // Create the SVG group that will contain the visualization.
@@ -69,16 +76,25 @@ define([], function (){
     });
   };
 
-  reactivis.foo = function(model){};
-  reactivis.foo = function(model){};
-  reactivis.foo = function(model){};
-  reactivis.foo = function(model){};
-  reactivis.foo = function(model){};
-  reactivis.foo = function(model){};
-  reactivis.foo = function(model){};
-  reactivis.foo = function(model){};
-  reactivis.foo = function(model){};
-  reactivis.foo = function(model){};
+  reactivis.color = function(model){
+
+    // Allow the API client to optionally specify a color column.
+    model.colorDomain = None;
+    model.colorRange = None;
+    
+    // The default color of circles (CSS color string).
+    model.colorDefault = "black";
+
+    // Set up the color scale.
+    model.when(["colorDefault", "colorDomain", "colorRange"],
+        function (colorDefault, colorDomain, colorRange){
+      if(colorDomain !== None && colorRange !== None){
+        model.colorScale = d3.scale.ordinal().domain(colorDomain).range(colorRange);
+      } else {
+        model.colorScale = function (d){ return colorDefault; };
+      }
+    });
+  };
 
   return reactivis;
 });

@@ -51,8 +51,22 @@ Created by Curran Kelleher Mar 2015</p>
             targetAlias = target[<span class="hljs-number">0</span>],
             targetProperty = target[<span class="hljs-number">1</span>];
         runtime.getComponent(sourceAlias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(sourceComponent)</span></span>{
-          runtime.getComponent(targetAlias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(targetComponent)</span></span>{
-            sourceComponent.when(sourceProperty, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span></span>{
+          runtime.getComponent(targetAlias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(targetComponent)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>TODO keep track of listeners and remove old ones when bindings change.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            sourceComponent.when(sourceProperty, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span></span>{
               targetComponent[targetProperty] = value;
             });
           });

@@ -31,9 +31,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span></span>{
-  <span class="hljs-keyword">var</span> reactivis = {};
-
-  reactivis.svg = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{</pre></div></div>
+  <span class="hljs-keyword">var</span> reactivis = {};</pre></div></div>
             
         </li>
         
@@ -44,11 +42,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Create the SVG element from the container DOM element.</p>
+              <p>A representation for an optional Model property that is not specified.
+This allows the “when” approach to support optional properties.
+Inspired by Scala”s Option type.
+See <a href="http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null">http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"container"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(container)</span> </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> None = <span class="hljs-string">"__none__"</span>;
+  reactivis.None = None;
+
+  reactivis.svg = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{</pre></div></div>
             
         </li>
         
@@ -58,6 +62,21 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Create the SVG element from the container DOM element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when(<span class="hljs-string">"container"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(container)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Use CSS <code>position: absolute;</code> so setting <code>left</code> and <code>top</code> CSS
 properties later will position the SVG relative to containing div.</p>
@@ -71,11 +90,11 @@ properties later will position the SVG relative to containing div.</p>
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Adjust the SVG based on the <code>box</code> property.</p>
 
@@ -86,11 +105,11 @@ properties later will position the SVG relative to containing div.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Set the CSS <code>left</code> and <code>top</code> properties to move the
 SVG to <code>(box.x, box.y)</code> relative to its container.</p>
@@ -99,19 +118,19 @@ SVG to <code>(box.x, box.y)</code> relative to its container.</p>
             
             <div class="content"><div class='highlight'><pre>      svg
         .style(<span class="hljs-string">"left"</span>, box.x + <span class="hljs-string">"px"</span>)
-        .style(<span class="hljs-string">"top"</span>, box.y + <span class="hljs-string">"px"</span>);
-
-      svg.attr(<span class="hljs-string">"width"</span>, box.width).attr(<span class="hljs-string">"height"</span>, box.height);
+        .style(<span class="hljs-string">"top"</span>, box.y + <span class="hljs-string">"px"</span>)
+        .attr(<span class="hljs-string">"width"</span>, box.width)
+        .attr(<span class="hljs-string">"height"</span>, box.height);
     });</pre></div></div>
             
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Create the SVG group that will contain the visualization.</p>
 
@@ -127,11 +146,11 @@ SVG to <code>(box.x, box.y)</code> relative to its container.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Create the title text element.</p>
 
@@ -144,11 +163,11 @@ SVG to <code>(box.x, box.y)</code> relative to its container.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Center the title text when width changes.</p>
 
@@ -161,11 +180,11 @@ SVG to <code>(box.x, box.y)</code> relative to its container.</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Update the title text based on the <code>title</code> property.</p>
 
@@ -178,11 +197,11 @@ SVG to <code>(box.x, box.y)</code> relative to its container.</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Update the title text offset.</p>
 
@@ -197,11 +216,11 @@ SVG to <code>(box.x, box.y)</code> relative to its container.</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Encapsulates conventional D3 margins.
 See <a href="http://bl.ocks.org/mbostock/3019563">http://bl.ocks.org/mbostock/3019563</a></p>
@@ -213,11 +232,11 @@ See <a href="http://bl.ocks.org/mbostock/3019563">http://bl.ocks.org/mbostock/30
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Compute the inner box from the outer box and margin.</p>
 
@@ -231,11 +250,11 @@ See <a href="http://bl.ocks.org/mbostock/3019563">http://bl.ocks.org/mbostock/30
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Adjust the translation of the group based on the margin.</p>
 
@@ -246,16 +265,61 @@ See <a href="http://bl.ocks.org/mbostock/3019563">http://bl.ocks.org/mbostock/30
     });
   };
 
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
-  reactivis.foo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{};
+  reactivis.color = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Allow the API client to optionally specify a color column.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.colorDomain = None;
+    model.colorRange = None;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>The default color of circles (CSS color string).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.colorDefault = <span class="hljs-string">"black"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Set up the color scale.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"colorDefault"</span>, <span class="hljs-string">"colorDomain"</span>, <span class="hljs-string">"colorRange"</span>],
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(colorDefault, colorDomain, colorRange)</span></span>{
+      <span class="hljs-keyword">if</span>(colorDomain !== None &amp;&amp; colorRange !== None){
+        model.colorScale = d3.scale.ordinal().domain(colorDomain).range(colorRange);
+      } <span class="hljs-keyword">else</span> {
+        model.colorScale = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> colorDefault; };
+      }
+    });
+  };
 
   <span class="hljs-keyword">return</span> reactivis;
 });</pre></div></div>

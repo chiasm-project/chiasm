@@ -51,7 +51,7 @@ See <a href="http://alvinalexander.com/scala/using-scala-option-some-none-idiom-
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> None = <span class="hljs-string">"__none__"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> None = reactivis.None;</pre></div></div>
             
         </li>
         
@@ -96,7 +96,8 @@ This will serve as the public API for the visualization.</p>
 
     reactivis.svg(model);
     reactivis.title(model);
-    reactivis.margin(model);</pre></div></div>
+    reactivis.margin(model);
+    reactivis.color(model);</pre></div></div>
             
         </li>
         
@@ -486,63 +487,6 @@ This will serve as the public API for the visualization.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>Allow the API client to optionally specify a color column.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    model.colorColumn = None;
-    model.colorRange = None;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>The default color of circles (CSS color string).</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    model.colorDefault = <span class="hljs-string">"black"</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>Set up the color scale.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"colorColumn"</span>, <span class="hljs-string">"data"</span>, <span class="hljs-string">"colorDefault"</span>, <span class="hljs-string">"colorRange"</span>],
-        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(colorColumn, data, colorDefault, colorRange)</span></span>{
-      <span class="hljs-keyword">if</span>(colorColumn !== None &amp;&amp; colorRange !== None){
-        <span class="hljs-keyword">var</span> getColor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> d[colorColumn]; },
-            colorScale = d3.scale.ordinal()
-              .domain(data.map(getColor))
-              .range(colorRange);
-        model.getColorScaled = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> colorScale(getColor(d)); };
-      } <span class="hljs-keyword">else</span> {
-        model.getColorScaled = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> colorDefault; };
-      }
-    });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
               <p>Add an SVG group to contain the line.</p>
 
             </div>
@@ -554,21 +498,55 @@ This will serve as the public API for the visualization.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>For a bar chart, use the X column for color.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"xColumn"</span>, <span class="hljs-string">"colorScale"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(xColumn, colorScale)</span></span>{
+      model.getColorScaled = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{ <span class="hljs-keyword">return</span> colorScale(d[xColumn]); };
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Draw the bars.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"barsG"</span>, <span class="hljs-string">"sortedData"</span>, <span class="hljs-string">"getXScaled"</span>, <span class="hljs-string">"getYScaled"</span>, <span class="hljs-string">"xScale"</span>, <span class="hljs-string">"height"</span>, <span class="hljs-string">"getColorScaled"</span>],
-        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(barsG, sortedData, getXScaled, getYScaled, xScale, height, getColorScaled)</span></span>{
-      <span class="hljs-keyword">var</span> bars = barsG.selectAll(<span class="hljs-string">"rect"</span>).data(sortedData);
+            <div class="content"><div class='highlight'><pre>    model.when([<span class="hljs-string">"barsG"</span>, <span class="hljs-string">"sortedData"</span>, <span class="hljs-string">"getXScaled"</span>, <span class="hljs-string">"getYScaled"</span>, <span class="hljs-string">"xScale"</span>, <span class="hljs-string">"height"</span>, <span class="hljs-string">"getColorScaled"</span>, <span class="hljs-string">"getX"</span>],
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(barsG, sortedData, getXScaled, getYScaled, xScale, height, getColorScaled, getX)</span></span>{
+      <span class="hljs-keyword">var</span> bars = barsG.selectAll(<span class="hljs-string">"rect"</span>).data(sortedData, getX);
       bars.enter().append(<span class="hljs-string">"rect"</span>);
-      bars.attr(<span class="hljs-string">"x"</span>, getXScaled).attr(<span class="hljs-string">"y"</span>, getYScaled)
+      bars</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>TODO generalize transitions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .transition().ease(<span class="hljs-string">"linear"</span>).duration(<span class="hljs-number">200</span>)
+        .attr(<span class="hljs-string">"x"</span>, getXScaled)
+        .attr(<span class="hljs-string">"y"</span>, getYScaled)
         .attr(<span class="hljs-string">"width"</span>, xScale.rangeBand())
         .attr(<span class="hljs-string">"height"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> height - getYScaled(d); })
         .attr(<span class="hljs-string">"fill"</span>, getColorScaled);

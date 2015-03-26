@@ -178,6 +178,25 @@ necessary for computing configuration differences.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
+              <p>This object stores original values for public properties.</p>
+<ul>
+<li>Keys are component aliases.</li>
+<li>Values are { property -&gt; defaultValue } objects.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> publicPropertyDefaults = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
               <p>These methods unpack actions and invoke the corresponding functions.</p>
 
             </div>
@@ -192,22 +211,8 @@ necessary for computing configuration differences.</p>
       set: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
         set(action.alias, action.property, action.value, callback);
       },
-      unset: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p>TODO test</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        unset(action.alias, action.property, callback);
+      unset: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(action, callback)</span> </span>{
+        unset(action.alias, action.property, callback);
       }
     };</pre></div></div>
             
@@ -332,14 +337,11 @@ then uses RequireJS to load the plugin as an AMD module.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Default values for public properties.
-TODO test</p>
+              <p>Default values for public properties.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> defaults = {};
-
-        components[alias] = component;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> defaults = {};</pre></div></div>
             
         </li>
         
@@ -349,6 +351,23 @@ TODO test</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Store defaults object reference for later use with “unset”.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        publicPropertyDefaults[alias] = defaults;
+
+        components[alias] = component;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Propagate changes from components to configuration.</p>
 
@@ -362,11 +381,11 @@ TODO test</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Store default values for public properties.</p>
 
@@ -377,11 +396,11 @@ TODO test</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Store the listener so it can be removed later,
 when the component is destroyed.</p>
@@ -393,11 +412,11 @@ when the component is destroyed.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Handle the case that the property is changed after the component has
 been removed from the configuration but before the component’s
@@ -418,11 +437,11 @@ listeners have been removed.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Ignore changes that originated from the config.
 Use oldConfig rather than runtime.config to handle the case that
@@ -437,11 +456,11 @@ Use JSON.stringify so deep JSON structures are compared correctly.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Surgically change oldConfig so that the diff computation will yield
 no actions. Without this, the update would propagate from the 
@@ -452,11 +471,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>If no state is tracked, create the state object.</p>
 
@@ -471,11 +490,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>This assignment will notify any listeners that the config has changed,
 (e.g. the config editor), but the config diff will yield no actions to execute.</p>
@@ -497,11 +516,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Applies a “destroy” action to the runtime.</p>
 
@@ -513,11 +532,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Remove public property listeners.</p>
 
@@ -531,11 +550,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Invoke component.destroy()</p>
 
@@ -548,17 +567,32 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Remove the internal reference to the component.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">delete</span> components[alias];
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">delete</span> components[alias];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Remove stored default values that were stored.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">delete</span> publicPropertyDefaults[alias];
 
         callback();
       });
@@ -567,11 +601,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>Applies a “set” action to the runtime.</p>
 
@@ -587,11 +621,46 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Applies an “unset” action to the runtime.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unset</span><span class="hljs-params">(alias, property, callback)</span> </span>{
+      getComponent(alias, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(component)</span></span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>TODO test behavior of unset when there are no public properties declared.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> defaultValue = publicPropertyDefaults[alias][property];
+        component[property] = defaultValue;
+        callback();
+      });
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Respond to changes in configuration.</p>
 
@@ -608,11 +677,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Expose getComponent as a public method.</p>
 
@@ -623,11 +692,11 @@ component to the config and then back again unnecessarily.</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>This function checks if a component exists.
 Necessary for complete code coverage in unit tests.</p>

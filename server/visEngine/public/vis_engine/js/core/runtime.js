@@ -51,6 +51,12 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     // * Values are components constructed by plugins.
     var components = {};
 
+    // This object stores original values for public properties.
+    //
+    // * Keys are component aliases.
+    // * Values are { property -> defaultValue } objects.
+    var publicPropertyDefaults = {};
+
     // These methods unpack actions and invoke the corresponding functions.
     var methods = {
       create: function (action, callback) {
@@ -63,7 +69,6 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
         set(action.alias, action.property, action.value, callback);
       },
       unset: function (action, callback) {
-        // TODO test
         unset(action.alias, action.property, callback);
       }
     };
@@ -109,8 +114,10 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
         var component = constructor(runtime);
 
         // Default values for public properties.
-        // TODO test
         var defaults = {};
+
+        // Store defaults object reference for later use with "unset".
+        publicPropertyDefaults[alias] = defaults;
 
         components[alias] = component;
 
@@ -190,6 +197,9 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
         // Remove the internal reference to the component.
         delete components[alias];
 
+        // Remove stored default values that were stored.
+        delete publicPropertyDefaults[alias];
+
         callback();
       });
     }
@@ -198,6 +208,17 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     function set(alias, property, value, callback) {
       getComponent(alias, function(component){
         component[property] = value;
+        callback();
+      });
+    }
+
+    // Applies an "unset" action to the runtime.
+    function unset(alias, property, callback) {
+      getComponent(alias, function(component){
+
+        // TODO test behavior of unset when there are no public properties declared.
+        var defaultValue = publicPropertyDefaults[alias][property];
+        component[property] = defaultValue;
         callback();
       });
     }

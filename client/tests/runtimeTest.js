@@ -347,4 +347,35 @@ describe("runtime", function () {
       setTimeout(done, 0);
     });
   });
+
+  it("should unset a property, restoring default value", function(done) {
+    var runtime = Runtime();
+    runtime.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
+    
+    runtime.config = {
+      foo: {
+        plugin: "simplePluginWithDefaults",
+        state: {
+          x: 50
+        }
+      }
+    };
+
+    runtime.getComponent("foo", function(foo){
+      expect(foo).to.exist();
+      foo.when("x", function(x){
+        if(x == 50){
+          runtime.config = {
+            foo: {
+              plugin: "simplePluginWithDefaults",
+              state: { }
+            }
+          };
+        } else {
+          expect(x).to.equal(5);
+          done();
+        }
+      });
+    });
+  });
 });
