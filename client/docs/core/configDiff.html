@@ -75,8 +75,10 @@ The diff is returned as an array of Action objects.</p>
             <div class="content"><div class='highlight'><pre>    newAliases.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(alias)</span> </span>{
       <span class="hljs-keyword">var</span> oldModel = alias <span class="hljs-keyword">in</span> oldConfig ? oldConfig[alias].state || {} : <span class="hljs-literal">null</span>,
           newModel = newConfig[alias].state || {},
-          oldProperties = _.keys(oldModel),
-          newProperties = _.keys(newModel);</pre></div></div>
+          oldProperties = oldModel ? _.keys(oldModel) : [],
+          newProperties = _.keys(newModel),
+          oldPlugin = alias <span class="hljs-keyword">in</span> oldConfig ? oldConfig[alias].plugin : <span class="hljs-literal">null</span>,
+          newPlugin = newConfig[alias].plugin;</pre></div></div>
             
         </li>
         
@@ -87,16 +89,11 @@ The diff is returned as an array of Action objects.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Handle added aliases.</p>
+              <p>Handle changed plugin.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span>(!oldModel){
-        actions.push(Action.create(alias, newConfig[alias].plugin));
-        newProperties.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
-          actions.push(Action.set(alias, property, newModel[property]));
-        });
-      } <span class="hljs-keyword">else</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span>(oldModel &amp;&amp; (oldPlugin !== newPlugin)){</pre></div></div>
             
         </li>
         
@@ -107,13 +104,11 @@ The diff is returned as an array of Action objects.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Handle added properties.</p>
+              <p>Destroy the old component that used the old plugin.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        _.difference(newProperties, oldProperties).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
-          actions.push(Action.set(alias, property, newModel[property]));
-        });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        actions.push(Action.destroy(alias));</pre></div></div>
             
         </li>
         
@@ -124,13 +119,11 @@ The diff is returned as an array of Action objects.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Handle removed properties.</p>
+              <p>Create a new component that uses the new plugin.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        _.difference(oldProperties, newProperties).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
-          actions.push(Action.unset(alias, property));
-        });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        oldModel = <span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -141,16 +134,82 @@ The diff is returned as an array of Action objects.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
+              <p>Set all properties on the newly created component.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        oldProperties = [];
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Handle added aliases.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span>(!oldModel){
+        actions.push(Action.create(alias, newConfig[alias].plugin));
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Handle added properties.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      _.difference(newProperties, oldProperties).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
+        actions.push(Action.set(alias, property, newModel[property]));
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Handle removed properties.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      _.difference(oldProperties, newProperties).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
+        actions.push(Action.unset(alias, property));
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
               <p>Handle updated properties.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        _.intersection(newProperties, oldProperties).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
-          <span class="hljs-keyword">if</span>(!_.isEqual(oldModel[property], newModel[property])){
-            actions.push(Action.set(alias, property, newModel[property]));
-          }
-        });
-      }
+            <div class="content"><div class='highlight'><pre>      _.intersection(newProperties, oldProperties).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property)</span> </span>{
+        <span class="hljs-keyword">if</span>(!_.isEqual(oldModel[property], newModel[property])){
+          actions.push(Action.set(alias, property, newModel[property]));
+        }
+      });
     });
     <span class="hljs-keyword">return</span> actions;
   };

@@ -42,7 +42,7 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
           .style("pointer-events", "all");
   
         model.selectedXLine = g.append("line")
-          .attr("class", "hover-line")
+          .attr("class", "hover-line");
       }
     });
 
