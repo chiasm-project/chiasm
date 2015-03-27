@@ -326,7 +326,8 @@ then uses RequireJS to load the plugin as an AMD module.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> component = constructor(runtime);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> component = constructor(runtime);
+        components[alias] = component;</pre></div></div>
             
         </li>
         
@@ -356,9 +357,7 @@ then uses RequireJS to load the plugin as an AMD module.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        publicPropertyDefaults[alias] = defaults;
-
-        components[alias] = component;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        publicPropertyDefaults[alias] = defaults;</pre></div></div>
             
         </li>
         
@@ -451,7 +450,8 @@ Use JSON.stringify so deep JSON structures are compared correctly.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span>(<span class="hljs-built_in">JSON</span>.stringify(oldValue) !== <span class="hljs-built_in">JSON</span>.stringify(newValue)){</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+                <span class="hljs-keyword">if</span>(<span class="hljs-built_in">JSON</span>.stringify(oldValue) !== <span class="hljs-built_in">JSON</span>.stringify(newValue)){</pre></div></div>
             
         </li>
         

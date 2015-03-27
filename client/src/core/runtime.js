@@ -112,14 +112,13 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
 
         // Construct the component using the plugin.
         var component = constructor(runtime);
+        components[alias] = component;
 
         // Default values for public properties.
         var defaults = {};
 
         // Store defaults object reference for later use with "unset".
         publicPropertyDefaults[alias] = defaults;
-
-        components[alias] = component;
 
         // Propagate changes from components to configuration.
         if("publicProperties" in component){
@@ -152,6 +151,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
                 // runtime.config has been changed and its listener that computes
                 // the diff and dispatches actions has not yet run.
                 // Use JSON.stringify so deep JSON structures are compared correctly.
+
                 if(JSON.stringify(oldValue) !== JSON.stringify(newValue)){
 
                   // Surgically change oldConfig so that the diff computation will yield
