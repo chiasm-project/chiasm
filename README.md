@@ -15,12 +15,10 @@
 
 Chiasm is a standalone system with client side and server side components, but is also designed such that it can integrated with [Chorus](https://github.com/Chorus/chorus), a collaboration platform for Big Data.
 
-The project directory structure is as follows:
-
- * [`client`](client) The client-side visualization environment.
- * [`server`](server) The server-side components.
-   * `dataReductionService` The [Spark](https://spark.apache.org/)-based data reduction service.
-   * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with [Chorus](https://github.com/Chorus/chorus).
+ * [`client`](client) The runtime and plugins for interactive visualizations.
+ * [`server`](server) The data reduction service and its REST API.
+   * [`dataReductionService`](server/dataReductionService) The [Spark](https://spark.apache.org/)-based data reduction service.
+   * [`visEngine`](server/visEngine) The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with [Chorus](https://github.com/Chorus/chorus).
 
 ## Architecture
 
