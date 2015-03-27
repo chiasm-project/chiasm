@@ -20,7 +20,7 @@ The project directory structure is as follows:
  * `client` The client-side visualization environment.
  * `server`
    * `dataReductionService` The [Spark](https://spark.apache.org/)-based data reduction service.
-   * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with Chorus.
+   * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with [Chorus](https://github.com/Chorus/chorus).
 
 ## Examples
 [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1)
