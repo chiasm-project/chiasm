@@ -17,15 +17,11 @@ Chiasm is a standalone system with client side and server side components, but i
 
  * [`client`](client) The runtime and plugins for interactive visualizations.
  * [`server`](server) The data reduction service and its REST API.
-   * [`dataReductionService`](server/dataReductionService) The [Spark](https://spark.apache.org/)-based data reduction service.
-   * [`visEngine`](server/visEngine) The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with [Chorus](https://github.com/Chorus/chorus).
+   * `dataReductionService` The [Spark](https://spark.apache.org/)-based data reduction service.
+   * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with [Chorus](https://github.com/Chorus/chorus).
 
 ## Architecture
 
----------------------------------------
-
 ![](http://curran.github.io/images/chiasm/vis_flow.png)
 
-The overall architecture for interactive Big Data visualization with Chiasm.
-
----------------------------------------
+The overall architecture for interactive Big Data visualization with Chiasm. The goal is to establish an interactive feedback loop between the user and the data that enables rapid visual data exploration.
