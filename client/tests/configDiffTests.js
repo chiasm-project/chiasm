@@ -208,4 +208,30 @@ describe("configDiff", function () {
     });
     expect(actions.length).to.equal(0);
   });
+
+  it("changed plugin", function() {
+    var actions = diff({
+      thing: {
+        plugin: "foo",
+        state: {
+          x: 50,
+          y: 40
+        }
+      }
+    }, {
+      thing: {
+        plugin: "bar",
+        state: {
+          x: 50,
+          y: 40
+        }
+      }
+    });
+
+    expect(actions).to.contain("destroy(thing)");
+    expect(actions).to.contain("create(thing, bar)");
+    expect(actions).to.contain("set(thing, x, 50)");
+    expect(actions).to.contain("set(thing, y, 40)");
+    expect(actions.length).to.equal(4);
+  });
 });
