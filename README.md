@@ -11,12 +11,7 @@
 [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
 [![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632)
 
----------------------------------------
-![](http://curran.github.io/images/chiasm/vis_flow.png)
-
-The overall system design for interactive Big Data visualization with Chiasm.
-
----------------------------------------
+## Organization
 
 Chiasm is a standalone system with client side and server side components, but is also designed such that it can integrated with [Chorus](https://github.com/Chorus/chorus), a collaboration platform for Big Data.
 
@@ -26,3 +21,13 @@ The project directory structure is as follows:
  * [`server`](server) The server-side components.
    * `dataReductionService` The [Spark](https://spark.apache.org/)-based data reduction service.
    * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with [Chorus](https://github.com/Chorus/chorus).
+
+## Architecture
+
+---------------------------------------
+
+![](http://curran.github.io/images/chiasm/vis_flow.png)
+
+The overall architecture for interactive Big Data visualization with Chiasm.
+
+---------------------------------------
