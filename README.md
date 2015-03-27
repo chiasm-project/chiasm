@@ -4,7 +4,12 @@
 
 > The **Chiasm** was a junction of interdimensional networks and corridors that allowed for instantaneous travel over long distances of space. - [Dr. Who](http://tardis.wikia.com/wiki/Chiasm)
 
-**Chiasm**, this project, connects the "brain" of Big Data and cluster computing to the eyes of users through interactive data visualization, allowing them to travel long distances in multidimensional data space instantaneously.
+**Chiasm**, this project, is an interactive data visualization system. It relates to the above meanings of the word "Chiasm" in that it connects the "brain" of Big Data and cluster computing to the eyes of users through interactive data visualization. The Chiasm server side implements a Big Data version of [Crossfilter](http://square.github.io/crossfilter/), so in a way this is an intersection of multidimensional corridors in data space, and interacting with it allows users to rapidly pivot and navigate through the data.
+
+## Examples
+[![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1)
+[![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
+[![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632)
 
 ---------------------------------------
 ![](http://curran.github.io/images/chiasm/vis_flow.png)
@@ -22,14 +27,9 @@ The project directory structure is as follows:
    * `dataReductionService` The [Spark](https://spark.apache.org/)-based data reduction service.
    * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with [Chorus](https://github.com/Chorus/chorus).
 
-## Examples
-[![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1)
-[![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
-[![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632)
-
 ## Client
 
-The Chiasm client side is a runtime environment for interactive visualizations.
+The Chiasm client side is a runtime environment and plugin architecture for interactive visualizations. It can be used independently of the Chiasm server, and allows visualization plugins to be loaded and configured dynamically.
 
 [Try it out!](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/) Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
 
