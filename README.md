@@ -22,7 +22,7 @@ Chiasm is a standalone system with client side and server side components, but i
 
 The project directory structure is as follows:
 
- * `client` The client-side visualization environment.
- * `server`
+ * [`client`](client) The client-side visualization environment.
+ * [`server`](server) The server-side components.
    * `dataReductionService` The [Spark](https://spark.apache.org/)-based data reduction service.
    * `visEngine` The [Rails Engine](http://guides.rubyonrails.org/engines.html) for integration with [Chorus](https://github.com/Chorus/chorus).
