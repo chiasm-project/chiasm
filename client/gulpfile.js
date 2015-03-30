@@ -31,7 +31,7 @@ var mocha = require("gulp-mocha");
 // Docco is a documentation generator.
 // http://jashkenas.github.io/docco/
 // https://www.npmjs.com/package/gulp-docco
-var docco = require("gulp-docco");
+//var docco = require("gulp-docco");
 
 // Del is for deleting files.
 // https://github.com/gulpjs/gulp/blob/master/docs/recipes/delete-files-folder.md
@@ -45,7 +45,7 @@ var srcCode = "src/**/*.js",
 var visEnginePublicDir = "../server/visEngine/public/vis_engine/js/";
 
 // This task runs when the "gulp" command is executed with no arguments.
-gulp.task("default", ["lint", "test", "docs", "copy-to-engine"]);
+gulp.task("default", ["lint", "test", /*"docs",*/ "copy-to-engine"]);
 
 // Run JSHint.
 gulp.task("lint", function () {
@@ -61,14 +61,14 @@ gulp.task("test", ["lint"], function () {
 });
 
 // Build documentation.
-gulp.task("docs", ["docs-clean", "test"], function () {
-  return gulp.src(srcCode)
-    .pipe(docco())
-    .pipe(gulp.dest("docs"));
-});
-gulp.task("docs-clean", function (cb) {
-  del("docs", cb);
-});
+//gulp.task("docs", ["docs-clean", "test"], function () {
+//  return gulp.src(srcCode)
+//    .pipe(docco())
+//    .pipe(gulp.dest("docs"));
+//});
+//gulp.task("docs-clean", function (cb) {
+//  del("docs", cb);
+//});
 
 // Copy client-side files into the Rails Engine.
 gulp.task("copy-to-engine", function (){
