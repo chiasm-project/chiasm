@@ -648,7 +648,9 @@ component to the config and then back again unnecessarily.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> defaultValue = publicPropertyDefaults[alias][property];
-        component[property] = defaultValue;
+
+        component[property] = defaultValue || Model.None;
+
         callback();
       });
     }</pre></div></div>

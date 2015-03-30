@@ -218,7 +218,9 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
 
         // TODO test behavior of unset when there are no public properties declared.
         var defaultValue = publicPropertyDefaults[alias][property];
-        component[property] = defaultValue;
+
+        component[property] = defaultValue || Model.None;
+
         callback();
       });
     }

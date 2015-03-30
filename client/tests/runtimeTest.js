@@ -26,9 +26,22 @@ function SimplestPlugin(){
 // components (instances of the plugin) to the configuration.
 function SimplePlugin(){
   return Model({
-    publicProperties: ["message"]
+    publicProperties: ["message"],
+    message: Model.None
   });
 }
+
+// Invalid because no default property values are provided.
+// These must be explicit, because the runtime engine must know
+// what values to use when the property is "unset" - when it is
+// removed from the component state configuration.
+
+// TODO test this
+//function InvalidPlugin(){
+//  return Model({
+//    publicProperties: ["message"]
+//  });
+//}
 
 // Demonstrates having default values for public properties.
 function SimplePluginWithDefaults(){
@@ -378,4 +391,51 @@ describe("runtime", function () {
       });
     });
   });
+
+  it("should unset a property, setting None if default is None", function(done) {
+    var runtime = Runtime();
+    runtime.plugins.simplePlugin= SimplePlugin;
+    
+    runtime.config = {
+      foo: {
+        plugin: "simplePlugin",
+        state: {
+          x: 50
+        }
+      }
+    };
+
+    runtime.getComponent("foo", function(foo){
+      expect(foo).to.exist();
+      foo.when("x", function(x){
+        if(x == 50){
+          runtime.config = {
+            foo: {
+              plugin: "simplePlugin",
+              state: { }
+            }
+          };
+        } else {
+          expect(x).to.equal(Model.None);
+          done();
+        }
+      });
+    });
+  });
+
+  //it("should throw an error when no public property default is provided", function(done) {
+  //  var runtime = Runtime();
+  //  runtime.plugins.invalidPlugin = InvalidPlugin;
+
+  //  var fn = function(){
+  //    runtime.config = {
+  //      foo: {
+  //        plugin: "invalidPlugin",
+  //        state: { }
+  //      }
+  //    };
+  //  };
+
+  //  expect(fn).to.throw(Error, "No default provided for public property 'message'.");
+  //});
 });
