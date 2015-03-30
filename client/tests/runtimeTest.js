@@ -471,4 +471,59 @@ describe("runtime", function () {
       });
     });
   });
+
+  it("should change a plugin and transfer properties", function(done) {
+    var runtime = Runtime();
+
+    runtime.plugins.barChart = function(){
+      return Model({
+        pluginName: "barChart"
+      });
+    };
+
+    runtime.plugins.pieChart = function(){
+      return Model({
+        pluginName: "pieChart"
+      });
+    };
+    
+    var config1 = {
+      chart: {
+        plugin: "barChart",
+        state: {
+          markColumn: "browser",
+          sizeColumn: "popularity"
+        }
+      }
+    };
+
+    var config2 = {
+      chart: {
+        plugin: "pieChart",
+        state: {
+          markColumn: "browser",
+          sizeColumn: "popularity"
+        }
+      }
+    };
+
+    runtime.config = config1;
+
+    runtime.getComponent("chart", function(chart1){
+
+      expect(chart1.pluginName).to.equal("barChart");
+      expect(chart1.markColumn).to.equal("browser");
+      expect(chart1.sizeColumn).to.equal("popularity");
+
+      runtime.setConfig(config2 , function(err){
+        runtime.getComponent("chart", function(chart2){
+
+          expect(chart2.pluginName).to.equal("pieChart");
+          expect(chart2.markColumn).to.equal("browser");
+          expect(chart2.sizeColumn).to.equal("popularity");
+          done();
+        });
+      });
+    });
+  });
 });
