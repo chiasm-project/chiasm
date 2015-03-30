@@ -31,17 +31,15 @@ function SimplePlugin(){
   });
 }
 
-// Invalid because no default property values are provided.
-// These must be explicit, because the runtime engine must know
-// what values to use when the property is "unset" - when it is
+// This plugin is invalid because no default property values are provided.
+// Default values must be explicit, because the runtime engine must know
+// what values to use when the property is "unset" - when the property is
 // removed from the component state configuration.
-
-// TODO test this
-//function InvalidPlugin(){
-//  return Model({
-//    publicProperties: ["message"]
-//  });
-//}
+function InvalidPlugin(){
+  return Model({
+    publicProperties: ["message"]
+  });
+}
 
 // Demonstrates having default values for public properties.
 function SimplePluginWithDefaults(){
@@ -423,19 +421,54 @@ describe("runtime", function () {
     });
   });
 
-  //it("should throw an error when no public property default is provided", function(done) {
-  //  var runtime = Runtime();
-  //  runtime.plugins.invalidPlugin = InvalidPlugin;
+  it("should throw an error when no public property default is provided", function(done) {
+    var runtime = Runtime();
+    runtime.plugins.invalidPlugin = InvalidPlugin;
 
-  //  var fn = function(){
-  //    runtime.config = {
-  //      foo: {
-  //        plugin: "invalidPlugin",
-  //        state: { }
-  //      }
-  //    };
-  //  };
+    runtime.setConfig({
+      foo: {
+        plugin: "invalidPlugin",
+        state: { }
+      }
+    }, function(err){
+      expect(err.message).to.equal("Default value for public property 'message' not specified for component with alias 'foo'.");
+      done();
+    });
 
-  //  expect(fn).to.throw(Error, "No default provided for public property 'message'.");
-  //});
+  });
+
+  it("should change a plugin", function(done) {
+    var runtime = Runtime();
+    runtime.plugins.pluginA = function(){
+      return Model({
+        pluginName: "A"
+      });
+    };
+
+    runtime.plugins.pluginB = function(){
+      return Model({
+        pluginName: "B"
+      });
+    };
+    
+    runtime.config = {
+      foo: {
+        plugin: "pluginA"
+      }
+    };
+
+    runtime.getComponent("foo", function(foo){
+      expect(foo.pluginName).to.equal("A");
+      runtime.setConfig({
+        foo: {
+          plugin: "pluginB"
+        }
+      }, function(err){
+        runtime.getComponent("foo", function(foo){
+          expect(foo.pluginName).to.equal("B");
+          done();
+        });
+      });
+    });
+  });
 });

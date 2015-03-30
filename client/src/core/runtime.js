@@ -74,8 +74,8 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     };
 
     // An asynchronous FIFO queue for applying actions to the runtime.
-    var actionQueue = async.queue(function(action, callback){
-      methods[action.method](action, callback);
+    var actionQueue = async.queue(function(fn, callback){
+      fn(callback);
     }, 1);
 
     // This object contains the listeners that respond to changes in
@@ -120,62 +120,74 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
         // Store defaults object reference for later use with "unset".
         publicPropertyDefaults[alias] = defaults;
 
-        // Propagate changes from components to configuration.
-        if("publicProperties" in component){
-        
-          listeners[alias] = [];
-          component.publicProperties.forEach(function(property){
+        try {
 
-            // Store default values for public properties.
-            defaults[property] = component[property];
+          // Propagate changes from components to configuration.
+          if("publicProperties" in component){
+          
+            listeners[alias] = [];
+            component.publicProperties.forEach(function(property){
 
-            // Store the listener so it can be removed later,
-            // when the component is destroyed.
-            listeners[alias].push(component.when(property, function(newValue){
+              // Require that all declared public properties have a default value.
+              if(!(property in component)){
 
-              // Handle the case that the property is changed after the component has
-              // been removed from the configuration but before the component's
-              // listeners have been removed.
-              if(alias in oldConfig){
-
-                var oldValue;
-
-                if("state" in oldConfig[alias] && property in oldConfig[alias].state){
-                  oldValue = oldConfig[alias].state[property];
-                } else {
-                  oldValue = defaults[property];
-                }
-
-                // Ignore changes that originated from the config.
-                // Use oldConfig rather than runtime.config to handle the case that
-                // runtime.config has been changed and its listener that computes
-                // the diff and dispatches actions has not yet run.
-                // Use JSON.stringify so deep JSON structures are compared correctly.
-
-                if(JSON.stringify(oldValue) !== JSON.stringify(newValue)){
-
-                  // Surgically change oldConfig so that the diff computation will yield
-                  // no actions. Without this, the update would propagate from the 
-                  // component to the config and then back again unnecessarily.
-
-                  // If no state is tracked, create the state object.
-                  if(!("state" in oldConfig[alias])){
-                    oldConfig[alias].state = {};
-                  }
-
-                  oldConfig[alias].state[property] = newValue;
-
-                  // This assignment will notify any listeners that the config has changed,
-                  // (e.g. the config editor), but the config diff will yield no actions to execute.
-                  runtime.config = oldConfig;
-                }
+                // Use an exception to break the forEach loop.
+                throw new Error("Default value for public property '" +
+                  property + "' not specified for component with alias '" + alias + "'.");
               }
 
-            }));
-          });
-        }
+              // Store default values for public properties.
+              defaults[property] = component[property];
 
-        callback();
+              // Store the listener so it can be removed later,
+              // when the component is destroyed.
+              listeners[alias].push(component.when(property, function(newValue){
+
+                // Handle the case that the property is changed after the component has
+                // been removed from the configuration but before the component's
+                // listeners have been removed.
+                if(alias in oldConfig){
+
+                  var oldValue;
+
+                  if("state" in oldConfig[alias] && property in oldConfig[alias].state){
+                    oldValue = oldConfig[alias].state[property];
+                  } else {
+                    oldValue = defaults[property];
+                  }
+
+                  // Ignore changes that originated from the config.
+                  // Use oldConfig rather than runtime.config to handle the case that
+                  // runtime.config has been changed and its listener that computes
+                  // the diff and dispatches actions has not yet run.
+                  // Use JSON.stringify so deep JSON structures are compared correctly.
+
+                  if(JSON.stringify(oldValue) !== JSON.stringify(newValue)){
+
+                    // Surgically change oldConfig so that the diff computation will yield
+                    // no actions. Without this, the update would propagate from the 
+                    // component to the config and then back again unnecessarily.
+
+                    // If no state is tracked, create the state object.
+                    if(!("state" in oldConfig[alias])){
+                      oldConfig[alias].state = {};
+                    }
+
+                    oldConfig[alias].state[property] = newValue;
+
+                    // This assignment will notify any listeners that the config has changed,
+                    // (e.g. the config editor), but the config diff will yield no actions to execute.
+                    runtime.config = oldConfig;
+                  }
+                }
+
+              }));
+            });
+          }
+          callback();
+        } catch (err) {
+          callback(err);
+        }
       });
     }
 
@@ -215,30 +227,70 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     // Applies an "unset" action to the runtime.
     function unset(alias, property, callback) {
       getComponent(alias, function(component){
-
-        // TODO test behavior of unset when there are no public properties declared.
         var defaultValue = publicPropertyDefaults[alias][property];
-
         component[property] = defaultValue || Model.None;
-
         callback();
       });
     }
 
-    // Respond to changes in configuration.
-    runtime.when("config", function(newConfig){
-      var actions = configDiff(oldConfig, newConfig);
-      if(actions.length > 0){
-        actions.forEach(actionQueue.push);
-        oldConfig = _.cloneDeep(newConfig);
-      }
-    });
+    // If the configuration is set via `runtime.config = ...`,
+    // this will work but any errors that occur will be thrown as exceptions.
+    runtime.when("config", setConfig);
 
-    // Expose getComponent as a public method.
+    // If the configuration is set via `runtime.setConfig(...)`,
+    // this will also work and any errors that occur will passed to the async callback.
+    function setConfig(newConfig, callback){
+
+      // Compute the difference between the old and new configurations.
+      var actions = configDiff(oldConfig, newConfig);
+
+      // If there is any difference between the two configurations, 
+      if(actions.length > 0){
+
+        // Store the new config as the old config.
+        oldConfig = _.cloneDeep(newConfig);
+
+        // Push a new job onto the runtime's async queue.
+        actionQueue.push(function(queueCallback){
+
+          // The job will apply each action resulting from the configuration difference.
+          async.eachSeries(actions, processAction, function(err){
+
+            // If the caller of setConfig passed a callback (which may or may not be the case),
+            if(callback){
+
+              // pass any errors that resulted from this batch of actions
+              // to the caller of setConfig.
+              callback(err);
+
+            } else {
+
+              // If the caller of setConfig did not pass a callback,
+              // and there was an error, then throw the error.
+              if(err) {
+                throw err;
+              }
+            }
+
+            // Notify the async queue that this batch of actions has completed processing,
+            // so it can move on to the next batch.
+            queueCallback();
+          });
+        });
+      }
+    }
+
+    // Processes a single action by executing it within the runtime.
+    function processAction(action, callback){
+      methods[action.method](action, callback);
+    }
+
+    // Expose public methods.
     runtime.getComponent = getComponent;
+    runtime.setConfig = setConfig;
 
     // This function checks if a component exists.
-    // Necessary for complete code coverage in unit tests.
+    // Necessary for code coverage in unit tests.
     runtime.componentExists = function(alias){
       return alias in components;
     };
