@@ -7,9 +7,10 @@
 // Created by Curran Kelleher Feb 2015
 define(["./computeLayout", "model", "async", "lodash"], function (computeLayout, Model, async, _){
 
-  // This defines the layout Chiasm plugin.
+  // The layout Chiasm plugin constructor function.
   return function Layout(runtime){
 
+    // The public API object returned by the constructor function.
     var model = Model({
       publicProperties: ["layout"]
     });
@@ -39,6 +40,7 @@ define(["./computeLayout", "model", "async", "lodash"], function (computeLayout,
       // Apply the layout via the `box` property of components.
       Object.keys(boxes).forEach(function(alias){
         runtime.getComponent(alias, function(err, component){
+          // TODO bubble errors to UI
           component.box = boxes[alias];
         });
       });
@@ -46,17 +48,23 @@ define(["./computeLayout", "model", "async", "lodash"], function (computeLayout,
 
     // Compute `sizes` from runtime components.
     model.when(["layout"], function(layout){
+
+      // Extract the list of aliases referenced in the layout.
       var aliases = aliasesInLayout(layout);
 
+      // Set sizes once initially.
+      extractSizes(aliases);
+
+      // Set sizes when the "size" property changes on any component.
       aliases.forEach(function(alias){
         runtime.getComponent(alias, function(err, component){
           // TODO clean up listeners, test for leaks.
+          // TODO bubble errors to UI
           component.when("size", function(size){
             extractSizes(aliases);
           });
         });
       });
-      extractSizes(aliases);
     });
 
     // Sets `model.sizes` by extracting the "size" and "hidden"
@@ -71,6 +79,7 @@ define(["./computeLayout", "model", "async", "lodash"], function (computeLayout,
         aliases,
         function(alias, callback){
           runtime.getComponent(alias, function(err, component){
+            // TODO bubble errors to UI
 
             // store its "size" and "hidden" properties.
             if(component.size || component.hidden){
@@ -108,10 +117,16 @@ define(["./computeLayout", "model", "async", "lodash"], function (computeLayout,
       return aliases;
     }
 
+    // Determines whether the given node in the layout tree
+    // is a leaf node or a non-leaf node.
     function isLeafNode(layout){
+
+      // If it is a leaf node, then it is a string
+      // that is interpreted as a component alias.
       return typeof layout === "string";
     }
 
+    // Return the public API.
     return model;
   };
 });
