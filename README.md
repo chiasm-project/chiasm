@@ -8,6 +8,8 @@
 
 Here's a [talk on YouTube about Chiasm - Constructing Interactive Data Visualizations](https://www.youtube.com/watch?v=GxGkHam33Cw)
 
+See also [Model.js](https://github.com/curran/model), which this project is built on.
+
 ## Examples
 [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1)
 [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
