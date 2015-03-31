@@ -12,6 +12,7 @@ define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/j
       // The `hidden` boolean property triggers the layout
       // to recalculate to show and hide the editor.
       publicProperties: [ "hidden" , "size"],
+      hidden: false,
       size: "400px"
     });
 
