@@ -24,7 +24,7 @@ function expectValues(runtime, values, callback){
         property = path[1],
         propertyPath = path.slice(2),
         expectedValue = values[key];
-    runtime.getComponent(alias, function(component){
+    runtime.getComponent(alias, function(err, component){
       component.when(property, function(value){
         propertyPath.forEach(function(key){
           value = value[key];
@@ -165,8 +165,8 @@ describe("plugins/layout", function () {
       }
     };
 
-    runtime.getComponent("a", function(a){
-      runtime.getComponent("b", function(b){
+    runtime.getComponent("a", function(err, a){
+      runtime.getComponent("b", function(err, b){
         a.when("box", function(box){
           if(a.size === "40px"){
             expect(box.width).to.equal(40);

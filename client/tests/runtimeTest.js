@@ -88,7 +88,7 @@ describe("runtime", function () {
       }
     });
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       done();
     });
@@ -104,7 +104,7 @@ describe("runtime", function () {
         plugin: "simplestPlugin"
       }
     }, function(err){
-      runtime.getComponent("foo", function(foo){
+      runtime.getComponent("foo", function(err, foo){
         expect(foo).to.exist();
         done();
       });
@@ -122,7 +122,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       done();
     });
@@ -141,7 +141,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       foo.when("message", function(message){
         expect(message).to.equal("Hello");
@@ -164,7 +164,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       foo.when(["x", "y"], function(x, y){
         expect(x).to.equal(5);
@@ -187,7 +187,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       foo.when(["x"], function(x){
         expect(x).to.equal(5);
         runtime.config = {
@@ -220,7 +220,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       runtime.when("config", function(config) {
         if(foo.message === "Hello"){
           foo.message = "World";
@@ -245,7 +245,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       expect(runtime.div).to.exist();
       expect(runtime.div.children.length).to.equal(1);
 
@@ -272,7 +272,7 @@ describe("runtime", function () {
 
     runtime.when("config", function(config){
       if("foo" in config){
-        runtime.getComponent("foo", function(foo){
+        runtime.getComponent("foo", function(err, foo){
           expect(runtime.div).to.exist();
           expect(runtime.div.children.length).to.equal(1);
 
@@ -312,7 +312,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       runtime.when("config", function(config){
         if("foo" in config){
           expect(config.foo.state.message).to.equal("Hello");
@@ -340,7 +340,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       var invocations = 0;
       runtime.when("config", function(config){
         invocations++;
@@ -364,7 +364,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       foo.message = "Hello";
 
       setTimeout(function(){
@@ -406,7 +406,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       foo.when("x", function(x){
         if(x == 50){
@@ -436,7 +436,7 @@ describe("runtime", function () {
         }
       }
     }, function (err){
-      runtime.getComponent("foo", function(foo){
+      runtime.getComponent("foo", function(err, foo){
         expect(foo).to.exist();
         expect(foo.message).to.equal("Hello");
         runtime.setConfig({
@@ -489,14 +489,14 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(foo){
+    runtime.getComponent("foo", function(err, foo){
       expect(foo.pluginName).to.equal("A");
       runtime.setConfig({
         foo: {
           plugin: "pluginB"
         }
       }, function(err){
-        runtime.getComponent("foo", function(foo){
+        runtime.getComponent("foo", function(err, foo){
           expect(foo.pluginName).to.equal("B");
           done();
         });
@@ -531,14 +531,14 @@ describe("runtime", function () {
 
     runtime.config = config1;
     
-    runtime.getComponent("chart", function(chart1){
+    runtime.getComponent("chart", function(err, chart1){
 
       expect(chart1.pluginName).to.equal("barChart");
       expect(chart1.markColumn).to.equal("browser");
       expect(chart1.sizeColumn).to.equal("popularity");
 
       runtime.setConfig(config2 , function(err){
-        runtime.getComponent("chart", function(chart2){
+        runtime.getComponent("chart", function(err, chart2){
 
           expect(chart2.pluginName).to.equal("pieChart");
           expect(chart2.markColumn).to.equal("browser");
@@ -547,5 +547,15 @@ describe("runtime", function () {
         });
       });
     });
+  });
+
+  it("should pass an async error when timeout exceeded in getComponent", function(done) {
+    var runtime = Runtime();
+    
+    runtime.getComponent("chart", function(err, chart){
+      expect(err).to.exist();
+      expect(err.message).to.equal("Component with alias 'chart' does not exist after timeout of 0.1 seconds exceeded.");
+      done();
+    }, 100);
   });
 });

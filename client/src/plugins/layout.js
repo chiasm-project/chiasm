@@ -38,7 +38,7 @@ define(["./computeLayout", "model", "async", "lodash"], function (computeLayout,
 
       // Apply the layout via the `box` property of components.
       Object.keys(boxes).forEach(function(alias){
-        runtime.getComponent(alias, function(component){
+        runtime.getComponent(alias, function(err, component){
           component.box = boxes[alias];
         });
       });
@@ -49,7 +49,7 @@ define(["./computeLayout", "model", "async", "lodash"], function (computeLayout,
       var aliases = aliasesInLayout(layout);
 
       aliases.forEach(function(alias){
-        runtime.getComponent(alias, function(component){
+        runtime.getComponent(alias, function(err, component){
           // TODO clean up listeners, test for leaks.
           component.when("size", function(size){
             extractSizes(aliases);
@@ -70,7 +70,7 @@ define(["./computeLayout", "model", "async", "lodash"], function (computeLayout,
       async.each(
         aliases,
         function(alias, callback){
-          runtime.getComponent(alias, function(component){
+          runtime.getComponent(alias, function(err, component){
 
             // store its "size" and "hidden" properties.
             if(component.size || component.hidden){

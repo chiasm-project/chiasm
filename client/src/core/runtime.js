@@ -89,15 +89,29 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     // can be removed from components when the components are destroyed.
     var listeners = {};
 
-    // Gets a component by alias, passes it to the callback.
-    // If the component exists, the callback is called immediately.
-    // If the component does not exist, this function waits until the
-    // component is created (by polling), then the callback is called.
-    function getComponent (alias, callback) {
+    // Gets a component by alias, passes it to the callback(err, component).
+    // This is asynchronous because the component may not be instantiated yet,
+    // in which case this function polls for existence of the component until
+    // maxWaitTime has elapsed.
+    function getComponent (alias, callback, maxWaitTime) {
+      var startTime = Date.now();
+
+      // Use a default max wait time of 10 seconds.
+      maxWaitTime = maxWaitTime || 10000;
+
+      // Poll for the component until max wait time has elapsed.
       async.until(
         function(){ return alias in components; },
-        function(cb){ setTimeout(cb, 0); },
-        function(){ callback(components[alias]); }
+        function(cb){
+          if( (Date.now() - startTime) > maxWaitTime ){
+            cb(new Error("Component with alias '" + alias +
+              "' does not exist after timeout of " + 
+              (maxWaitTime / 1000) + " seconds exceeded."));
+          } else {
+            setTimeout(cb, 1);
+          }
+        },
+        function(err){ callback(err, components[alias]); }
       );
     }
 
@@ -199,7 +213,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
 
     // Applies a "destroy" action to the runtime.
     function destroy(alias, callback){
-      getComponent(alias, function(component){
+      getComponent(alias, function(err, component){
 
         // Remove public property listeners.
         if(alias in listeners){
@@ -224,15 +238,18 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     
     // Applies a "set" action to the runtime.
     function set(alias, property, value, callback) {
-      getComponent(alias, function(component){
-        component[property] = value;
-        callback();
+      getComponent(alias, function(err, component){
+        if(err) { callback(err); }
+        else{
+          component[property] = value;
+          callback();
+        }
       });
     }
 
     // Applies an "unset" action to the runtime.
     function unset(alias, property, callback) {
-      getComponent(alias, function(component){
+      getComponent(alias, function(err, component){
         var defaultValue = publicPropertyDefaults[alias][property];
         component[property] = defaultValue;
         callback();
