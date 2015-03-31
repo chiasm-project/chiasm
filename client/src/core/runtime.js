@@ -228,17 +228,23 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     function unset(alias, property, callback) {
       getComponent(alias, function(component){
         var defaultValue = publicPropertyDefaults[alias][property];
-        component[property] = defaultValue || Model.None;
+        component[property] = defaultValue;
         callback();
       });
     }
 
     // If the configuration is set via `runtime.config = ...`,
     // this will work but any errors that occur will be thrown as exceptions.
-    runtime.when("config", setConfig);
+    runtime.on("config", function(newConfig){
+      setConfig(newConfig, function(err){
+        if(err) {
+          throw err;
+        }
+      });
+    });
 
     // If the configuration is set via `runtime.setConfig(...)`,
-    // this will also work and any errors that occur will passed to the async callback.
+    // errors will passed to the async callback.
     function setConfig(newConfig, callback){
 
       // Compute the difference between the old and new configurations.
@@ -256,20 +262,10 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
           // The job will apply each action resulting from the configuration difference.
           async.eachSeries(actions, processAction, function(err){
 
-            // If the caller of setConfig passed a callback (which may or may not be the case),
+            // pass any errors that resulted from this batch of actions
+            // to the caller of setConfig.
             if(callback){
-
-              // pass any errors that resulted from this batch of actions
-              // to the caller of setConfig.
               callback(err);
-
-            } else {
-
-              // If the caller of setConfig did not pass a callback,
-              // and there was an error, then throw the error.
-              if(err) {
-                throw err;
-              }
             }
 
             // Notify the async queue that this batch of actions has completed processing,

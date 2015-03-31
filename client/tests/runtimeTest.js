@@ -75,11 +75,45 @@ function DOMPlugin(runtime){
 
 describe("runtime", function () {
 
-  it("create a component", function(done) {
+  it("create a component via setConfig(config)", function(done) {
     var runtime = Runtime();
 
-    // Assign the plugin here so the runtime does not
+    // Assign the plugin this way so the runtime does not
     // try to load it dynamically using RequireJS.
+    runtime.plugins.simplestPlugin = SimplestPlugin;
+    
+    runtime.setConfig({
+      foo: {
+        plugin: "simplestPlugin"
+      }
+    });
+
+    runtime.getComponent("foo", function(foo){
+      expect(foo).to.exist();
+      done();
+    });
+  });
+
+  it("create a component via setConfig(config, callback)", function(done) {
+    var runtime = Runtime();
+
+    runtime.plugins.simplestPlugin = SimplestPlugin;
+    
+    runtime.setConfig({
+      foo: {
+        plugin: "simplestPlugin"
+      }
+    }, function(err){
+      runtime.getComponent("foo", function(foo){
+        expect(foo).to.exist();
+        done();
+      });
+    });
+  });
+
+  it("create a component via runtime.config = config", function(done) {
+    var runtime = Runtime();
+
     runtime.plugins.simplestPlugin = SimplestPlugin;
     
     runtime.config = {
@@ -392,33 +426,31 @@ describe("runtime", function () {
 
   it("should unset a property, setting None if default is None", function(done) {
     var runtime = Runtime();
-    runtime.plugins.simplePlugin= SimplePlugin;
+    runtime.plugins.simplePlugin = SimplePlugin;
     
-    runtime.config = {
+    runtime.setConfig({
       foo: {
         plugin: "simplePlugin",
         state: {
-          x: 50
+          message: "Hello"
         }
       }
-    };
-
-    runtime.getComponent("foo", function(foo){
-      expect(foo).to.exist();
-      foo.when("x", function(x){
-        if(x == 50){
-          runtime.config = {
-            foo: {
-              plugin: "simplePlugin",
-              state: { }
-            }
-          };
-        } else {
-          expect(x).to.equal(Model.None);
+    }, function (err){
+      runtime.getComponent("foo", function(foo){
+        expect(foo).to.exist();
+        expect(foo.message).to.equal("Hello");
+        runtime.setConfig({
+          foo: {
+            plugin: "simplePlugin",
+            state: { }
+          }
+        }, function(err){
+          expect(foo.message).to.equal(Model.None);
           done();
-        }
+        });
       });
     });
+
   });
 
   it("should throw an error when no public property default is provided", function(done) {
@@ -475,40 +507,30 @@ describe("runtime", function () {
   it("should change a plugin and transfer properties", function(done) {
     var runtime = Runtime();
 
-    runtime.plugins.barChart = function(){
-      return Model({
-        pluginName: "barChart"
-      });
-    };
-
-    runtime.plugins.pieChart = function(){
-      return Model({
-        pluginName: "pieChart"
-      });
-    };
-    
     var config1 = {
       chart: {
         plugin: "barChart",
-        state: {
-          markColumn: "browser",
-          sizeColumn: "popularity"
-        }
+        state: { markColumn: "browser", sizeColumn: "popularity" }
       }
     };
 
     var config2 = {
       chart: {
         plugin: "pieChart",
-        state: {
-          markColumn: "browser",
-          sizeColumn: "popularity"
-        }
+        state: { markColumn: "browser", sizeColumn: "popularity" }
       }
     };
 
-    runtime.config = config1;
+    runtime.plugins.barChart = function(){
+      return Model({ pluginName: "barChart" });
+    };
 
+    runtime.plugins.pieChart = function(){
+      return Model({ pluginName: "pieChart" });
+    };
+
+    runtime.config = config1;
+    
     runtime.getComponent("chart", function(chart1){
 
       expect(chart1.pluginName).to.equal("barChart");
