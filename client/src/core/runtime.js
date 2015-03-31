@@ -16,6 +16,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
       // * `plugins` An object for setting up plugins before loading a configuration.
       //   The runtime first looks here for plugins, then if a plugin is not found here
       //   it is dynamically loaded at runtime using RequireJS where the plugin name 
+      //   corresponds to a configured AMD module, or artibrary URL.
       //   * Keys are plugin names.
       //   * Values are plugin implementations, which are constructor functions for
       //     runtime components. A plugin constructor function takes as input a reference
@@ -74,8 +75,13 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     };
 
     // An asynchronous FIFO queue for applying actions to the runtime.
-    var actionQueue = async.queue(function(fn, callback){
-      fn(callback);
+    // This is used as essentially a lock, so multiple sequential calls 
+    // to setConfig() do not cause conflicting overlapping async action sequences.
+    var actionQueue = async.queue(function(actionBatch, queueCallback){
+
+      // Each queued task is an async function that executes a batch of actions,
+      // so here it is simply invoked, passing the queue callback.
+      actionBatch(queueCallback);
     }, 1);
 
     // This object contains the listeners that respond to changes in
@@ -257,7 +263,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
         oldConfig = _.cloneDeep(newConfig);
 
         // Push a new job onto the runtime's async queue.
-        actionQueue.push(function(queueCallback){
+        actionQueue.push(function actionBatch(queueCallback){
 
           // The job will apply each action resulting from the configuration difference.
           async.eachSeries(actions, processAction, function(err){
