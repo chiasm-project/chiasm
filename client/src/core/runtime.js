@@ -119,10 +119,18 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     // First tries to find plugin in runtime.plugins,
     // then uses RequireJS to load the plugin as an AMD module.
     function loadPlugin(plugin, callback){
+
+      // If the plugin has been set up in `runtime.plugins`, use it.
       if(plugin in runtime.plugins){
         callback(runtime.plugins[plugin]);
       } else {
-        requirejs(["plugins/" + plugin], callback);
+
+        // Otherwise, load the plugin dynamically using RequireJS.
+        // This uses the configured plugin name as an AMD module name.
+        // This means that paths for plugins must be set up via RequireJS configuration.
+        // This way of loading plugins also allows arbitrary AMD module URLs to be used.
+        // See also http://requirejs.org/docs/api.html#config-paths
+        requirejs([plugin], callback);
       }
     }
 

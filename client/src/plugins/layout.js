@@ -5,7 +5,7 @@
 // https://github.com/curran/model-contrib/blob/gh-pages/modules/boxes.js
 //
 // Created by Curran Kelleher Feb 2015
-define(["./computeLayout", "model", "async", "lodash"], function (computeLayout, Model, async, _){
+define(["computeLayout", "model", "async", "lodash"], function (computeLayout, Model, async, _){
 
   // The layout Chiasm plugin constructor function.
   return function Layout(runtime){

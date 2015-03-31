@@ -5,7 +5,7 @@
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
     requirejs = require("./configureRequireJS.js"),
-    computeLayout = requirejs("plugins/computeLayout");
+    computeLayout = requirejs("computeLayout");
 
 describe("computeLayout", function () {
 

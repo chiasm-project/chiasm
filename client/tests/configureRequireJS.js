@@ -46,9 +46,10 @@ requirejs.config({
     // https://github.com/caolan/async
     async: "bower_components/async/lib/async",
 
-    // Configure paths for plugins loaded at runtime.
-    plugins: "src/plugins/"
-
+    // Configure paths for plugins.
+    layout: "src/plugins/layout",
+    computeLayout: "src/plugins/computeLayout",
+    dummyVis: "src/plugins/dummyVis",
   }
 });
 
