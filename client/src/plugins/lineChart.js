@@ -1,13 +1,9 @@
 // A reusable line chart module.
 // Draws from D3 line chart example http://bl.ocks.org/mbostock/3883245
 // Curran Kelleher March 2015
-define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
+define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
 
-  // A representation for an optional Model property that is not specified.
-  // This allows the "when" approach to support optional properties.
-  // Inspired by Scala"s Option type.
-  // See http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null
-  var None = reactivis.None;
+  var None = Model.None;
 
   // The constructor function, accepting default values.
   return function LineChart(runtime) {
@@ -30,6 +26,13 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
     reactivis.title(model);
     reactivis.margin(model);
     reactivis.color(model);
+
+
+    // Generate a function for getting the X value.
+    model.when(["data", "xColumn"], function (data, xColumn) {
+      model.getX = function (d) { return d[xColumn]; };
+    });
+
 
     // Append a mouse target for intercepting mouse hover events.
     model.enableHoverLine = false;
@@ -69,11 +72,6 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
 
     model.when(["mouseTarget", "height"], function (mouseTarget, height) {
       mouseTarget.attr("height", height);
-    });
-
-    // Generate a function for getting the X value.
-    model.when(["data", "xColumn"], function (data, xColumn) {
-      model.getX = function (d) { return d[xColumn]; };
     });
 
     // Compute the domain of the X attribute.

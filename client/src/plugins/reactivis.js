@@ -1,12 +1,7 @@
-define([], function (){
+define(["model"], function (Model){
   var reactivis = {};
 
-  // A representation for an optional Model property that is not specified.
-  // This allows the "when" approach to support optional properties.
-  // Inspired by Scala"s Option type.
-  // See http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null
-  var None = "__none__";
-  reactivis.None = None;
+  var None = Model.None;
 
   reactivis.svg = function(model){
 
@@ -49,7 +44,7 @@ define([], function (){
       titleText.attr("x", width / 2);
     });
 
-    // Update the title text based on the `title` property.
+    // Update the title text based on the public `title` property.
     model.when(["titleText", "title"], function (titleText, title){
       titleText.text(title);
     });

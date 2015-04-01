@@ -1,13 +1,9 @@
 // A reusable bar chart module.
 // Draws from D3 bar chart example http://bl.ocks.org/mbostock/3885304
 // Curran Kelleher March 2015
-define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _) {
+define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _) {
 
-  // A representation for an optional Model property that is not specified.
-  // This allows the "when" approach to support optional properties.
-  // Inspired by Scala"s Option type.
-  // See http://alvinalexander.com/scala/using-scala-option-some-none-idiom-function-java-null
-  var None = reactivis.None;
+  var None = Model.None;
 
   // The constructor function, accepting default values.
   return function BarChart(runtime) {
@@ -98,25 +94,19 @@ define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model,
       model.getY = function (d) { return d[yColumn]; };
     });
 
-    // Compute the domain of the Y attribute.
-
     // Allow the API client to optionally specify fixed min and max values.
+    model.publicProperties.push("yDomainMin");
+    model.publicProperties.push("yDomainMax");
     model.yDomainMin = None;
     model.yDomainMax = None;
+
+    // Compute the domain of the Y attribute.
     model.when(["data", "getY", "yDomainMin", "yDomainMax"],
         function (data, getY, yDomainMin, yDomainMax) {
-
-      if(yDomainMin === None && yDomainMax === None){
-        model.yDomain = d3.extent(data, getY);
-      } else {
-        if(yDomainMin === None){
-          yDomainMin = d3.min(data, getY);
-        }
-        if(yDomainMax === None){
-          yDomainMax = d3.max(data, getY);
-        }
-        model.yDomain = [yDomainMin, yDomainMax];
-      }
+      model.yDomain = [
+        yDomainMin === None ? d3.min(data, getY): yDomainMin,
+        yDomainMax === None ? d3.max(data, getY): yDomainMax
+      ];
     });
 
     // Compute the Y scale.
