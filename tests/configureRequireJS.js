@@ -19,16 +19,8 @@ requirejs.config({
 
   baseUrl: ".",
 
-  // Set up the Chiasm package.
-  // https://github.com/curran/chiasm
-  packages: [{
-    name: "chiasm",
-    location: "src/core"
-  }],
-
-  // Set up paths for Bower dependencies.
-  // Uses github.com/curran/cdn
   paths: {
+    chiasm: "src/chiasm",
 
     // Visualization library.
     // http://d3js.org/

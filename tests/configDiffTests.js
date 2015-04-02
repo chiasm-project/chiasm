@@ -5,8 +5,9 @@
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
     requirejs = require("./configureRequireJS.js"),
-    configDiff = requirejs("chiasm/configDiff"),
-    Action = requirejs("chiasm/action");
+    Chiasm = requirejs("chiasm"),
+    configDiff = Chiasm.configDiff,
+    Action = Chiasm.Action;
 
 // Calls configDiff and converts the returned actions to strings,
 // for clean looking tests.

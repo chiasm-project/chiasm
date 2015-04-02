@@ -7,7 +7,7 @@ var expect = require("chai").expect,
     requirejs = require("../configureRequireJS.js"),
     async = requirejs("async"),
     Model = requirejs("model"),
-    Runtime = requirejs("chiasm/runtime");
+    Chiasm = requirejs("chiasm");
 
 // Use JSDOM for DOM manipulation in Node.
 // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
@@ -17,14 +17,14 @@ window = document.parentWindow;
 
 
 // A utility function for asserting component property values.
-function expectValues(runtime, values, callback){
+function expectValues(chiasm, values, callback){
   async.each(Object.keys(values), function(key, cb){
     var path = key.split("."),
         alias = path[0],
         property = path[1],
         propertyPath = path.slice(2),
         expectedValue = values[key];
-    runtime.getComponent(alias, function(err, component){
+    chiasm.getComponent(alias, function(err, component){
       component.when(property, function(value){
         propertyPath.forEach(function(key){
           value = value[key];
@@ -39,12 +39,12 @@ function expectValues(runtime, values, callback){
 describe("plugins/layout", function () {
   it("should compute size for a single dummyVis", function(done) {
     var div = document.createElement("div");
-    var runtime = Runtime(div);
+    var chiasm = Chiasm(div);
 
     // Set the width and height that the layout will use.
     div.clientHeight = div.clientWidth = 100;
     
-    runtime.config = {
+    chiasm.config = {
       layout: {
         plugin: "layout",
         state: {
@@ -56,7 +56,7 @@ describe("plugins/layout", function () {
       }
     };
 
-    expectValues(runtime, {
+    expectValues(chiasm, {
       "a.box.x": 0,
       "a.box.y": 0,
       "a.box.width": 100,
@@ -66,12 +66,12 @@ describe("plugins/layout", function () {
 
   it("should compute size for a 2 instances of dummyVis", function(done) {
     var div = document.createElement("div");
-    var runtime = Runtime(div);
+    var chiasm = Chiasm(div);
 
     // Set the width and height that the layout will use.
     div.clientHeight = div.clientWidth = 100;
     
-    runtime.config = {
+    chiasm.config = {
       layout: {
         plugin: "layout",
         state: {
@@ -89,7 +89,7 @@ describe("plugins/layout", function () {
       }
     };
 
-    expectValues(runtime, {
+    expectValues(chiasm, {
       "a.box.x": 0,
       "a.box.y": 0,
       "a.box.width": 50,
@@ -103,12 +103,12 @@ describe("plugins/layout", function () {
 
   it("should compute from size specified in initial state", function(done) {
     var div = document.createElement("div");
-    var runtime = Runtime(div);
+    var chiasm = Chiasm(div);
 
     // Set the width and height that the layout will use.
     div.clientHeight = div.clientWidth = 100;
     
-    runtime.config = {
+    chiasm.config = {
       layout: {
         plugin: "layout",
         state: {
@@ -128,7 +128,7 @@ describe("plugins/layout", function () {
         plugin: "dummyVis"
       }
     };
-    expectValues(runtime, {
+    expectValues(chiasm, {
       "a.box.width": 40,
       "b.box.width": 60
     }, done);
@@ -139,12 +139,12 @@ describe("plugins/layout", function () {
     // in the "size" property of each component in the layout.
 
     var div = document.createElement("div");
-    var runtime = Runtime(div);
+    var chiasm = Chiasm(div);
 
     // Set the width and height that the layout will use.
     div.clientHeight = div.clientWidth = 100;
     
-    runtime.config = {
+    chiasm.config = {
       layout: {
         plugin: "layout",
         state: {
@@ -165,8 +165,8 @@ describe("plugins/layout", function () {
       }
     };
 
-    runtime.getComponent("a", function(err, a){
-      runtime.getComponent("b", function(err, b){
+    chiasm.getComponent("a", function(err, a){
+      chiasm.getComponent("b", function(err, b){
         a.when("box", function(box){
           if(a.size === "40px"){
             expect(box.width).to.equal(40);

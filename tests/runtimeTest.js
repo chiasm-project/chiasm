@@ -1,4 +1,4 @@
-// This file contains tests for the runtime environment module.
+// This file contains tests for the top level Chiasm module.
 //
 // Draws from previous work found at
 // https://github.com/curran/reactivis/blob/gh-pages/tests/reactivisTest.js
@@ -14,7 +14,7 @@ var expect = require("chai").expect,
 // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
     document = require("jsdom").jsdom(),
     requirejs = require("./configureRequireJS.js"),
-    Runtime = requirejs("chiasm/runtime"),
+    Chiasm = requirejs("chiasm"),
     Model = requirejs("model");
 
 // The simplest possible plugin just returns a ModelJS model.
@@ -51,88 +51,88 @@ function SimplePluginWithDefaults(){
 }
 
 // This plugin demonstrates basic use of the DOM.
-// Notice that the runtime is passed into the plugin,
-// and the runtime has its own div that serves as the
+// Notice that the chiasm instance is passed into the plugin,
+// and the chiasm has its own div that serves as the
 // container for DOM elements of components.
-function DOMPlugin(runtime){
+function DOMPlugin(chiasm){
   var model = Model({
         publicProperties: ["message"]
       }),
       div = document.createElement("div");
   
-  runtime.div.appendChild(div);
+  chiasm.div.appendChild(div);
 
   model.when("message", function(message){
     div.innerHTML = message;
   });
 
   model.destroy = function(){
-    runtime.div.removeChild(div);
+    chiasm.div.removeChild(div);
   };
   
   return model;
 }
 
-describe("runtime", function () {
+describe("chiasm", function () {
 
   it("create a component via setConfig(config)", function(done) {
-    var runtime = Runtime();
+    var chiasm = Chiasm();
 
     // Assign the plugin this way so the runtime does not
     // try to load it dynamically using RequireJS.
-    runtime.plugins.simplestPlugin = SimplestPlugin;
+    chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    runtime.setConfig({
+    chiasm.setConfig({
       foo: {
         plugin: "simplestPlugin"
       }
     });
 
-    runtime.getComponent("foo", function(err, foo){
+    chiasm.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       done();
     });
   });
 
   it("create a component via setConfig(config, callback)", function(done) {
-    var runtime = Runtime();
+    var chiasm = Chiasm();
 
-    runtime.plugins.simplestPlugin = SimplestPlugin;
+    chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    runtime.setConfig({
+    chiasm.setConfig({
       foo: {
         plugin: "simplestPlugin"
       }
     }, function(err){
-      runtime.getComponent("foo", function(err, foo){
+      chiasm.getComponent("foo", function(err, foo){
         expect(foo).to.exist();
         done();
       });
     });
   });
 
-  it("create a component via runtime.config = config", function(done) {
-    var runtime = Runtime();
+  it("create a component via chiasm.config = config", function(done) {
+    var chiasm = Chiasm();
 
-    runtime.plugins.simplestPlugin = SimplestPlugin;
+    chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplestPlugin"
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
+    chiasm.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       done();
     });
   });
 
   it("create a component, set state with a single property", function(done) {
-    var runtime = Runtime();
-    runtime.plugins.simplestPlugin = SimplestPlugin;
+    var chiasm = Chiasm();
+    chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplestPlugin",
         state: {
@@ -141,7 +141,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
+    chiasm.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       foo.when("message", function(message){
         expect(message).to.equal("Hello");
@@ -151,10 +151,10 @@ describe("runtime", function () {
   });
 
   it("create a component, set state with two properties", function(done) {
-    var runtime = Runtime();
-    runtime.plugins.simplestPlugin = SimplestPlugin;
+    var chiasm = Chiasm();
+    chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplestPlugin",
         state: {
@@ -164,7 +164,7 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
+    chiasm.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       foo.when(["x", "y"], function(x, y){
         expect(x).to.equal(5);
@@ -175,10 +175,10 @@ describe("runtime", function () {
   });
 
   it("propagate changes from config to components", function(done) {
-    var runtime = Runtime();
-    runtime.plugins.simplestPlugin = SimplestPlugin;
+    var chiasm = Chiasm();
+    chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplestPlugin",
         state: {
@@ -187,10 +187,10 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
+    chiasm.getComponent("foo", function(err, foo){
       foo.when(["x"], function(x){
         expect(x).to.equal(5);
-        runtime.config = {
+        chiasm.config = {
           foo: {
             plugin: "simplestPlugin",
             state: {
@@ -208,10 +208,10 @@ describe("runtime", function () {
   });
 
   it("propagate changes from components to config (using 'publicProperties')", function(done) {
-    var runtime = Runtime();
-    runtime.plugins.simplePlugin = SimplePlugin;
+    var chiasm = Chiasm();
+    chiasm.plugins.simplePlugin = SimplePlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplePlugin",
         state: {
@@ -220,8 +220,8 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
-      runtime.when("config", function(config) {
+    chiasm.getComponent("foo", function(err, foo){
+      chiasm.when("config", function(config) {
         if(foo.message === "Hello"){
           foo.message = "World";
         } else {
@@ -232,11 +232,11 @@ describe("runtime", function () {
     });
   });
 
-  it("use a DOM node within the runtime", function(done) {
-    var runtime = Runtime(document.createElement("div"));
-    runtime.plugins.domPlugin = DOMPlugin;
+  it("use a DOM node within the chiasm", function(done) {
+    var chiasm = Chiasm(document.createElement("div"));
+    chiasm.plugins.domPlugin = DOMPlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "domPlugin",
         state: {
@@ -245,23 +245,23 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
-      expect(runtime.div).to.exist();
-      expect(runtime.div.children.length).to.equal(1);
+    chiasm.getComponent("foo", function(err, foo){
+      expect(chiasm.div).to.exist();
+      expect(chiasm.div.children.length).to.equal(1);
 
       foo.when("message", function(message){
         expect(message).to.equal("Hello");
-        expect(runtime.div.children[0].innerHTML).to.equal("Hello");
+        expect(chiasm.div.children[0].innerHTML).to.equal("Hello");
         done();
       });
     });
   });
 
   it("clean up DOM node when component destroyed", function(done) {
-    var runtime = Runtime(document.createElement("div"));
-    runtime.plugins.domPlugin = DOMPlugin;
+    var chiasm = Chiasm(document.createElement("div"));
+    chiasm.plugins.domPlugin = DOMPlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "domPlugin",
         state: {
@@ -270,15 +270,15 @@ describe("runtime", function () {
       }
     };
 
-    runtime.when("config", function(config){
+    chiasm.when("config", function(config){
       if("foo" in config){
-        runtime.getComponent("foo", function(err, foo){
-          expect(runtime.div).to.exist();
-          expect(runtime.div.children.length).to.equal(1);
+        chiasm.getComponent("foo", function(err, foo){
+          expect(chiasm.div).to.exist();
+          expect(chiasm.div.children.length).to.equal(1);
 
           // Removing "foo" from the config should cause its
           // destroy() method to be invoked.
-          runtime.config = {};
+          chiasm.config = {};
         });
       } else {
 
@@ -288,10 +288,10 @@ describe("runtime", function () {
         setTimeout(function(){
 
           // Test that foo.destroy() removed foo's div.
-          expect(runtime.div.children.length).to.equal(0);
+          expect(chiasm.div.children.length).to.equal(0);
 
           // Test that the component has been removed internally.
-          expect(runtime.componentExists("foo")).to.equal(false);
+          expect(chiasm.componentExists("foo")).to.equal(false);
 
           done();
         },0);
@@ -300,10 +300,10 @@ describe("runtime", function () {
   });
 
   it("do not propagate from component to config after component destroyed", function(done) {
-    var runtime = Runtime();
-    runtime.plugins.simplePlugin = SimplePlugin;
+    var chiasm = Chiasm();
+    chiasm.plugins.simplePlugin = SimplePlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplePlugin",
         state: {
@@ -312,11 +312,11 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
-      runtime.when("config", function(config){
+    chiasm.getComponent("foo", function(err, foo){
+      chiasm.when("config", function(config){
         if("foo" in config){
           expect(config.foo.state.message).to.equal("Hello");
-          runtime.config = {};
+          chiasm.config = {};
         } else {
           foo.message = "World";
           setTimeout(done, 0);
@@ -328,10 +328,10 @@ describe("runtime", function () {
   it("do not propagate from component to config if structure matches", function(done) {
     // This tests that JSON.stringify is used to compare old and new values
     // when propagating changes from components to the config.
-    var runtime = Runtime();
-    runtime.plugins.simplePlugin = SimplePlugin;
+    var chiasm = Chiasm();
+    chiasm.plugins.simplePlugin = SimplePlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplePlugin",
         state: {
@@ -340,9 +340,9 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
+    chiasm.getComponent("foo", function(err, foo){
       var invocations = 0;
-      runtime.when("config", function(config){
+      chiasm.when("config", function(config){
         invocations++;
         expect(invocations).to.equal(1);
         foo.message = {foo: ["a", "b"]};
@@ -355,38 +355,38 @@ describe("runtime", function () {
     // This tests that the "state" property is automatically created in the config
     // before it is populated with the updated state property
     // when propagating changes from components to the config.
-    var runtime = Runtime();
-    runtime.plugins.simplePlugin = SimplePlugin;
+    var chiasm = Chiasm();
+    chiasm.plugins.simplePlugin = SimplePlugin;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplePlugin"
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
+    chiasm.getComponent("foo", function(err, foo){
       foo.message = "Hello";
 
       setTimeout(function(){
-        expect(runtime.config.foo.state.message).to.equal("Hello");
+        expect(chiasm.config.foo.state.message).to.equal("Hello");
         done();
       }, 0);
     });
   });
 
   it("should not propagate from component to config for defaults", function(done) {
-    var runtime = Runtime();
+    var chiasm = Chiasm();
 
-    runtime.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
+    chiasm.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplePluginWithDefaults"
       }
     };
 
     var invocations = 0;
-    runtime.when("config", function(config){
+    chiasm.when("config", function(config){
       invocations++;
       expect(invocations).to.equal(1);
       setTimeout(done, 0);
@@ -394,10 +394,10 @@ describe("runtime", function () {
   });
 
   it("should unset a property, restoring default value", function(done) {
-    var runtime = Runtime();
-    runtime.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
+    var chiasm = Chiasm();
+    chiasm.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "simplePluginWithDefaults",
         state: {
@@ -406,11 +406,11 @@ describe("runtime", function () {
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
+    chiasm.getComponent("foo", function(err, foo){
       expect(foo).to.exist();
       foo.when("x", function(x){
         if(x == 50){
-          runtime.config = {
+          chiasm.config = {
             foo: {
               plugin: "simplePluginWithDefaults",
               state: { }
@@ -425,10 +425,10 @@ describe("runtime", function () {
   });
 
   it("should unset a property, setting None if default is None", function(done) {
-    var runtime = Runtime();
-    runtime.plugins.simplePlugin = SimplePlugin;
+    var chiasm = Chiasm();
+    chiasm.plugins.simplePlugin = SimplePlugin;
     
-    runtime.setConfig({
+    chiasm.setConfig({
       foo: {
         plugin: "simplePlugin",
         state: {
@@ -436,10 +436,10 @@ describe("runtime", function () {
         }
       }
     }, function (err){
-      runtime.getComponent("foo", function(err, foo){
+      chiasm.getComponent("foo", function(err, foo){
         expect(foo).to.exist();
         expect(foo.message).to.equal("Hello");
-        runtime.setConfig({
+        chiasm.setConfig({
           foo: {
             plugin: "simplePlugin",
             state: { }
@@ -454,10 +454,10 @@ describe("runtime", function () {
   });
 
   it("should throw an error when no public property default is provided", function(done) {
-    var runtime = Runtime();
-    runtime.plugins.invalidPlugin = InvalidPlugin;
+    var chiasm = Chiasm();
+    chiasm.plugins.invalidPlugin = InvalidPlugin;
 
-    runtime.setConfig({
+    chiasm.setConfig({
       foo: {
         plugin: "invalidPlugin",
         state: { }
@@ -470,33 +470,33 @@ describe("runtime", function () {
   });
 
   it("should change a plugin", function(done) {
-    var runtime = Runtime();
-    runtime.plugins.pluginA = function(){
+    var chiasm = Chiasm();
+    chiasm.plugins.pluginA = function(){
       return Model({
         pluginName: "A"
       });
     };
 
-    runtime.plugins.pluginB = function(){
+    chiasm.plugins.pluginB = function(){
       return Model({
         pluginName: "B"
       });
     };
     
-    runtime.config = {
+    chiasm.config = {
       foo: {
         plugin: "pluginA"
       }
     };
 
-    runtime.getComponent("foo", function(err, foo){
+    chiasm.getComponent("foo", function(err, foo){
       expect(foo.pluginName).to.equal("A");
-      runtime.setConfig({
+      chiasm.setConfig({
         foo: {
           plugin: "pluginB"
         }
       }, function(err){
-        runtime.getComponent("foo", function(err, foo){
+        chiasm.getComponent("foo", function(err, foo){
           expect(foo.pluginName).to.equal("B");
           done();
         });
@@ -505,7 +505,7 @@ describe("runtime", function () {
   });
 
   it("should change a plugin and transfer properties", function(done) {
-    var runtime = Runtime();
+    var chiasm = Chiasm();
 
     var config1 = {
       chart: {
@@ -521,24 +521,24 @@ describe("runtime", function () {
       }
     };
 
-    runtime.plugins.barChart = function(){
+    chiasm.plugins.barChart = function(){
       return Model({ pluginName: "barChart" });
     };
 
-    runtime.plugins.pieChart = function(){
+    chiasm.plugins.pieChart = function(){
       return Model({ pluginName: "pieChart" });
     };
 
-    runtime.config = config1;
+    chiasm.config = config1;
     
-    runtime.getComponent("chart", function(err, chart1){
+    chiasm.getComponent("chart", function(err, chart1){
 
       expect(chart1.pluginName).to.equal("barChart");
       expect(chart1.markColumn).to.equal("browser");
       expect(chart1.sizeColumn).to.equal("popularity");
 
-      runtime.setConfig(config2 , function(err){
-        runtime.getComponent("chart", function(err, chart2){
+      chiasm.setConfig(config2 , function(err){
+        chiasm.getComponent("chart", function(err, chart2){
 
           expect(chart2.pluginName).to.equal("pieChart");
           expect(chart2.markColumn).to.equal("browser");
@@ -550,9 +550,9 @@ describe("runtime", function () {
   });
 
   it("should pass an async error when timeout exceeded in getComponent", function(done) {
-    var runtime = Runtime();
+    var chiasm = Chiasm();
     
-    runtime.getComponent("chart", function(err, chart){
+    chiasm.getComponent("chart", function(err, chart){
       expect(err).to.exist();
       expect(err.message).to.equal("Component with alias 'chart' does not exist after timeout of 0.1 seconds exceeded.");
       done();

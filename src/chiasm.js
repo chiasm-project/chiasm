@@ -1,4 +1,4 @@
-// The runtime engine for interactive visualizations.
+// The Chiasm runtime engine for interactive visualizations.
 //
 // Draws from previous work found at
 //
@@ -6,24 +6,128 @@
 //  * https://github.com/curran/overseer/blob/master/src/overseer.js
 //
 // Created by Curran Kelleher Feb 2015
-define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model, async, _) {
+define(["model", "async", "lodash"], function (Model, async, _) {
 
-  // This module provides a runtime constructor function that returns a `runtime`
-  // object with the following properties:
-  return function Runtime(div){
-    var runtime = Model({
+  // Methods for creating and serializing Action objects, which are used to express 
+  // differences between configurations.
+  //
+  // The primary purpose of Action objects is to support editing the
+  // JSON application configuration at runtime. To avoid reloading the
+  // entire configuration in response to each change, the difference is computed
+  // and expressed as an array of Action objects, then the Action objects
+  // are applied to the runtime environment.
+  //
+  // Based on previous work found at:
+  // https://github.com/curran/overseer/blob/master/src/action.js
+  //
+  // This lays the foundation for undo/redo and real-time synchronization.
+  //
+  // For synchronization, these Action objects should be directly translatable
+  // into ShareJS operations for JSON transformation, documented at
+  // https://github.com/ottypes/json0
+  var Action = {
+    create: function (alias, plugin) {
+      return { method: "create", alias: alias, plugin: plugin };
+    },
+    destroy: function (alias) {
+      return { method: "destroy", alias: alias };
+    },
+    set: function (alias, property, value) {
+      return { method: "set", alias: alias, property: property, value: value };
+    },
+    unset: function (alias, property) {
+      return { method: "unset", alias: alias, property: property};
+    },
+    toString: function (action) {
+      return [
+        action.method + "(",
+        action.alias,
+        action.property !== undefined ? ", " + action.property : "",
+        action.value !== undefined ? ", " + action.value : "",
+        action.plugin !== undefined ? ", " + action.plugin : "",
+        ")"
+      ].join("");
+    }
+  };
+
+  // This function computes the difference ("diff") between two configurations.
+  // The diff is returned as an array of Action objects.
+  //
+  // Based on pervious work found at
+  // https://github.com/curran/overseer/blob/master/src/configDiff.js
+  function configDiff(oldConfig, newConfig){
+    var actions = [],
+        newAliases = _.keys(newConfig),
+        oldAliases = _.keys(oldConfig);
+
+    // Handle removed aliases.
+    _.difference(oldAliases, newAliases).forEach(function (alias) {
+      actions.push(Action.destroy(alias));
+    });
+
+    // Handle updated aliases.
+    newAliases.forEach(function (alias) {
+      var oldModel = alias in oldConfig ? oldConfig[alias].state || {} : null,
+          newModel = newConfig[alias].state || {},
+          oldProperties = oldModel ? _.keys(oldModel) : [],
+          newProperties = _.keys(newModel),
+          oldPlugin = alias in oldConfig ? oldConfig[alias].plugin : null,
+          newPlugin = newConfig[alias].plugin;
+
+      // Handle changed plugin.
+      if(oldModel && (oldPlugin !== newPlugin)){
+
+        // Destroy the old component that used the old plugin.
+        actions.push(Action.destroy(alias));
+
+        // Create a new component that uses the new plugin.
+        oldModel = null;
+
+        // Set all properties on the newly created component.
+        oldProperties = [];
+      }
+
+      // Handle added aliases.
+      if(!oldModel){
+        actions.push(Action.create(alias, newConfig[alias].plugin));
+      }
+
+      // Handle added properties.
+      _.difference(newProperties, oldProperties).forEach(function (property) {
+        actions.push(Action.set(alias, property, newModel[property]));
+      });
+  
+      // Handle removed properties.
+      _.difference(oldProperties, newProperties).forEach(function (property) {
+        actions.push(Action.unset(alias, property));
+      });
+  
+      // Handle updated properties.
+      _.intersection(newProperties, oldProperties).forEach(function (property) {
+        if(!_.isEqual(oldModel[property], newModel[property])){
+          actions.push(Action.set(alias, property, newModel[property]));
+        }
+      });
+    });
+    return actions;
+  }
+
+  // Define the Chiasm constructor function exposed by this AMD module.
+  function Chiasm(div){
+    var chiasm = Model({
 
       // * `plugins` An object for setting up plugins before loading a configuration.
-      //   The runtime first looks here for plugins, then if a plugin is not found here
+      //   The chiasm first looks here for plugins, then if a plugin is not found here
       //   it is dynamically loaded at runtime using RequireJS where the plugin name 
       //   corresponds to a configured AMD module, or artibrary URL.
       //   * Keys are plugin names.
       //   * Values are plugin implementations, which are constructor functions for
       //     runtime components. A plugin constructor function takes as input a reference
-      //     to the runtime, and yield as output a ModelJS model with the following properties:
+      //     to the chiasm instance, and yield as output a ModelJS model with the following properties:
       //     * `publicProperties` An array of property names whose updates will be propagated
       //       to the configuration as part of the component's serialized state.
       //     * `destroy` (optional) A function that frees all resources allocated by the component.
+      //     * See plugin documentation at https://github.com/curran/chiasm/wiki
       plugins: {},
 
       // * `config` The configuration object encapsulating application state.
@@ -35,7 +139,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
       //       properties of the component.
       config: {},
 
-      // * `div` The DOM container passed into the runtime constructor.
+      // * `div` The DOM container passed into the chiasm constructor.
       //   Visible plugins should append their own DOM elements to this container
       //   (and remove them when destroyed).
       div: div
@@ -74,9 +178,9 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
       }
     };
 
-    // An asynchronous FIFO queue for applying actions to the runtime.
-    // This is used as essentially a lock, so multiple sequential calls 
-    // to setConfig() do not cause conflicting overlapping async action sequences.
+    // An asynchronous FIFO queue for applying actions.
+    // This is used as essentially a synchronization lock, so multiple synchronous calls 
+    // to setConfig() do not cause conflicting overlapping asynchronous action sequences.
     var actionQueue = async.queue(function(actionBatch, queueCallback){
 
       // Each queued task is an async function that executes a batch of actions,
@@ -116,13 +220,13 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     }
 
     // Loads a plugin by name. 
-    // First tries to find plugin in runtime.plugins,
+    // First tries to find plugin in chiasm.plugins,
     // then uses RequireJS to load the plugin as an AMD module.
     function loadPlugin(plugin, callback){
 
-      // If the plugin has been set up in `runtime.plugins`, use it.
-      if(plugin in runtime.plugins){
-        callback(runtime.plugins[plugin]);
+      // If the plugin has been set up in `chiasm.plugins`, use it.
+      if(plugin in chiasm.plugins){
+        callback(chiasm.plugins[plugin]);
       } else {
 
         // Otherwise, load the plugin dynamically using RequireJS.
@@ -134,12 +238,12 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
       }
     }
 
-    // Applies a "create" action to the runtime.
+    // Applies a "create" action.
     function create(alias, plugin, callback){
       loadPlugin(plugin, function (constructor) {
 
         // Construct the component using the plugin.
-        var component = constructor(runtime);
+        var component = constructor(chiasm);
         components[alias] = component;
 
         // Default values for public properties.
@@ -186,10 +290,11 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
                   }
 
                   // Ignore changes that originated from the config.
-                  // Use oldConfig rather than runtime.config to handle the case that
-                  // runtime.config has been changed and its listener that computes
+                  // Use oldConfig rather than chiasm.config to handle the case that
+                  // chiasm.config has been changed and its listener that computes
                   // the diff and dispatches actions has not yet run.
                   // Use JSON.stringify so deep JSON structures are compared correctly.
+                  // TODO refactor this part
 
                   if(JSON.stringify(oldValue) !== JSON.stringify(newValue)){
 
@@ -206,7 +311,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
 
                     // This assignment will notify any listeners that the config has changed,
                     // (e.g. the config editor), but the config diff will yield no actions to execute.
-                    runtime.config = oldConfig;
+                    chiasm.config = oldConfig;
                   }
                 }
 
@@ -220,7 +325,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
       });
     }
 
-    // Applies a "destroy" action to the runtime.
+    // Applies a "destroy" action.
     function destroy(alias, callback){
       getComponent(alias, function(err, component){
 
@@ -245,7 +350,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
       });
     }
     
-    // Applies a "set" action to the runtime.
+    // Applies a "set" action.
     function set(alias, property, value, callback) {
       getComponent(alias, function(err, component){
         if(err) { callback(err); }
@@ -256,7 +361,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
       });
     }
 
-    // Applies an "unset" action to the runtime.
+    // Applies an "unset".
     function unset(alias, property, callback) {
       getComponent(alias, function(err, component){
         var defaultValue = publicPropertyDefaults[alias][property];
@@ -265,13 +370,13 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
       });
     }
 
-    // If the configuration is set via `runtime.config = ...`,
+    // If the configuration is set via `chiasm.config = ...`,
     // this will work but any errors that occur will be thrown as exceptions.
-    runtime.on("config", function(newConfig){
+    chiasm.on("config", function(newConfig){
       setConfig(newConfig);
     });
 
-    // If the configuration is set via `runtime.setConfig(...)`,
+    // If the configuration is set via `chiasm.setConfig(...)`,
     // errors will passed to the async callback.
     function setConfig(newConfig, callback){
 
@@ -284,7 +389,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
         // Store the new config as the old config.
         oldConfig = _.cloneDeep(newConfig);
 
-        // Push a new job onto the runtime's async queue.
+        // Push a new job onto the async action queue.
         actionQueue.push(function actionBatch(queueCallback){
 
           // The job will apply each action resulting from the configuration difference.
@@ -306,21 +411,29 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
       }
     }
 
-    // Processes a single action by executing it within the runtime.
+    // Processes a single action by executing it,
+    // using the appropriate method depending on the action type.
     function processAction(action, callback){
       methods[action.method](action, callback);
     }
 
     // Expose public methods.
-    runtime.getComponent = getComponent;
-    runtime.setConfig = setConfig;
+    chiasm.getComponent = getComponent;
+    chiasm.setConfig = setConfig;
 
     // This function checks if a component exists.
     // Necessary for code coverage in unit tests.
-    runtime.componentExists = function(alias){
+    chiasm.componentExists = function(alias){
       return alias in components;
     };
 
-    return runtime;
-  };
+    return chiasm;
+  }
+
+  // Expose configDiff and Action for unit tests.
+  Chiasm.configDiff = configDiff;
+  Chiasm.Action = Action;
+
+  // Return the Chiasm constructor function as this AMD module.
+  return Chiasm;
 });
