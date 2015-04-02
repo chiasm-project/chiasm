@@ -176,6 +176,13 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
       bars.exit().remove();
     });
 
+    model.destroy = function(){
+      if(model.container && model.svg){
+        model.svg.node().innerHTML = "";
+        model.container.removeChild(model.svg.node());
+      }
+    };
+
     return model;
   };
 });

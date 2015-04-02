@@ -198,6 +198,13 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
       lines.exit().remove();
     });
 
+    model.destroy = function(){
+      if(model.container && model.svg){
+        model.svg.node().innerHTML = "";
+        model.container.removeChild(model.svg.node());
+      }
+    };
+
     return model;
   };
 });

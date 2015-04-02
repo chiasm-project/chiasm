@@ -148,6 +148,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
         // Store defaults object reference for later use with "unset".
         publicPropertyDefaults[alias] = defaults;
 
+        // Exceptions are used for control flow in the case of an error.
         try {
 
           // Propagate changes from components to configuration.
@@ -229,7 +230,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
           delete listeners[alias];
         }
 
-        // Invoke component.destroy()
+        // Invoke component.destroy(), which is part of the plugin API.
         if("destroy" in component){
           component.destroy();
         }
@@ -267,11 +268,7 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
     // If the configuration is set via `runtime.config = ...`,
     // this will work but any errors that occur will be thrown as exceptions.
     runtime.on("config", function(newConfig){
-      setConfig(newConfig, function(err){
-        if(err) {
-          throw err;
-        }
-      });
+      setConfig(newConfig);
     });
 
     // If the configuration is set via `runtime.setConfig(...)`,
@@ -297,6 +294,8 @@ define(["./configDiff", "model", "async", "lodash"], function (configDiff, Model
             // to the caller of setConfig.
             if(callback){
               callback(err);
+            } else if(err) {
+              throw err;
             }
 
             // Notify the async queue that this batch of actions has completed processing,
