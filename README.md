@@ -1,5 +1,7 @@
 # Chiasm
 
+[![Build Status](https://travis-ci.org/curran/chiasm.svg)](https://travis-ci.org/curran/chiasm)
+
 Chiasm is a browser based runtime environment and plugin architecture for interactive visualizations. It allows plugins for data access, data transformation, and interactive visualization to be loaded and configured dynamically.
 
 [Try it out!](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/) Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.

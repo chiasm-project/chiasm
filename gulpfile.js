@@ -37,6 +37,10 @@ var mocha = require("gulp-mocha");
 // https://github.com/gulpjs/gulp/blob/master/docs/recipes/delete-files-folder.md
 var del = require("del");
 
+// Uglify is for minification.
+// TODO resolve how to make this work with chiasm core as well as plugins
+//var uglify = require("gulp-uglify");
+
 // Source code glob expressions for /src and /test.
 var srcCode = "src/**/*.js",
     testCode = "tests/**/*.js";

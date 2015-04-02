@@ -9,6 +9,9 @@
   "keywords": [
     "visualization"
   ],
+  "scripts": {
+    "test": "gulp test"
+  },
   "author": "Curran Kelleher",
   "license": "MIT",
   "devDependencies": {
@@ -22,5 +25,8 @@
     "jsdom": "^3.1.0",
     "jshint-stylish": "^1.0.0",
     "requirejs": "^2.1.15"
+  },
+  "dependencies": {
+    "gulp-uglify": "^1.1.0"
   }
 }
