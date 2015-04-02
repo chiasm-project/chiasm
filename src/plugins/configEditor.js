@@ -12,7 +12,10 @@ define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/j
       // The `hidden` boolean property triggers the layout
       // to recalculate to show and hide the editor.
       publicProperties: [ "hidden" , "size"],
+       
+      // TODO test hidden on/off
       hidden: false,
+
       size: "400px"
     });
 
@@ -47,13 +50,14 @@ define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/j
     });
 
     // Update the runtime config when text is edited.
-    editor.on("change", _.throttle(function(){
+    var changeListener = _.throttle(function(){
       oldConfigStr = editor.getValue();
       runtime.config = JSON.parse(oldConfigStr);
 
       // Throttle by 33 ms so the frequent updates induced by Inlet widgets
       // propagates through the system at most 30 frames per second (1000 / 30 = 33.333).
-    }, 33));
+    }, 33);
+    editor.on("change", changeListener);
 
     // When the size of the visualization is set by the layout plugin,
     model.when("box", function (box) {
@@ -75,9 +79,11 @@ define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/j
     // Clean up the DOM elements when the component is destroyed.
     model.destroy = function(){
 
-      // TODO test this
-      // TODO remove config listener
-      runtime.div.removeChild(textarea.node());
+      // Remove the listener that was added to the CodeMirror instance.
+      editor.on("change", changeListener);
+
+      // Remove the CodeMirror DOM element.
+      editor.getWrapperElement().remove();
     };
 
     // Augment the editor using Inlet, which gives
