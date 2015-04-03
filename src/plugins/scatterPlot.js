@@ -111,7 +111,7 @@ define(["d3", "model"], function (d3, Model) {
         if(xDomainMax === None){
           xDomainMax = d3.max(data, getX);
         }
-        model.xDomain = [xDomainMin, xDomainMax]
+        model.xDomain = [xDomainMin, xDomainMax];
       }
     });
 
@@ -178,7 +178,7 @@ define(["d3", "model"], function (d3, Model) {
         if(yDomainMax === None){
           yDomainMax = d3.max(data, getY);
         }
-        model.yDomain = [yDomainMin, yDomainMax]
+        model.yDomain = [yDomainMin, yDomainMax];
       }
     });
 
@@ -203,7 +203,7 @@ define(["d3", "model"], function (d3, Model) {
     
     // Move the Y axis label based on its specified offset.
     model.when(["yAxisText", "yAxisLabelOffset"], function (yAxisText, yAxisLabelOffset){
-      yAxisText.attr("dy", "-" + yAxisLabelOffset + "em")
+      yAxisText.attr("dy", "-" + yAxisLabelOffset + "em");
     });
 
     // Center the Y axis label when height changes.
@@ -235,7 +235,7 @@ define(["d3", "model"], function (d3, Model) {
     model.when(["sizeColumn", "data", "sizeDefault", "sizeMin", "sizeMax"],
         function (sizeColumn, data, sizeDefault, sizeMin, sizeMax){
       if(sizeColumn !== None){
-        var getSize = function (d){ return d[sizeColumn] },
+        var getSize = function (d){ return d[sizeColumn]; },
             sizeScale = d3.scale.linear()
               .domain(d3.extent(data, getSize))
               .range([sizeMin, sizeMax]);
@@ -257,7 +257,7 @@ define(["d3", "model"], function (d3, Model) {
     model.when(["colorColumn", "data", "colorDefault", "colorDomain", "colorRange"],
         function (colorColumn, data, colorDefault, colorDomain, colorRange){
       if(colorColumn !== None && colorDomain !== None && colorRange !== None){
-        var getColor = function (d){ return d[colorColumn] },
+        var getColor = function (d){ return d[colorColumn]; },
             colorScale = d3.scale.ordinal()
               .domain(colorDomain)
               .range(colorRange);
