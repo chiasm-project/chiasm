@@ -66,7 +66,36 @@ Status: partially implemented.
 
 ## Plugins
 
-Here's [how to implement a Chiasm plugin](https://github.com/curran/chiasm/wiki). The following sections describe foundational plugins that are included in the Chiasm project under `src/plugins`.
+Here's [how to create a Chiasm plugin](https://github.com/curran/chiasm/wiki).
+
+The following sections describe foundational plugins that are included in the Chiasm project under `src/plugins`.
+
+### Visualization Plugins
+
+ * [bar chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/barChart.js)
+ * [line chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/lineChart.js)
+ * [Scatter Plot](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/scatterPlot.js)
+ * [Crossfilter](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/crossfilter.js)
+
+Targets for implementation as plugins include the following visualizations:
+
+ * [Table](http://curran.github.io/model-contrib/#/examples/table)
+ * [Parallel Coordinates](https://github.com/curran/model/tree/gh-pages/examples/d3ParallelCoordinates)
+ * [Stacked Area Chart](https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea)
+ * [Choropleth Map (using Leaflet)](http://leafletjs.com/examples/choropleth.html)
+ * [Calendar View](http://bl.ocks.org/mbostock/4063318)
+
+The following features common to many D3-based visualizations can reside in a separate module (prototyped in the [Reactivis project](https://github.com/curran/reactivis)):
+
+ * Margins
+ * Scales (X, Y, color)
+ * Axes
+ * Color Legend
+ * [Brushing (draw a rectangle to select many records)](http://curran.github.io/model-contrib/#/examples/linkedViews)
+ * [Selecting (click/tap to select a single value)](http://curran.github.io/model/examples/d3LinkedChoropleth/)
+ * [Hovering](http://curran.github.io/model/examples/d3LinkedChoropleth/)
+
+If you're interested in contributing plugins, please experiment and get in touch! Feel free to email me at curran.kelleher@gmail.com or send a pull request with your work. I am looking for collaborators on this project.
 
 ### Layout
 
@@ -145,37 +174,6 @@ Plugins may be created for components that make requests to a server. The inputs
 See also:
 
  * [links plugin](http://curran.github.io/chiasm/client/docs/plugins/links.html)
-
-## Visualization Plugins
-
-Here's [how to create a Chiasm plugin](https://github.com/curran/chiasm/wiki).
-
-Implemented visualization plugins:
-
- * [bar chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/barChart.js)
- * [line chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/lineChart.js)
- * [Scatter Plot](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/scatterPlot.js)
- * [Crossfilter](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/crossfilter.js)
-
-Targets for implementation as plugins include the following visualizations:
-
- * [Table](http://curran.github.io/model-contrib/#/examples/table)
- * [Parallel Coordinates](https://github.com/curran/model/tree/gh-pages/examples/d3ParallelCoordinates)
- * [Stacked Area Chart](https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea)
- * [Choropleth Map (using Leaflet)](http://leafletjs.com/examples/choropleth.html)
- * [Calendar View](http://bl.ocks.org/mbostock/4063318)
-
-The following features common to many D3-based visualizations can reside in a separate module (prototyped in the [Reactivis project](https://github.com/curran/reactivis)):
-
- * Margins
- * Scales (X, Y, color)
- * Axes
- * Color Legend
- * [Brushing (draw a rectangle to select many records)](http://curran.github.io/model-contrib/#/examples/linkedViews)
- * [Selecting (click/tap to select a single value)](http://curran.github.io/model/examples/d3LinkedChoropleth/)
- * [Hovering](http://curran.github.io/model/examples/d3LinkedChoropleth/)
-
-If you're interested in contributing plugins, please get in touch! Feel free to email me at curran.kelleher@gmail.com or send a pull request with your work.
 
 # The word "[Chiasm](http://www.merriam-webster.com/audio.php?file=chiasm02&word=chiasm&text=)"
 
