@@ -148,16 +148,18 @@ See also:
 
 ## Visualization Plugins
 
+Here's [how to create a Chiasm plugin](https://github.com/curran/chiasm/wiki).
+
 Implemented visualization plugins:
 
- * [bar chart](http://curran.github.io/chiasm/client/docs/plugins/barChart.html)
- * [line chart](http://curran.github.io/chiasm/client/docs/plugins/lineChart.html)
+ * [bar chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/barChart.js)
+ * [line chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/lineChart.js)
+ * [Scatter Plot](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/scatterPlot.js)
+ * [Crossfilter](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/crossfilter.js)
 
 Targets for implementation as plugins include the following visualizations:
 
- * [Scatter Plot](http://bl.ocks.org/curran/9e04ccfebeb84bcdc76c)
  * [Table](http://curran.github.io/model-contrib/#/examples/table)
- * [Crossfilter](http://curran.github.io/model-contrib/#/examples/linkedViews)
  * [Parallel Coordinates](https://github.com/curran/model/tree/gh-pages/examples/d3ParallelCoordinates)
  * [Stacked Area Chart](https://github.com/curran/model/tree/gh-pages/examples/d3StackedArea)
  * [Choropleth Map (using Leaflet)](http://leafletjs.com/examples/choropleth.html)
