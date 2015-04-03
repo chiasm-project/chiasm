@@ -1,4 +1,4 @@
-// The Chiasm runtime engine for interactive visualizations.
+
 //
 // Draws from previous work found at
 //
@@ -355,6 +355,10 @@ define(["model", "async", "lodash"], function (Model, async, _) {
       getComponent(alias, function(err, component){
         if(err) { callback(err); }
         else{
+
+          // TODO strictly enforce that every property set via the configuration
+          // is a public property that has a default value.
+
           component[property] = value;
           callback();
         }

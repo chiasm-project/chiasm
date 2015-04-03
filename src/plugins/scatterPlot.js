@@ -10,7 +10,23 @@ define(["d3", "model"], function (d3, Model) {
     // Create a Model instance for the visualization.
     // This will serve as its public API.
     var model = Model({
-      container: chiasm.div
+      container: chiasm.div,
+
+      // TODO refactor this, define public properties
+      // close to reactive functions that use them.
+      publicProperties: [
+        "xColumn",
+        "xAxisLabel",
+        "yColumn",
+        "yAxisLabel",
+        "margin",
+        "xAxisLabelOffset",
+        "yAxisLabelOffset",
+        "title",
+        "titleOffset",
+        "sizeDefault",
+        "colorDefault"
+      ]
     });
 
     // Create an SVG element from the container DOM element.
@@ -231,18 +247,19 @@ define(["d3", "model"], function (d3, Model) {
 
     // Allow the API client to optionally specify a color column.
     model.colorColumn = None;
+    model.colorDomain = None;
     model.colorRange = None;
     
     // The default color of circles (CSS color string).
     model.colorDefault = "black";
 
     // Set up the color scale.
-    model.when(["colorColumn", "data", "colorDefault", "colorRange"],
-        function (colorColumn, data, colorDefault, colorRange){
-      if(colorColumn !== None && colorRange !== None){
+    model.when(["colorColumn", "data", "colorDefault", "colorDomain", "colorRange"],
+        function (colorColumn, data, colorDefault, colorDomain, colorRange){
+      if(colorColumn !== None && colorDomain !== None && colorRange !== None){
         var getColor = function (d){ return d[colorColumn] },
             colorScale = d3.scale.ordinal()
-              .domain(data.map(getColor))
+              .domain(colorDomain)
               .range(colorRange);
         model.getColorScaled = function (d){ return colorScale(getColor(d)); };
       } else {
@@ -262,6 +279,7 @@ define(["d3", "model"], function (d3, Model) {
       var circles = circlesG.selectAll("circle").data(data);
       circles.enter().append("circle");
       circles
+        .transition().duration(500) // TODO make this a model property
         .attr("cx", getXScaled)
         .attr("cy", getYScaled)
         .attr("r", getSizeScaled)
