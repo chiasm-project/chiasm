@@ -14,6 +14,8 @@ Here's a [talk on YouTube about Chiasm - Constructing Interactive Data Visualiza
 
 See also [Model.js](https://github.com/curran/model), which this project is built on.
 
+Please give this repo a star if you think it is cool. Also feel free to submit issues for feature requests, or reach out to me if you're at all interested in collaborating on this curran.kelleher@gmail.com
+
 ## Examples
 [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1)
 [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
