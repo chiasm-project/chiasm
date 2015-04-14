@@ -1,5 +1,3 @@
-
-//
 // Draws from previous work found at
 //
 //  * https://github.com/curran/model-contrib/blob/gh-pages/modules/overseer.js
@@ -114,10 +112,12 @@ define(["model", "async", "lodash"], function (Model, async, _) {
 
   // Define the Chiasm constructor function exposed by this AMD module.
   function Chiasm(div){
+
+    // This is the object returned by the constructor.
     var chiasm = Model({
 
       // * `plugins` An object for setting up plugins before loading a configuration.
-      //   The chiasm first looks here for plugins, then if a plugin is not found here
+      //   Chiasm first looks here for plugins, then if a plugin is not found here
       //   it is dynamically loaded at runtime using RequireJS where the plugin name 
       //   corresponds to a configured AMD module, or artibrary URL.
       //   * Keys are plugin names.
@@ -226,7 +226,13 @@ define(["model", "async", "lodash"], function (Model, async, _) {
 
       // If the plugin has been set up in `chiasm.plugins`, use it.
       if(plugin in chiasm.plugins){
-        callback(chiasm.plugins[plugin]);
+
+        // Make the loadPlugin function asynchronous all the time,
+        // for consistency, so as not to release Zalgo.
+        // See http://blog.izs.me/post/59142742143/designing-apis-for-asynchrony
+        setTimeout(function(){
+          callback(chiasm.plugins[plugin]);
+        }, 0);
       } else {
 
         // Otherwise, load the plugin dynamically using RequireJS.
@@ -263,6 +269,9 @@ define(["model", "async", "lodash"], function (Model, async, _) {
 
               // Require that all declared public properties have a default value.
               if(!(property in component)){
+
+                // TODO refactor this code so it doesn't throw an exception,
+                // but rather uses a nicer error handling style.
 
                 // Use an exception to break the forEach loop.
                 throw new Error("Default value for public property '" +
@@ -356,11 +365,27 @@ define(["model", "async", "lodash"], function (Model, async, _) {
         if(err) { callback(err); }
         else{
 
-          // TODO strictly enforce that every property set via the configuration
-          // is a public property that has a default value.
-
           component[property] = value;
           callback();
+
+// TODO uncomment this and fix all resulting errors.
+//          // Strictly enforce that every property set via the configuration
+//          // is a public property that has a default value.
+//          // Without this, the behavior of Chiasm is unstable in the case that
+//          // a property is set, then the property is removed from the configuration (unset).
+//          // The default values tell Chiasm what value to use after a property is unset.
+//          // Without default values, unsetting a property would have no effect, which would
+//          // make the state of the system out of sync the state specified configuration.
+//          if( alias in publicPropertyDefaults && property in publicPropertyDefaults[alias] ){
+//            component[property] = value;
+//            callback();
+//          } else {
+//            callback(new Error([
+//              "Any property set from a Chiasm configuration must be ",
+//              "declared as a public property by the plugin, and must have ",
+//              "a default value provided."
+//            ].join("")));
+//          }
         }
       });
     }
