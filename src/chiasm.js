@@ -188,7 +188,11 @@ define(["model", "lodash"], function (Model, _) {
 
       // The timeout (in milliseconds) used for plugin loading and getComponent().
       // The default timeout is 10 seconds.
-      timeout: 10000
+      timeout: 10000,
+
+      // Expose the container DOM element to plugins so they can
+      // append their own DOM elements to it.
+      container: container
     });
 
     // The runtime components created by plugins.
@@ -347,57 +351,73 @@ define(["model", "lodash"], function (Model, _) {
           // Store defaults object reference for later use with "unset".
           defaults[alias] = {};
 
-          // Handle public properties.
-          if("publicProperties" in component){
+          try {
+
+            // Handle public properties.
+            if("publicProperties" in component){
           
-            // Validate that all public properties have default values and store them.
-            component.publicProperties.forEach(function(property){
+              // Validate that all public properties have default values and store them.
+              component.publicProperties.forEach(function(property){
 
-              // Require that all declared public properties have a default value.
-              if(!(property in component)){
+                // Require that all declared public properties have a default value.
+                if(!(property in component)){
 
-                // Throw an exception in order to break out of the current control flow.
-                // Because this is in synchronous code within a promise, throwing this error
-                // will have the exact same promise-friendly behavior as calling reject(Error(...)).
-                throw Error([
-                  "Default value for public property '", property,
-                  "' not specified for component with alias '", alias, "'."
-                ].join(""));
-              }
-
-              // Store default values for public properties.
-              defaults[property] = component[property];
-            });
-
-            // Propagate changes originating from components into the configuration.
-            callbacks[alias] = component.publicProperties.map(function(property){
-
-              // Store the "on" callbacks so they can be removed later, when the component is destroyed.
-              return component.on(property, function(newValue){
-
-                // If this change did not originate from setConfig(),
-                // but rather originated from the component, possibly via user interaction,
-                // then propagate it into the configuration.
-                if(settingProperty){
-
-                  // If no state is tracked, create the state object.
-                  if(!("state" in chiasm.config[alias])){
-                    chiasm.config[alias].state = {};
-                  }
-  
-                  // Surgically change `chiasm.config` so that the diff computation will yield
-                  // no actions. Without this step, the update would propagate from the 
-                  // component to the config and then back again unnecessarily.
-                  chiasm.config[alias].state[property] = newValue;
-  
-                  // This assignment will notify any callbacks that the config has changed,
-                  // (e.g. the config editor), but the config diff will yield no actions to execute.
-                  chiasm.config = chiasm.config;
+                  // Throw an exception in order to break out of the current control flow.
+                  throw Error([
+                    "Default value for public property '", property,
+                    "' not specified for component with alias '", alias, "'."
+                  ].join(""));
                 }
+
+                // Store default values for public properties.
+                defaults[alias][property] = component[property];
               });
-            });
+
+              // Propagate changes originating from components into the configuration.
+              callbacks[alias] = component.publicProperties.map(function(property){
+
+                var callback = function(newValue){
+
+                  // If this change did not originate from setConfig(),
+                  // but rather originated from the component, possibly via user interaction,
+                  // then propagate it into the configuration.
+                  if(!settingProperty){
+
+                    // If no state is tracked, create the state object.
+                    if(!("state" in chiasm.config[alias])){
+                      chiasm.config[alias].state = {};
+                    }
+  
+                    // Surgically change `chiasm.config` so that the diff computation will yield
+                    // no actions. Without this step, the update would propagate from the 
+                    // component to the config and then back again unnecessarily.
+                    chiasm.config[alias].state[property] = newValue;
+  
+                    // This assignment will notify any callbacks that the config has changed,
+                    // (e.g. the config editor), but the config diff will yield no actions to execute.
+                    chiasm.config = chiasm.config;
+                  }
+                };
+
+                // Listen for property changes on the component model.
+                component.on(property, callback);
+
+                // Store the callbacks for each property so they can be removed later,
+                // when the component is destroyed.
+                return {
+                  property: property,
+                  callback: callback
+                };
+              });
+            }
+            resolve();
+
+          } catch (err) {
+
+            // Catch the error for missing default values and
+            // pass it to the Promise reject function.
+            reject(err);
           }
-          resolve();
         }, reject);
       });
     }
@@ -405,11 +425,13 @@ define(["model", "lodash"], function (Model, _) {
     // Applies a "destroy" action.
     function destroy(alias){
       return new Promise(function(resolve, reject){
-        getComponent(alias, function(err, component){
+        getComponent(alias).then(function(component){
 
           // Remove public property callbacks.
           if(alias in callbacks){
-            callbacks[alias].forEach(component.off);
+            callbacks[alias].forEach(function(cb){
+              component.off(cb.property, cb.callback);
+            });
             delete callbacks[alias];
           }
 
@@ -469,8 +491,14 @@ define(["model", "lodash"], function (Model, _) {
     // Applies an "unset" action.
     function unset(alias, property, callback) {
       return new Promise(function(resolve, reject){
-        getComponent(alias).then(function(err, component){
+        getComponent(alias).then(function(component){
+
+          // Set this flag so Chiasm knows the change originated from setConfig().
+          settingProperty = true;
+
           component[property] = defaults[alias][property];
+          
+          settingProperty = false;
           resolve();
         }, reject);
       });
