@@ -13,11 +13,11 @@ var expect = require("chai").expect,
 // Use JSDOM for DOM manipulation in Node.
 // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
     document = require("jsdom").jsdom(),
-    requirejs = require("./configureRequireJS.js"),
-    Chiasm = requirejs("chiasm"),
-    Model = requirejs("model");
+    requireJS = require("./configureRequireJS.js"),
+    Chiasm = requireJS("chiasm"),
+    Model = requireJS("model");
 
-// The simplest possible plugin just returns a ModelJS model.
+// The simplest possible plugin just returns a model (using model.js).
 function SimplestPlugin(){
   return Model();
 }
@@ -76,486 +76,541 @@ function DOMPlugin(chiasm){
 describe("chiasm", function () {
 
   it("create a component via setConfig(config)", function(done) {
+
+    // Create a new Chiasm instance by invoking the constructor function.
     var chiasm = Chiasm();
 
     // Assign the plugin this way so the runtime does not
     // try to load it dynamically using RequireJS.
     chiasm.plugins.simplestPlugin = SimplestPlugin;
     
+    // Set the Chiasm configuration.
     chiasm.setConfig({
       foo: {
         plugin: "simplestPlugin"
       }
     });
 
-    chiasm.getComponent("foo", function(err, foo){
+    // Get the component created by the plugin.
+    chiasm.getComponent("foo").then(function(foo){
+
+      // Make sure the component exists.
       expect(foo).to.exist();
+
       done();
     });
   });
 
-  it("create a component via setConfig(config, callback)", function(done) {
+  it("the promise returned by setConfig(config) should resolve", function(done) {
     var chiasm = Chiasm();
 
     chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    chiasm.setConfig({
+    // setConfig returns a promise that is resolved after the
+    // configuration has been fully loaded.
+    var promise = chiasm.setConfig({
       foo: {
         plugin: "simplestPlugin"
       }
-    }, function(err){
-      chiasm.getComponent("foo", function(err, foo){
+    });
+    
+    promise.then(function(){
+      chiasm.getComponent("foo").then(function(foo){
         expect(foo).to.exist();
         done();
       });
     });
   });
 
-  it("create a component via chiasm.config = config", function(done) {
+  it("setConfig(config) should report an error from RequireJS if a plugin doesn't load", function(done) {
     var chiasm = Chiasm();
 
     chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    chiasm.config = {
+    // setConfig returns a promise that handles errors.
+    var promise = chiasm.setConfig({
       foo: {
-        plugin: "simplestPlugin"
+        plugin: "nonexistentPlugin"
       }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      expect(foo).to.exist();
+    });
+    
+    promise.then(function(){}, function(err){
+      expect(err.message).to.equal("Tried loading \"nonexistentPlugin\" at ./nonexistentPlugin.js then tried node's require(\"nonexistentPlugin\") and it failed with error: Error: Cannot find module 'nonexistentPlugin'");
       done();
     });
   });
 
-  it("create a component, set state with a single property", function(done) {
+  it("setConfig(config) should report an timeout error a plugin doesn't load", function(done) {
     var chiasm = Chiasm();
+
     chiasm.plugins.simplestPlugin = SimplestPlugin;
+
+    // This is how you can modify the timeout,
+    // the number of milliseconds to wait before reporting an error.
+    chiasm.timeout = 10;
+
+    // This is how you can prevent Chiasm from attempting to use RequireJS.
+    chiasm.disableRequireJS = true;
     
-    chiasm.config = {
+    // setConfig returns a promise that handles errors.
+    var promise = chiasm.setConfig({
       foo: {
-        plugin: "simplestPlugin",
-        state: {
-          message: "Hello"
-        }
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      expect(foo).to.exist();
-      foo.when("message", function(message){
-        expect(message).to.equal("Hello");
-        done();
-      });
-    });
-  });
-
-  it("create a component, set state with two properties", function(done) {
-    var chiasm = Chiasm();
-    chiasm.plugins.simplestPlugin = SimplestPlugin;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "simplestPlugin",
-        state: {
-          x: 5,
-          y: 10
-        }
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      expect(foo).to.exist();
-      foo.when(["x", "y"], function(x, y){
-        expect(x).to.equal(5);
-        expect(y).to.equal(10);
-        done();
-      });
-    });
-  });
-
-  it("propagate changes from config to components", function(done) {
-    var chiasm = Chiasm();
-    chiasm.plugins.simplestPlugin = SimplestPlugin;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "simplestPlugin",
-        state: {
-          x: 5
-        }
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      foo.when(["x"], function(x){
-        expect(x).to.equal(5);
-        chiasm.config = {
-          foo: {
-            plugin: "simplestPlugin",
-            state: {
-              x: 5,
-              y: 10
-            }
-          }
-        };
-        foo.when(["y"], function(y){
-          expect(y).to.equal(10);
-          done();
-        });
-      });
-    });
-  });
-
-  it("propagate changes from components to config (using 'publicProperties')", function(done) {
-    var chiasm = Chiasm();
-    chiasm.plugins.simplePlugin = SimplePlugin;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "simplePlugin",
-        state: {
-          message: "Hello"
-        }
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      chiasm.when("config", function(config) {
-        if(foo.message === "Hello"){
-          foo.message = "World";
-        } else {
-          expect(config.foo.state.message).to.equal("World");
-          done();
-        }
-      });
-    });
-  });
-
-  it("use a DOM node within the chiasm", function(done) {
-    var chiasm = Chiasm(document.createElement("div"));
-    chiasm.plugins.domPlugin = DOMPlugin;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "domPlugin",
-        state: {
-          message: "Hello"
-        }
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      expect(chiasm.div).to.exist();
-      expect(chiasm.div.children.length).to.equal(1);
-
-      foo.when("message", function(message){
-        expect(message).to.equal("Hello");
-        expect(chiasm.div.children[0].innerHTML).to.equal("Hello");
-        done();
-      });
-    });
-  });
-
-  it("clean up DOM node when component destroyed", function(done) {
-    var chiasm = Chiasm(document.createElement("div"));
-    chiasm.plugins.domPlugin = DOMPlugin;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "domPlugin",
-        state: {
-          message: "Hello"
-        }
-      }
-    };
-
-    chiasm.when("config", function(config){
-      if("foo" in config){
-        chiasm.getComponent("foo", function(err, foo){
-          expect(chiasm.div).to.exist();
-          expect(chiasm.div.children.length).to.equal(1);
-
-          // Removing "foo" from the config should cause its
-          // destroy() method to be invoked.
-          chiasm.config = {};
-        });
-      } else {
-
-        // Use setTimeout here to queue the test to run AFTER
-        // the config update has been processed. This is necessary because
-        // config update processing is done on an async queue.
-        setTimeout(function(){
-
-          // Test that foo.destroy() removed foo's div.
-          expect(chiasm.div.children.length).to.equal(0);
-
-          // Test that the component has been removed internally.
-          expect(chiasm.componentExists("foo")).to.equal(false);
-
-          done();
-        },0);
+        plugin: "nonexistentPlugin"
       }
     });
-  });
-
-  it("do not propagate from component to config after component destroyed", function(done) {
-    var chiasm = Chiasm();
-    chiasm.plugins.simplePlugin = SimplePlugin;
     
-    chiasm.config = {
-      foo: {
-        plugin: "simplePlugin",
-        state: {
-          message: "Hello"
-        }
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      chiasm.when("config", function(config){
-        if("foo" in config){
-          expect(config.foo.state.message).to.equal("Hello");
-          chiasm.config = {};
-        } else {
-          foo.message = "World";
-          setTimeout(done, 0);
-        }
-      });
-    });
-  });
-
-  it("do not propagate from component to config if structure matches", function(done) {
-    // This tests that JSON.stringify is used to compare old and new values
-    // when propagating changes from components to the config.
-    var chiasm = Chiasm();
-    chiasm.plugins.simplePlugin = SimplePlugin;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "simplePlugin",
-        state: {
-          message: {foo: ["a", "b"]}
-        }
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      var invocations = 0;
-      chiasm.when("config", function(config){
-        invocations++;
-        expect(invocations).to.equal(1);
-        foo.message = {foo: ["a", "b"]};
-        setTimeout(done, 0);
-      });
-    });
-  });
-
-  it("propagate from component to config when config state is undefined", function(done) {
-    // This tests that the "state" property is automatically created in the config
-    // before it is populated with the updated state property
-    // when propagating changes from components to the config.
-    var chiasm = Chiasm();
-    chiasm.plugins.simplePlugin = SimplePlugin;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "simplePlugin"
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      foo.message = "Hello";
-
-      setTimeout(function(){
-        expect(chiasm.config.foo.state.message).to.equal("Hello");
-        done();
-      }, 0);
-    });
-  });
-
-  it("should not propagate from component to config for defaults", function(done) {
-    var chiasm = Chiasm();
-
-    chiasm.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "simplePluginWithDefaults"
-      }
-    };
-
-    var invocations = 0;
-    chiasm.when("config", function(config){
-      invocations++;
-      expect(invocations).to.equal(1);
-      setTimeout(done, 0);
-    });
-  });
-
-  it("should unset a property, restoring default value", function(done) {
-    var chiasm = Chiasm();
-    chiasm.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "simplePluginWithDefaults",
-        state: {
-          x: 50
-        }
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      expect(foo).to.exist();
-      foo.when("x", function(x){
-        if(x == 50){
-          chiasm.config = {
-            foo: {
-              plugin: "simplePluginWithDefaults",
-              state: { }
-            }
-          };
-        } else {
-          expect(x).to.equal(5);
-          done();
-        }
-      });
-    });
-  });
-
-  it("should unset a property, setting None if default is None", function(done) {
-    var chiasm = Chiasm();
-    chiasm.plugins.simplePlugin = SimplePlugin;
-    
-    chiasm.setConfig({
-      foo: {
-        plugin: "simplePlugin",
-        state: {
-          message: "Hello"
-        }
-      }
-    }, function (err){
-      chiasm.getComponent("foo", function(err, foo){
-        expect(foo).to.exist();
-        expect(foo.message).to.equal("Hello");
-        chiasm.setConfig({
-          foo: {
-            plugin: "simplePlugin",
-            state: { }
-          }
-        }, function(err){
-          expect(foo.message).to.equal(Model.None);
-          done();
-        });
-      });
-    });
-
-  });
-
-  it("should throw an error when no public property default is provided", function(done) {
-    var chiasm = Chiasm();
-    chiasm.plugins.invalidPlugin = InvalidPlugin;
-
-    chiasm.setConfig({
-      foo: {
-        plugin: "invalidPlugin",
-        state: { }
-      }
-    }, function(err){
-      expect(err.message).to.equal("Default value for public property 'message' not specified for component with alias 'foo'.");
+    promise.then(function(){}, function(err){
+      expect(err.message).to.equal("Plugin 'nonexistentPlugin' failed to load after timeout of 0.01 seconds exceeded.");
       done();
-    });
-
-  });
-
-  it("should change a plugin", function(done) {
-    var chiasm = Chiasm();
-    chiasm.plugins.pluginA = function(){
-      return Model({
-        pluginName: "A"
-      });
-    };
-
-    chiasm.plugins.pluginB = function(){
-      return Model({
-        pluginName: "B"
-      });
-    };
-    
-    chiasm.config = {
-      foo: {
-        plugin: "pluginA"
-      }
-    };
-
-    chiasm.getComponent("foo", function(err, foo){
-      expect(foo.pluginName).to.equal("A");
-      chiasm.setConfig({
-        foo: {
-          plugin: "pluginB"
-        }
-      }, function(err){
-        chiasm.getComponent("foo", function(err, foo){
-          expect(foo.pluginName).to.equal("B");
-          done();
-        });
-      });
+      
     });
   });
-
-  it("should change a plugin and transfer properties", function(done) {
-    var chiasm = Chiasm();
-
-    var config1 = {
-      chart: {
-        plugin: "barChart",
-        state: { markColumn: "browser", sizeColumn: "popularity" }
-      }
-    };
-
-    var config2 = {
-      chart: {
-        plugin: "pieChart",
-        state: { markColumn: "browser", sizeColumn: "popularity" }
-      }
-    };
-
-    chiasm.plugins.barChart = function(){
-      return Model({ pluginName: "barChart" });
-    };
-
-    chiasm.plugins.pieChart = function(){
-      return Model({ pluginName: "pieChart" });
-    };
-
-    chiasm.config = config1;
-    
-    chiasm.getComponent("chart", function(err, chart1){
-
-      expect(chart1.pluginName).to.equal("barChart");
-      expect(chart1.markColumn).to.equal("browser");
-      expect(chart1.sizeColumn).to.equal("popularity");
-
-      chiasm.setConfig(config2 , function(err){
-        chiasm.getComponent("chart", function(err, chart2){
-
-          expect(chart2.pluginName).to.equal("pieChart");
-          expect(chart2.markColumn).to.equal("browser");
-          expect(chart2.sizeColumn).to.equal("popularity");
-          done();
-        });
-      });
-    });
-  });
-
-  it("should pass an async error when timeout exceeded in getComponent", function(done) {
-    var chiasm = Chiasm();
-    
-    chiasm.getComponent("chart", function(err, chart){
-      expect(err).to.exist();
-      expect(err.message).to.equal("Component with alias 'chart' does not exist after timeout of 0.1 seconds exceeded.");
-      done();
-    }, 100);
-  });
+//
+//  it("create a component via chiasm.config = config", function(done) {
+//    var chiasm = Chiasm();
+//
+//    chiasm.plugins.simplestPlugin = SimplestPlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplestPlugin"
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      expect(foo).to.exist();
+//      done();
+//    });
+//  });
+//
+//  it("create a component, set state with a single property", function(done) {
+//    var chiasm = Chiasm();
+//    chiasm.plugins.simplestPlugin = SimplestPlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplestPlugin",
+//        state: {
+//          message: "Hello"
+//        }
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      expect(foo).to.exist();
+//      foo.when("message", function(message){
+//        expect(message).to.equal("Hello");
+//        done();
+//      });
+//    });
+//  });
+//
+//  it("create a component, set state with two properties", function(done) {
+//    var chiasm = Chiasm();
+//    chiasm.plugins.simplestPlugin = SimplestPlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplestPlugin",
+//        state: {
+//          x: 5,
+//          y: 10
+//        }
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      expect(foo).to.exist();
+//      foo.when(["x", "y"], function(x, y){
+//        expect(x).to.equal(5);
+//        expect(y).to.equal(10);
+//        done();
+//      });
+//    });
+//  });
+//
+//  it("propagate changes from config to components", function(done) {
+//    var chiasm = Chiasm();
+//    chiasm.plugins.simplestPlugin = SimplestPlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplestPlugin",
+//        state: {
+//          x: 5
+//        }
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      foo.when(["x"], function(x){
+//        expect(x).to.equal(5);
+//        chiasm.config = {
+//          foo: {
+//            plugin: "simplestPlugin",
+//            state: {
+//              x: 5,
+//              y: 10
+//            }
+//          }
+//        };
+//        foo.when(["y"], function(y){
+//          expect(y).to.equal(10);
+//          done();
+//        });
+//      });
+//    });
+//  });
+//
+//  it("propagate changes from components to config (using 'publicProperties')", function(done) {
+//    var chiasm = Chiasm();
+//    chiasm.plugins.simplePlugin = SimplePlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplePlugin",
+//        state: {
+//          message: "Hello"
+//        }
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      chiasm.when("config", function(config) {
+//        if(foo.message === "Hello"){
+//          foo.message = "World";
+//        } else {
+//          expect(config.foo.state.message).to.equal("World");
+//          done();
+//        }
+//      });
+//    });
+//  });
+//
+//  it("use a DOM node within the chiasm", function(done) {
+//    var chiasm = Chiasm(document.createElement("div"));
+//    chiasm.plugins.domPlugin = DOMPlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "domPlugin",
+//        state: {
+//          message: "Hello"
+//        }
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      expect(chiasm.div).to.exist();
+//      expect(chiasm.div.children.length).to.equal(1);
+//
+//      foo.when("message", function(message){
+//        expect(message).to.equal("Hello");
+//        expect(chiasm.div.children[0].innerHTML).to.equal("Hello");
+//        done();
+//      });
+//    });
+//  });
+//
+//  it("clean up DOM node when component destroyed", function(done) {
+//    var chiasm = Chiasm(document.createElement("div"));
+//    chiasm.plugins.domPlugin = DOMPlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "domPlugin",
+//        state: {
+//          message: "Hello"
+//        }
+//      }
+//    };
+//
+//    chiasm.when("config", function(config){
+//      if("foo" in config){
+//        chiasm.getComponent("foo", function(err, foo){
+//          expect(chiasm.div).to.exist();
+//          expect(chiasm.div.children.length).to.equal(1);
+//
+//          // Removing "foo" from the config should cause its
+//          // destroy() method to be invoked.
+//          chiasm.config = {};
+//        });
+//      } else {
+//
+//        // Use setTimeout here to queue the test to run AFTER
+//        // the config update has been processed. This is necessary because
+//        // config update processing is done on an async queue.
+//        setTimeout(function(){
+//
+//          // Test that foo.destroy() removed foo's div.
+//          expect(chiasm.div.children.length).to.equal(0);
+//
+//          // Test that the component has been removed internally.
+//          expect(chiasm.componentExists("foo")).to.equal(false);
+//
+//          done();
+//        },0);
+//      }
+//    });
+//  });
+//
+//  it("do not propagate from component to config after component destroyed", function(done) {
+//    var chiasm = Chiasm();
+//    chiasm.plugins.simplePlugin = SimplePlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplePlugin",
+//        state: {
+//          message: "Hello"
+//        }
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      chiasm.when("config", function(config){
+//        if("foo" in config){
+//          expect(config.foo.state.message).to.equal("Hello");
+//          chiasm.config = {};
+//        } else {
+//          foo.message = "World";
+//          setTimeout(done, 0);
+//        }
+//      });
+//    });
+//  });
+//
+//  it("do not propagate from component to config if structure matches", function(done) {
+//    // This tests that JSON.stringify is used to compare old and new values
+//    // when propagating changes from components to the config.
+//    var chiasm = Chiasm();
+//    chiasm.plugins.simplePlugin = SimplePlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplePlugin",
+//        state: {
+//          message: {foo: ["a", "b"]}
+//        }
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      var invocations = 0;
+//      chiasm.when("config", function(config){
+//        invocations++;
+//        expect(invocations).to.equal(1);
+//        foo.message = {foo: ["a", "b"]};
+//        setTimeout(done, 0);
+//      });
+//    });
+//  });
+//
+//  it("propagate from component to config when config state is undefined", function(done) {
+//    // This tests that the "state" property is automatically created in the config
+//    // before it is populated with the updated state property
+//    // when propagating changes from components to the config.
+//    var chiasm = Chiasm();
+//    chiasm.plugins.simplePlugin = SimplePlugin;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplePlugin"
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      foo.message = "Hello";
+//
+//      setTimeout(function(){
+//        expect(chiasm.config.foo.state.message).to.equal("Hello");
+//        done();
+//      }, 0);
+//    });
+//  });
+//
+//  it("should not propagate from component to config for defaults", function(done) {
+//    var chiasm = Chiasm();
+//
+//    chiasm.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplePluginWithDefaults"
+//      }
+//    };
+//
+//    var invocations = 0;
+//    chiasm.when("config", function(config){
+//      invocations++;
+//      expect(invocations).to.equal(1);
+//      setTimeout(done, 0);
+//    });
+//  });
+//
+//  it("should unset a property, restoring default value", function(done) {
+//    var chiasm = Chiasm();
+//    chiasm.plugins.simplePluginWithDefaults = SimplePluginWithDefaults;
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "simplePluginWithDefaults",
+//        state: {
+//          x: 50
+//        }
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      expect(foo).to.exist();
+//      foo.when("x", function(x){
+//        if(x == 50){
+//          chiasm.config = {
+//            foo: {
+//              plugin: "simplePluginWithDefaults",
+//              state: { }
+//            }
+//          };
+//        } else {
+//          expect(x).to.equal(5);
+//          done();
+//        }
+//      });
+//    });
+//  });
+//
+//  it("should unset a property, setting None if default is None", function(done) {
+//    var chiasm = Chiasm();
+//    chiasm.plugins.simplePlugin = SimplePlugin;
+//    
+//    chiasm.setConfig({
+//      foo: {
+//        plugin: "simplePlugin",
+//        state: {
+//          message: "Hello"
+//        }
+//      }
+//    }, function (err){
+//      chiasm.getComponent("foo", function(err, foo){
+//        expect(foo).to.exist();
+//        expect(foo.message).to.equal("Hello");
+//        chiasm.setConfig({
+//          foo: {
+//            plugin: "simplePlugin",
+//            state: { }
+//          }
+//        }, function(err){
+//          expect(foo.message).to.equal(Model.None);
+//          done();
+//        });
+//      });
+//    });
+//
+//  });
+//
+//  it("should throw an error when no public property default is provided", function(done) {
+//    var chiasm = Chiasm();
+//    chiasm.plugins.invalidPlugin = InvalidPlugin;
+//
+//    chiasm.setConfig({
+//      foo: {
+//        plugin: "invalidPlugin",
+//        state: { }
+//      }
+//    }, function(err){
+//      expect(err.message).to.equal("Default value for public property 'message' not specified for component with alias 'foo'.");
+//      done();
+//    });
+//
+//  });
+//
+//  it("should change a plugin", function(done) {
+//    var chiasm = Chiasm();
+//    chiasm.plugins.pluginA = function(){
+//      return Model({
+//        pluginName: "A"
+//      });
+//    };
+//
+//    chiasm.plugins.pluginB = function(){
+//      return Model({
+//        pluginName: "B"
+//      });
+//    };
+//    
+//    chiasm.config = {
+//      foo: {
+//        plugin: "pluginA"
+//      }
+//    };
+//
+//    chiasm.getComponent("foo", function(err, foo){
+//      expect(foo.pluginName).to.equal("A");
+//      chiasm.setConfig({
+//        foo: {
+//          plugin: "pluginB"
+//        }
+//      }, function(err){
+//        chiasm.getComponent("foo", function(err, foo){
+//          expect(foo.pluginName).to.equal("B");
+//          done();
+//        });
+//      });
+//    });
+//  });
+//
+//  it("should change a plugin and transfer properties", function(done) {
+//    var chiasm = Chiasm();
+//
+//    var config1 = {
+//      chart: {
+//        plugin: "barChart",
+//        state: { markColumn: "browser", sizeColumn: "popularity" }
+//      }
+//    };
+//
+//    var config2 = {
+//      chart: {
+//        plugin: "pieChart",
+//        state: { markColumn: "browser", sizeColumn: "popularity" }
+//      }
+//    };
+//
+//    chiasm.plugins.barChart = function(){
+//      return Model({ pluginName: "barChart" });
+//    };
+//
+//    chiasm.plugins.pieChart = function(){
+//      return Model({ pluginName: "pieChart" });
+//    };
+//
+//    chiasm.config = config1;
+//    
+//    chiasm.getComponent("chart", function(err, chart1){
+//
+//      expect(chart1.pluginName).to.equal("barChart");
+//      expect(chart1.markColumn).to.equal("browser");
+//      expect(chart1.sizeColumn).to.equal("popularity");
+//
+//      chiasm.setConfig(config2 , function(err){
+//        chiasm.getComponent("chart", function(err, chart2){
+//
+//          expect(chart2.pluginName).to.equal("pieChart");
+//          expect(chart2.markColumn).to.equal("browser");
+//          expect(chart2.sizeColumn).to.equal("popularity");
+//          done();
+//        });
+//      });
+//    });
+//  });
+//
+//  it("should pass an async error when timeout exceeded in getComponent", function(done) {
+//    var chiasm = Chiasm();
+//    
+//    chiasm.getComponent("chart", function(err, chart){
+//      expect(err).to.exist();
+//      expect(err.message).to.equal("Component with alias 'chart' does not exist after timeout of 0.1 seconds exceeded.");
+//      done();
+//    }, 100);
+//  });
 });
