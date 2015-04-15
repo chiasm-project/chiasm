@@ -24,13 +24,13 @@ function expectValues(chiasm, values, callback){
         property = path[1],
         propertyPath = path.slice(2),
         expectedValue = values[key];
-    chiasm.getComponent(alias, function(err, component){
+    chiasm.getComponent(alias).then(function(component){
+      console.log("here");
       component.when(property, function(value){
         propertyPath.forEach(function(key){
           value = value[key];
         });
         expect(value).to.equal(expectedValue);
-        cb();
       });
     });
   }, callback);

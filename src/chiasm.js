@@ -3,6 +3,13 @@
 //
 // The main purpose of this module is to maintain synchronization between a dynamic
 // JSON configuration structure and a set of components instantiated by plugins.
+// Dynamic configuration changes (diffs) are detected by Chiasm and executed as
+// component lifecycle actions that
+//
+//  * create components (plugin instances)
+//  * set component properties
+//  * unset component properties (reset default values when a property is removed from the configuration)
+//  * destroy components
 //
 // Draws from previous work found at
 //
@@ -27,7 +34,7 @@ define(["model", "lodash"], function (Model, _) {
   // Based on previous work found at:
   // https://github.com/curran/overseer/blob/master/src/action.js
   //
-  // This lays the foundation for undo/redo and real-time synchronization.
+  // This architecture lays the foundation for undo/redo and real-time synchronization.
   //
   // For synchronization, these Action objects should be directly translatable
   // into ShareJS operations for JSON transformation, documented at
@@ -119,7 +126,7 @@ define(["model", "lodash"], function (Model, _) {
     return actions;
   }
 
-  // An asynchronous batch queue using Promises.
+  // An asynchronous batch queue for processing Actions using Promises.
   // Draws from https://www.promisejs.org/patterns/#all
   // The argument `process` is a function that takes as input
   // an item to process, and returns a promise.
@@ -143,8 +150,9 @@ define(["model", "lodash"], function (Model, _) {
 
   // The Chiasm constructor function exposed by this AMD module.
   // 
-  // Accepts a single arcument `container`, a DOM element, typically a div.
-  // Components created by plugins will append their own DOM elements to this container element.
+  // Accepts a single argument `container`, a DOM element, typically a div.
+  // Components created by plugins will append their own DOM elements to this container,
+  // and will remove them when they are destroyed.
   function Chiasm(container){
 
     // This is the public API object returned by the constructor.
@@ -153,7 +161,7 @@ define(["model", "lodash"], function (Model, _) {
       // `plugins` is An object for setting up plugins before loading a configuration.
       // Chiasm first looks here for plugins, then if a plugin is not found here
       // it is dynamically loaded at runtime using RequireJS where the plugin name 
-      // corresponds to an AMD module name or artibrary URL.
+      // corresponds to an AMD module name or arbitrary URL.
       // 
       // * Keys are plugin names.
       // * Values are plugin implementations, which are constructor functions for
@@ -161,40 +169,47 @@ define(["model", "lodash"], function (Model, _) {
       //   to the chiasm instance, and yields as output a ModelJS model with the following properties:
       //   * `publicProperties` An array of property names. This is the list of properties that
       //     are configurable via the JSON configuration structure. Each property listed here
-      //     must have a default value.
-      //   * `destroy` (optional) A function that frees all resources allocated by the component.
-      //   * See plugin documentation at https://github.com/curran/chiasm/wiki
+      //     must have a default value present on the freshly constructed component.
+      //   * `destroy` (optional) A function that frees all resources allocated by the component,
+      //     e.g. removing any DOM elements added to the Chiasm container, and removing event listeners.
+      //
+      // See additional plugin documentation at https://github.com/curran/chiasm/wiki
       plugins: {},
-
 
       // The JSON configuration object encapsulating application state.
       //
       //   * Keys are component aliases.
       //   * Values are objects with the following properties:
-      //     * `plugin` - The name of the plugin module that provides a factory
-      //       that instantiates the component (and later tears it down).
-      //     * `state` - An object containing the serialized state of the public
-      //       properties of the component.
+      //     * `plugin` - The name of the plugin.
+      //     * `state` - An object representing the state of a component, where
+      //       * Keys are component property names
+      //       * Values are component property values
       config: {},
 
-      // Use a default max wait time of 10 seconds.
-      // This is for timeout of plugin loading and component fetching.
+      // The timeout (in milliseconds) used for plugin loading and getComponent().
+      // The default timeout is 10 seconds.
       timeout: 10000
     });
 
     // The runtime components created by plugins.
     //
     // * Keys are component aliases.
-    // * Values are components constructed by plugins.
+    // * Values are components constructed by plugins, which are ModelJS models.
     var components = {};
 
     // This object stores default values for public properties.
+    // These are the values present when the component is constructed.
+    // The default values are used when processing "unset" actions, which restore
+    // default values to components when properties are removed from the configuration.
     //
     // * Keys are component aliases.
-    // * Values are { property -> defaultValue } objects.
+    // * Values are objects where
+    //   * Keys are component property names from `component.publicProperties`
+    //   * Values are default component property values
     var defaults = {};
 
-    // These methods unpack Action objects and invoke the corresponding functions.
+    // These methods unpack Action objects and invoke corresponding
+    // functions that execute them. Each method returns a promise.
     var methods = {
       create: function (action, callback) {
         return create(action.alias, action.plugin, callback);
@@ -210,20 +225,27 @@ define(["model", "lodash"], function (Model, _) {
       }
     };
 
-    // An asynchronous FIFO queue for applying actions.
+    // An asynchronous FIFO queue for processing actions.
     // This is used as essentially a synchronization lock, so multiple synchronous calls 
     // to setConfig() do not cause conflicting overlapping asynchronous action sequences.
-    var queue = Queue(processAction);
+    var queue = Queue(function (action){
+      return methods[action.method](action);
+    });
 
     // This object contains the callbacks that respond to changes in
-    // public properties of components. These must be stored here so they
-    // can be removed from components when the components are destroyed.
+    // public properties of components. These are stored so they
+    // can be removed from components when the they are destroyed.
     var callbacks = {};
+
+    // This flag is set to true when "set" actions are being processed,
+    // so Chiasm can distinguish between changes originating from setConfig()
+    // and changes originating from components, possibly via user interactions. 
+    var settingProperty = false;
 
     // Gets a component by alias, returns a promise.
     // This is asynchronous because the component may not be instantiated
-    // when this is called, but is in the process of loading, in which case this
-    // function polls for existence of the component until the timeout time has elapsed.
+    // when this is called, but may be in the process of loading. In this case the
+    // function polls for existence of the component until the timeout has elapsed.
     function getComponent(alias){
             
       // Race polling with a timeout.
@@ -240,7 +262,7 @@ define(["model", "lodash"], function (Model, _) {
           }());
         }),
 
-        // This promise rejects when timeout has elapsed.
+        // This promise reports an error when timeout has elapsed.
         new Promise(function(resolve, reject){
           setTimeout(function(){
             reject(new Error([
@@ -255,7 +277,7 @@ define(["model", "lodash"], function (Model, _) {
     }
 
     // Loads a plugin by name, returns a promise. 
-    // First tries to find plugin in chiasm.plugins,
+    // First tries to find plugin in `chiasm.plugins`,
     // then uses RequireJS to load the plugin as an AMD module.
     function loadPlugin(plugin){
 
@@ -275,33 +297,38 @@ define(["model", "lodash"], function (Model, _) {
             // This means that paths for plugins may be set up via RequireJS configuration.
             // This way of loading plugins also allows arbitrary AMD module URLs to be used.
             // See also http://requirejs.org/docs/api.html#config-paths
+            //
+            // Setting `chiasm.disableRequireJS = true` will cause Chiasm not to use RequireJS.
+            // This was added for complete code coverage in unit tests (so the timeout could be tested).
             if(!chiasm.disableRequireJS){
               requirejs([plugin], resolve, reject);
             }
           }
         }),
 
-        // This promise rejects when maxWaitTime has elapsed.
+        // This promise rejects when the timeout has elapsed.
         new Promise(function(resolve, reject){
           setTimeout(function(){
             reject(Error([
-              "Plugin '", plugin,
-              "' failed to load after timeout of ",
-              (chiasm.timeout / 1000),
-              " seconds exceeded."
+              "Plugin '", plugin, "' failed to load after timeout of ",
+              (chiasm.timeout / 1000), " seconds exceeded."
             ].join("")));
           }, chiasm.timeout);
         })
       ]);
     }
 
-    // Computes what the current value is for a given property
+    // Computes what the current configured value is for a given property
     // on the component with the given alias.
     function getConfiguredValue(alias, property){
       var options = chiasm.config[alias];
+    
+      // Get the value from `chiasm.config` if it is available there,
       if("state" in options && property in options.state){
         return options.state[property];
       } else {
+
+        // otherwise return the default value.
         return defaults[property];
       }
     }
@@ -348,27 +375,24 @@ define(["model", "lodash"], function (Model, _) {
               // Store the "on" callbacks so they can be removed later, when the component is destroyed.
               return component.on(property, function(newValue){
 
-                // Compute the old configured value so it can be compared to the new value.
-                var oldValue = getConfiguredValue(alias, property);
-
-                // If the new value is different from the old value,
-                // then this change originated from the component not the configuration,
-                // so the configuration must be updated.
-                if(JSON.stringify(oldValue) !== JSON.stringify(newValue)){
+                // If this change did not originate from setConfig(),
+                // but rather originated from the component, possibly via user interaction,
+                // then propagate it into the configuration.
+                if(settingProperty){
 
                   // If no state is tracked, create the state object.
-                  if(!("state" in config[alias])){
-                    config[alias].state = {};
+                  if(!("state" in chiasm.config[alias])){
+                    chiasm.config[alias].state = {};
                   }
-
-                  // Surgically change config so that the diff computation will yield
-                  // no actions. Without this, the update would propagate from the 
+  
+                  // Surgically change `chiasm.config` so that the diff computation will yield
+                  // no actions. Without this step, the update would propagate from the 
                   // component to the config and then back again unnecessarily.
-                  config[alias].state[property] = newValue;
-
+                  chiasm.config[alias].state[property] = newValue;
+  
                   // This assignment will notify any callbacks that the config has changed,
                   // (e.g. the config editor), but the config diff will yield no actions to execute.
-                  chiasm.config = config;
+                  chiasm.config = chiasm.config;
                 }
               });
             });
@@ -409,7 +433,16 @@ define(["model", "lodash"], function (Model, _) {
     function set(alias, property, value) {
       return new Promise(function(resolve, reject){
         getComponent(alias).then(function(component){
+
+          // Set this flag so Chiasm knows the change originated from setConfig().
+          settingProperty = true;
+
+          // Set the property on the component. Since the component is a ModelJS model,
+          // simply setting the value like this will propagate the change through the
+          // reactive data dependency graph of the component
           component[property] = value;
+
+          settingProperty = false;
           resolve();
         }, reject);
       });
@@ -445,16 +478,21 @@ define(["model", "lodash"], function (Model, _) {
 
     // Handle setting configuration via `chiasm.config = ...`.
     // This will work, but any errors that occur will be thrown as exceptions.
-    chiasm.on("config", function(newConfig){
-      setConfig(newConfig);
+    chiasm.on("config", function(newConfig, oldConfig){
+      setConfig(newConfig, oldConfig);
     });
 
     // Sets the Chiasm configuration, returns a promise.
-    function setConfig(newConfig){
+    function setConfig(newConfig, oldConfig){
+      
+      // The second argument, oldConfig, is optional, and 
+      // defaults to the current value of `chiasm.config`.
+      oldConfig = oldConfig || chiasm.config;
 
       // Compute the difference between the old and new configurations.
-      var actions = configDiff(chiasm.config, newConfig);
+      var actions = configDiff(oldConfig, newConfig);
 
+      // If there are any changes, execute them.
       if(actions.length > 0){
 
         // Store the new config.
@@ -469,13 +507,6 @@ define(["model", "lodash"], function (Model, _) {
         // If there are no actions to execute, return a resolved promise.
         return Promise.resolve(null);
       }
-    }
-
-    // Processes a single action by executing it,
-    // using the appropriate method depending on the action type.
-    // Returns a promise.
-    function processAction(action){
-      return methods[action.method](action);
     }
 
     // Expose public methods.

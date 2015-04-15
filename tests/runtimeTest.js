@@ -10,8 +10,8 @@
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
 
-// Use JSDOM for DOM manipulation in Node.
-// https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
+    // Use JSDOM for DOM manipulation in Node.
+    // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
     document = require("jsdom").jsdom(),
     requireJS = require("./configureRequireJS.js"),
     Chiasm = requireJS("chiasm"),
@@ -162,27 +162,26 @@ describe("chiasm", function () {
     promise.then(function(){}, function(err){
       expect(err.message).to.equal("Plugin 'nonexistentPlugin' failed to load after timeout of 0.01 seconds exceeded.");
       done();
-      
     });
   });
-//
-//  it("create a component via chiasm.config = config", function(done) {
-//    var chiasm = Chiasm();
-//
-//    chiasm.plugins.simplestPlugin = SimplestPlugin;
-//    
-//    chiasm.config = {
-//      foo: {
-//        plugin: "simplestPlugin"
-//      }
-//    };
-//
-//    chiasm.getComponent("foo", function(err, foo){
-//      expect(foo).to.exist();
-//      done();
-//    });
-//  });
-//
+
+  it("create a component via chiasm.config = config", function(done) {
+    var chiasm = Chiasm();
+
+    chiasm.plugins.simplestPlugin = SimplestPlugin;
+    
+    chiasm.config = {
+      foo: {
+        plugin: "simplestPlugin"
+      }
+    };
+
+    chiasm.getComponent("foo").then(function(foo){
+      expect(foo).to.exist();
+      done();
+    });
+  });
+
 //  it("create a component, set state with a single property", function(done) {
 //    var chiasm = Chiasm();
 //    chiasm.plugins.simplestPlugin = SimplestPlugin;
