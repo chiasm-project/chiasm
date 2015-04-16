@@ -5,23 +5,23 @@
 // https://github.com/curran/model-contrib/blob/gh-pages/modules/boxes.js
 //
 // Created by Curran Kelleher Feb 2015
-define(["computeLayout", "model", "async", "lodash"], function (computeLayout, Model, async, _){
+define(["computeLayout", "model", "lodash"], function (computeLayout, Model, _){
 
   // The layout Chiasm plugin constructor function.
-  return function Layout(runtime){
+  return function Layout(chiasm){
 
     // The public API object returned by the constructor function.
     var model = Model({
       publicProperties: ["layout"]
     });
 
-    // Sets the `box` model property based on actual div size .
+    // Sets the `box` model property based on actual container size .
     function setBox(){
       model.box = {
         x: 0,
         y: 0,
-        width: runtime.div.clientWidth,
-        height: runtime.div.clientHeight
+        width: chiasm.container.clientWidth,
+        height: chiasm.container.clientHeight
       };
     }
 
@@ -37,16 +37,19 @@ define(["computeLayout", "model", "async", "lodash"], function (computeLayout, M
       // Compute the layout.
       var boxes = computeLayout(layout, sizes, box);
 
+      setTimeout(function(){
+        console.log("here", layout, sizes, box, boxes);
+      }, 0);
+
       // Apply the layout via the `box` property of components.
       Object.keys(boxes).forEach(function(alias){
-        runtime.getComponent(alias, function(err, component){
-          // TODO bubble errors to UI
+        chiasm.getComponent(alias).then(function(component){
           component.box = boxes[alias];
         });
       });
     });
 
-    // Compute `sizes` from runtime components.
+    // Compute `sizes` from chiasm components.
     model.when(["layout"], function(layout){
 
       // Extract the list of aliases referenced in the layout.
@@ -57,7 +60,7 @@ define(["computeLayout", "model", "async", "lodash"], function (computeLayout, M
 
       // Set sizes when the "size" property changes on any component.
       aliases.forEach(function(alias){
-        runtime.getComponent(alias, function(err, component){
+        chiasm.getComponent(alias).then(function(component){
           // TODO clean up listeners, test for leaks.
           // TODO bubble errors to UI
           component.when("size", function(size){
@@ -73,13 +76,12 @@ define(["computeLayout", "model", "async", "lodash"], function (computeLayout, M
 
       // Compute which component aliases are referenced.
       var sizes = {};
+      
 
       // For each alias referenced in the layout,
-      async.each(
-        aliases,
-        function(alias, callback){
-          runtime.getComponent(alias, function(err, component){
-            // TODO bubble errors to UI
+      Promise.all(aliases.map(function(alias){
+        return new Promise(function(resolve, reject){
+          chiasm.getComponent(alias).then(function(component){
 
             // store its "size" and "hidden" properties.
             if(component.size || component.hidden){
@@ -88,20 +90,24 @@ define(["computeLayout", "model", "async", "lodash"], function (computeLayout, M
                 sizes[alias].size = component.size;
               }
               if(component.hidden){
-                sizes[alias].hidden = component.size;
+                // TODO test this line
+                sizes[alias].hidden = component.hidden;
               }
             }
-            callback();
-          });
-        }, function(){
-
-          // Set the stored "size" and "hidden" properties
-          // on the model to trigger the layout computation.
-          if(!_.isEqual(model.sizes, sizes)){
-            model.sizes = sizes;
-          }
+            resolve();
+          }, reject);
+        });
+      })).then(function(){
+        // Set the stored "size" and "hidden" properties
+        // on the model to trigger the layout computation.
+        if(!_.isEqual(model.sizes, sizes)){
+          model.sizes = sizes;
         }
-      );
+      }, function(err){
+        // Throw the error so it can be seen in a Node environment.
+        throw err;
+      });
+
     }
 
     // Computes which aliases are referenced in the given layout.

@@ -8,7 +8,7 @@
 // Created by Curran Kelleher Feb 2015
 define(["d3", "model"], function (d3, Model) {
 
-  return function DummyVis(runtime) {
+  return function DummyVis(chiasm) {
 
     var model = Model({
       publicProperties: [
@@ -28,10 +28,10 @@ define(["d3", "model"], function (d3, Model) {
       lineWidth: 8
     });
 
-    // Append an SVG to the runtime div.
+    // Append an SVG to the chiasm container.
     // Use CSS `position: absolute;` so setting `left` and `top` CSS
     // properties later will position the SVG relative to containing div.
-    var svg = d3.select(runtime.div).append("svg")
+    var svg = d3.select(chiasm.container).append("svg")
       .style("position", "absolute");
 
     // Add a background rectangle to the SVG.
@@ -62,7 +62,7 @@ define(["d3", "model"], function (d3, Model) {
           newLineWidth = newLineWidth < 1 ? 1 : newLineWidth;
 
           // dragging updates the `lineWidth` model property,
-          // which is visible to other visualizations in the runtime.
+          // which is visible to other visualizations in the chiasm.
           model.lineWidth = newLineWidth;
           x1 = x2;
         });
@@ -77,7 +77,7 @@ define(["d3", "model"], function (d3, Model) {
     model.when("text", text.text, text);
 
     // When the size of the visualization is set
-    // by the runtime layout engine,
+    // by the chiasm layout engine,
     model.when("box", function (box) {
 
       // Set the CSS `left` and `top` properties to move the
@@ -125,7 +125,7 @@ define(["d3", "model"], function (d3, Model) {
     // Clean up the DOM elements when the component is destroyed.
     model.destroy = function(){
       // TODO test this.
-      runtime.div.removeChild(svg.node());
+      chiasm.container.removeChild(svg.node());
     };
 
     return model;

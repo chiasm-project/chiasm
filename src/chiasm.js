@@ -251,75 +251,44 @@ define(["model", "lodash"], function (Model, _) {
     // when this is called, but may be in the process of loading. In this case the
     // function polls for existence of the component until the timeout has elapsed.
     function getComponent(alias){
-            
-      // Race polling with a timeout.
-      return Promise.race([
-
-        // This promise polls for existence of the component.
-        new Promise(function(resolve, reject){
-          (function poll(){
-            if(alias in components){
-              resolve(components[alias]);
-            } else {
-              setTimeout(poll, 1);
-            }
-          }());
-        }),
-
-        // This promise reports an error when timeout has elapsed.
-        new Promise(function(resolve, reject){
-          setTimeout(function(){
+      var startTime = Date.now();
+      return new Promise(function(resolve, reject){
+        (function poll(){
+          if(alias in components){
+            resolve(components[alias]);
+          } else if ((Date.now() - startTime) < chiasm.timeout){
+            setTimeout(poll, 1);
+          } else {
             reject(new Error([
               "Component with alias '", alias,
               "' does not exist after timeout of ",
               (chiasm.timeout / 1000),
               " seconds exceeded."
             ].join("")));
-          }, chiasm.timeout);
-        })
-      ]);
+          }
+        }());
+      });
     }
 
     // Loads a plugin by name, returns a promise. 
     // First tries to find plugin in `chiasm.plugins`,
     // then uses RequireJS to load the plugin as an AMD module.
     function loadPlugin(plugin){
+      return new Promise(function(resolve, reject){
 
-      // Race plugin loading with a timeout.
-      return Promise.race([
+        // If the plugin has been set up in `chiasm.plugins`, use it.
+        if(plugin in chiasm.plugins){
+          resolve(chiasm.plugins[plugin]);
+        } else {
 
-        // This promise loads the plugin.
-        new Promise(function(resolve, reject){
-
-          // If the plugin has been set up in `chiasm.plugins`, use it.
-          if(plugin in chiasm.plugins){
-            resolve(chiasm.plugins[plugin]);
-          } else {
-
-            // Otherwise, load the plugin dynamically using RequireJS.
-            // This uses the configured plugin name as an AMD module name.
-            // This means that paths for plugins may be set up via RequireJS configuration.
-            // This way of loading plugins also allows arbitrary AMD module URLs to be used.
-            // See also http://requirejs.org/docs/api.html#config-paths
-            //
-            // Setting `chiasm.disableRequireJS = true` will cause Chiasm not to use RequireJS.
-            // This was added for complete code coverage in unit tests (so the timeout could be tested).
-            if(!chiasm.disableRequireJS){
-              requirejs([plugin], resolve, reject);
-            }
-          }
-        }),
-
-        // This promise rejects when the timeout has elapsed.
-        new Promise(function(resolve, reject){
-          setTimeout(function(){
-            reject(Error([
-              "Plugin '", plugin, "' failed to load after timeout of ",
-              (chiasm.timeout / 1000), " seconds exceeded."
-            ].join("")));
-          }, chiasm.timeout);
-        })
-      ]);
+          // Otherwise, load the plugin dynamically using RequireJS.
+          // This uses the configured plugin name as an AMD module name.
+          // This means that paths for plugins may be set up via RequireJS configuration.
+          // This way of loading plugins also allows arbitrary AMD module URLs to be used.
+          // See also http://requirejs.org/docs/api.html#config-paths
+          requirejs([plugin], resolve, reject);
+        }
+      });
     }
 
     // Computes what the current configured value is for a given property
@@ -342,16 +311,16 @@ define(["model", "lodash"], function (Model, _) {
       return new Promise(function(resolve, reject){
         loadPlugin(plugin).then(function (constructor) {
 
-          // Construct the component using the plugin, passing the chiasm instance.
-          var component = constructor(chiasm);
-
-          // Store a reference to the component.
-          components[alias] = component;
-
-          // Store defaults object reference for later use with "unset".
-          defaults[alias] = {};
-
           try {
+
+            // Construct the component using the plugin, passing the chiasm instance.
+            var component = constructor(chiasm);
+
+            // Store a reference to the component.
+            components[alias] = component;
+
+            // Store defaults object reference for later use with "unset".
+            defaults[alias] = {};
 
             // Handle public properties.
             if("publicProperties" in component){
@@ -411,7 +380,6 @@ define(["model", "lodash"], function (Model, _) {
               });
             }
             resolve();
-
           } catch (err) {
 
             // Catch the error for missing default values and

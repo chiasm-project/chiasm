@@ -140,31 +140,6 @@ describe("chiasm", function () {
     });
   });
 
-  it("setConfig(config) should report an timeout error a plugin doesn't load", function(done) {
-    var chiasm = Chiasm();
-
-    chiasm.plugins.simplestPlugin = SimplestPlugin;
-
-    // This is how you can modify the timeout,
-    // the number of milliseconds to wait before reporting an error.
-    chiasm.timeout = 10;
-
-    // This is how you can prevent Chiasm from attempting to use RequireJS.
-    chiasm.disableRequireJS = true;
-    
-    // setConfig returns a promise that handles errors.
-    var promise = chiasm.setConfig({
-      foo: {
-        plugin: "nonexistentPlugin"
-      }
-    });
-    
-    promise.then(function(){}, function(err){
-      expect(err.message).to.equal("Plugin 'nonexistentPlugin' failed to load after timeout of 0.01 seconds exceeded.");
-      done();
-    });
-  });
-
   it("create a component via chiasm.config = config", function(done) {
     var chiasm = Chiasm();
 
