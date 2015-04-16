@@ -24,7 +24,6 @@ function expectValues(chiasm, values, callback){
           propertyPath = path.slice(2),
           expectedValue = values[key];
 
-      console.log(path);
       chiasm.getComponent(alias).then(function(component){
         component.when(property, function(value){
           propertyPath.forEach(function(key){
@@ -63,12 +62,8 @@ describe("plugins/layout", function () {
         plugin: "dummyVis"
       }
     }).then(function(){
-      console.log("outside");
       chiasm.getComponent("a").then(function(a){
-        console.log("inside");
-        console.log(a.box);
         a.when("box", function(box){
-          console.log(box);
           expect(box.x).to.equal(0);
           expect(box.y).to.equal(0);
           expect(box.width).to.equal(100);

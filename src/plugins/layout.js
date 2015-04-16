@@ -37,10 +37,6 @@ define(["computeLayout", "model", "lodash"], function (computeLayout, Model, _){
       // Compute the layout.
       var boxes = computeLayout(layout, sizes, box);
 
-      setTimeout(function(){
-        console.log("here", layout, sizes, box, boxes);
-      }, 0);
-
       // Apply the layout via the `box` property of components.
       Object.keys(boxes).forEach(function(alias){
         chiasm.getComponent(alias).then(function(component){
