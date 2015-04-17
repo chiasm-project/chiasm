@@ -246,6 +246,11 @@ define(["model", "lodash"], function (Model, _) {
     // and changes originating from components, possibly via user interactions. 
     var settingProperty = false;
 
+    // This flag is set to true inside setConfig() while `chiasm.config` is being set.
+    // This is so changes do not get counted twice when invoking setConfig(),
+    // and it also works if API clients set `chiasm.config = ...`.
+    var settingConfig = false;
+
     // Gets a component by alias, returns a promise.
     // This is asynchronous because the component may not be instantiated
     // when this is called, but may be in the process of loading. In this case the
@@ -329,7 +334,7 @@ define(["model", "lodash"], function (Model, _) {
               component.publicProperties.forEach(function(property){
 
                 // Require that all declared public properties have a default value.
-                if(!(property in component)){
+                if(component[property] === undefined){
 
                   // Throw an exception in order to break out of the current control flow.
                   throw Error([
@@ -475,7 +480,9 @@ define(["model", "lodash"], function (Model, _) {
     // Handle setting configuration via `chiasm.config = ...`.
     // This will work, but any errors that occur will be thrown as exceptions.
     chiasm.on("config", function(newConfig, oldConfig){
-      setConfig(newConfig, oldConfig);
+      if(!settingConfig){
+        setConfig(newConfig, oldConfig);
+      }
     });
 
     // Sets the Chiasm configuration, returns a promise.
@@ -492,7 +499,9 @@ define(["model", "lodash"], function (Model, _) {
       if(actions.length > 0){
 
         // Store the new config.
+        settingConfig = true;
         chiasm.config = _.cloneDeep(newConfig);
+        settingConfig = false;
 
         // Queue the actions from the diff to be executed in sequence,
         // and return the promise for this batch of actions.

@@ -12,7 +12,8 @@ define(["computeLayout", "model", "lodash"], function (computeLayout, Model, _){
 
     // The public API object returned by the constructor function.
     var model = Model({
-      publicProperties: ["layout"]
+      publicProperties: ["layout"],
+      layout: {}
     });
 
     // Sets the `box` model property based on actual container size .

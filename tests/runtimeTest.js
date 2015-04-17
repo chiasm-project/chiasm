@@ -56,7 +56,8 @@ function SimplePluginWithDefaults(){
 // that components can access.
 function DOMPlugin(chiasm){
   var model = Model({
-        publicProperties: ["message"]
+        publicProperties: ["message"],
+        message: ""
       }),
       div = document.createElement("div");
   
