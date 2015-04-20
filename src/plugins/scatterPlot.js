@@ -16,18 +16,43 @@ define(["d3", "model"], function (d3, Model) {
       // close to reactive functions that use them.
       publicProperties: [
         "xColumn",
-        "xAxisLabel",
         "yColumn",
+        "xAxisLabel",
         "yAxisLabel",
-        "margin",
         "xAxisLabelOffset",
         "yAxisLabelOffset",
+        "margin",
         "title",
         "titleOffset",
         "sizeDefault",
         "colorDefault"
-      ]
+      ],
+
+      // TODO push these into Reactivis getX, getY
+      xColumn: None,
+      yColumn: None,
+
+      // TODO push this into reactivis margin
+      margin: {
+        "top": 32,
+        "right": 2,
+        "bottom": 40,
+        "left": 47
+      },
+
+      title:"",
+      titleOffset: 0,
+
+      // TODO push axis labels down into Reactivis
+      xAxisLabel: "",
+      yAxisLabel: "",
+      xAxisLabelOffset: 0,
+      yAxisLabelOffset: 0
     });
+
+    // TODO move this logic into Chiasm,
+    // TODO add to plugin docs.
+    model.container = chiasm.container;
 
     // Create an SVG element from the container DOM element.
     model.when("container", function (container) {
@@ -90,8 +115,11 @@ define(["d3", "model"], function (d3, Model) {
     });
 
     // Generate a function for getting the X value.
+    // TODO push this into reactivis.
     model.when(["data", "xColumn"], function (data, xColumn) {
-      model.getX = function (d) { return d[xColumn]; };
+      if(xColumn !== None){
+        model.getX = function (d) { return d[xColumn]; };
+      }
     });
 
     // Compute the domain of the X attribute.
@@ -157,8 +185,11 @@ define(["d3", "model"], function (d3, Model) {
     });
 
     // Generate a function for getting the Y value.
+    // TODO push this into reactivis.
     model.when(["data", "yColumn"], function (data, yColumn) {
-      model.getY = function (d) { return d[yColumn]; };
+      if(yColumn !== None){
+        model.getY = function (d) { return d[yColumn]; };
+      }
     });
 
     // Compute the domain of the Y attribute.

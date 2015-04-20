@@ -6,7 +6,7 @@
 // Created by Curran Kelleher Feb 2015
 define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/javascript/javascript", "inlet"], function (d3, Model, _, CodeMirror) {
 
-  return function ConfigEditor(runtime) {
+  return function ConfigEditor(chiasm) {
 
     var model = Model({
       // The `hidden` boolean property triggers the layout
@@ -19,10 +19,10 @@ define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/j
       size: "400px"
     });
 
-    // Append a div to contain the editor to the runtime div.
+    // Append a div to contain the editor to the chiasm div.
     // Use CSS `position: absolute;` so setting `left` and `top` CSS
-    // properties later will position the SVG relative to the runtime div.
-    var div = d3.select(runtime.div)
+    // properties later will position the SVG relative to the chiasm div.
+    var div = d3.select(chiasm.container)
       .append("div")
       .style("position", "absolute");
 
@@ -38,21 +38,21 @@ define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/j
     });
 
     // Keeps track of the config string from the CodeMirror editor
-    // that was the last to be parsed and set as the runtime config.
+    // that was the last to be parsed and set as the chiasm config.
     var oldConfigStr;
 
-    // Edit the text when the runtime config updates.
-    runtime.when("config", function(config){
+    // Edit the text when the chiasm config updates.
+    chiasm.when("config", function(config){
       var newConfigStr = JSON.stringify(config, null, 2);
       if(newConfigStr !== oldConfigStr){
         editor.setValue(newConfigStr);
       } 
     });
 
-    // Update the runtime config when text is edited.
+    // Update the chiasm config when text is edited.
     var changeListener = _.throttle(function(){
       oldConfigStr = editor.getValue();
-      runtime.config = JSON.parse(oldConfigStr);
+      chiasm.config = JSON.parse(oldConfigStr);
 
       // Throttle by 33 ms so the frequent updates induced by Inlet widgets
       // propagates through the system at most 30 frames per second (1000 / 30 = 33.333).
@@ -64,7 +64,7 @@ define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/j
 
 
       // set the CSS (left, top, width, height) properties to move and
-      // position the editor relative to the runtime div.
+      // position the editor relative to the chiasm div.
       div
         .style("left", box.x + "px")
         .style("top", box.y + "px")

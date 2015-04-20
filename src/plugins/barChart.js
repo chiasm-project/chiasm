@@ -6,7 +6,7 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
   var None = Model.None;
 
   // The constructor function, accepting default values.
-  return function BarChart(runtime) {
+  return function BarChart(chiasm) {
 
     // Create a Model instance for the bar chart.
     // This will serve as the public API for the visualization.
@@ -19,6 +19,8 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
         "xAxisLabelOffset",
         "yAxisLabelOffset"
       ],
+
+      // TODO push these into Reactivis getX, getY
       xColumn: None,
       yColumn: None,
 
@@ -32,7 +34,7 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
 
     // TODO move this logic into Chiasm,
     // TODO add to plugin docs.
-    model.container = runtime.container;
+    model.container = chiasm.container;
 
     reactivis.svg(model);
     reactivis.title(model);

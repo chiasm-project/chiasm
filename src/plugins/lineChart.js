@@ -6,7 +6,7 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
   var None = Model.None;
 
   // The constructor function, accepting default values.
-  return function LineChart(runtime) {
+  return function LineChart(chiasm) {
 
     // Create a Model instance for the line chart.
     // This will serve as the line chart's public API.
@@ -19,8 +19,21 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
         "xAxisLabelOffset",
         "yAxisLabelOffset"
       ],
-      container: runtime.div
+
+      // TODO push these into Reactivis getX, getY
+      xColumn: None,
+      yColumn: None,
+
+      // TODO push axis labels down into Reactivis
+      xAxisLabel: "",
+      yAxisLabel: "",
+      xAxisLabelOffset: 0,
+      yAxisLabelOffset: 0
     });
+
+    // TODO move this logic into Chiasm,
+    // TODO add to plugin docs.
+    model.container = chiasm.container;
 
     reactivis.svg(model);
     reactivis.title(model);
@@ -30,7 +43,9 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
 
     // Generate a function for getting the X value.
     model.when(["data", "xColumn"], function (data, xColumn) {
-      model.getX = function (d) { return d[xColumn]; };
+      if(xColumn !== None){
+        model.getX = function (d) { return d[xColumn]; };
+      }
     });
 
 
@@ -122,7 +137,9 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
 
     // Generate a function for getting the Y value.
     model.when(["data", "yColumn"], function (data, yColumn) {
-      model.getY = function (d) { return d[yColumn]; };
+      if(yColumn !== None){
+        model.getY = function (d) { return d[yColumn]; };
+      }
     });
 
     // Compute the domain of the Y attribute.
