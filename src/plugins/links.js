@@ -1,11 +1,12 @@
 // This module implements data binding between components.
-// Created by Curran Kelleher Mar 2015
+// by Curran Kelleher April 2015
 define(["d3", "model"], function (d3, Model) {
 
-  return function Links(runtime) {
+  return function Links(chiasm) {
 
     var model = Model({
-      publicProperties: [ "bindings" ]
+      publicProperties: [ "bindings" ],
+      bindings: []
     });
 
     model.when("bindings", function (bindings){
@@ -22,12 +23,14 @@ define(["d3", "model"], function (d3, Model) {
             targetProperty = target[1];
 
         // Retreive the source and target components.
-        runtime.getComponent(sourceAlias, function(err, sourceComponent){
+        chiasm.getComponent(sourceAlias).then(function(sourceComponent){
           // TODO propagate errors to UI
 
-          runtime.getComponent(targetAlias, function(err, targetComponent){
+          chiasm.getComponent(targetAlias).then(function(targetComponent){
             // TODO propagate errors to UI
             // TODO keep track of listeners and remove old ones when bindings change.
+            // TODO add a test for this
+
 
             // Add a reactive function that binds the source to the target.
             sourceComponent.when(sourceProperty, function(value){

@@ -1,6 +1,6 @@
 // A reusable bar chart module.
 // Draws from D3 bar chart example http://bl.ocks.org/mbostock/3885304
-// Curran Kelleher March 2015
+// Curran Kelleher April 2015
 define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _) {
 
   var None = Model.None;
@@ -19,8 +19,20 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
         "xAxisLabelOffset",
         "yAxisLabelOffset"
       ],
-      container: runtime.div
+      xColumn: None,
+      yColumn: None,
+
+      // TODO push axis labels down into Reactivis
+      xAxisLabel: "",
+      yAxisLabel: "",
+      xAxisLabelOffset: 0,
+      yAxisLabelOffset: 0
+
     });
+
+    // TODO move this logic into Chiasm,
+    // TODO add to plugin docs.
+    model.container = runtime.container;
 
     reactivis.svg(model);
     reactivis.title(model);
@@ -29,7 +41,9 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
 
     // Generate a function for getting the X value.
     model.when(["data", "xColumn"], function (data, xColumn) {
-      model.getX = function (d) { return d[xColumn]; };
+      if(xColumn !== None){
+        model.getX = function (d) { return d[xColumn]; };
+      }
     });
 
     // Handle sorting.
@@ -91,7 +105,9 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
 
     // Generate a function for getting the Y value.
     model.when(["data", "yColumn"], function (data, yColumn) {
-      model.getY = function (d) { return d[yColumn]; };
+      if(yColumn !== None){
+        model.getY = function (d) { return d[yColumn]; };
+      }
     });
 
     // Allow the API client to optionally specify fixed min and max values.
@@ -156,8 +172,11 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     });
 
     // For a bar chart, use the X column for color.
+    // TODO change this to unify handling of color across visualizations.
     model.when(["xColumn", "colorScale"], function(xColumn, colorScale){
-      model.getColorScaled = function(d){ return colorScale(d[xColumn]); };
+      if(xColumn !== None){
+        model.getColorScaled = function(d){ return colorScale(d[xColumn]); };
+      }
     });
 
     // Draw the bars.
