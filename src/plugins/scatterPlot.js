@@ -1,6 +1,6 @@
 // A reusable scatter plot module.
 // Curran Kelleher March 2015
-define(["d3", "model"], function (d3, Model) {
+define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
 
   var None = Model.None;
 
@@ -15,22 +15,13 @@ define(["d3", "model"], function (d3, Model) {
       // TODO refactor this, define public properties
       // close to reactive functions that use them.
       publicProperties: [
-        "xColumn",
-        "yColumn",
         "xAxisLabel",
         "yAxisLabel",
         "xAxisLabelOffset",
         "yAxisLabelOffset",
-        "margin",
-        "title",
-        "titleOffset",
         "sizeDefault",
         "colorDefault"
       ],
-
-      // TODO push these into Reactivis getX, getY
-      xColumn: None,
-      yColumn: None,
 
       // TODO push this into reactivis margin
       margin: {
@@ -54,73 +45,11 @@ define(["d3", "model"], function (d3, Model) {
     // TODO add to plugin docs.
     model.container = chiasm.container;
 
-    // Create an SVG element from the container DOM element.
-    model.when("container", function (container) {
-      model.svg = d3.select(container).append("svg")
-
-        // Use CSS `position: absolute;`
-        // so setting `left` and `top` later will
-        // position the SVG relative to the container div.
-        .style("position", "absolute");
-    });
-
-    // Adjust the size of the SVG based on the `box` property.
-    model.when(["svg", "box"], function (svg, box) {
-
-      // Set the CSS `left` and `top` properties
-      // to move the SVG to `(box.x, box.y)`
-      // relative to the container div.
-      svg
-        .style("left", box.x + "px")
-        .style("top", box.y + "px")
-        .attr("width", box.width)
-        .attr("height", box.height);
-    });
-
-    // Create an SVG group that will contain the visualization.
-    model.when("svg", function (svg) {
-      model.g = svg.append("g");
-    });
-
-    // Adjust the SVG group translation based on the margin.
-    model.when(["g", "margin"], function (g, margin) {
-      g.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    });
-
-    // Create the title text element.
-    model.when("g", function (g){
-      model.titleText = g.append("text").attr("class", "title-text");
-    });
-
-    // Center the title text when width changes.
-    model.when(["titleText", "width"], function (titleText, width) {
-      titleText.attr("x", width / 2);
-    });
-
-    // Update the title text based on the `title` property.
-    model.when(["titleText", "title"], function (titleText, title){
-      titleText.text(title);
-    });
-
-    // Update the title text offset.
-    model.when(["titleText", "titleOffset"], function (titleText, titleOffset){
-      titleText.attr("dy", titleOffset + "em");
-    });
-
-    // Compute the inner box from the outer box and margin.
-    // See Margin Convention http://bl.ocks.org/mbostock/3019563
-    model.when(["box", "margin"], function (box, margin) {
-      model.width = box.width - margin.left - margin.right;
-      model.height = box.height - margin.top - margin.bottom;
-    });
-
-    // Generate a function for getting the X value.
-    // TODO push this into reactivis.
-    model.when(["data", "xColumn"], function (data, xColumn) {
-      if(xColumn !== None){
-        model.getX = function (d) { return d[xColumn]; };
-      }
-    });
+    reactivis.svg(model);
+    reactivis.title(model);
+    reactivis.margin(model);
+    reactivis.getX(model);
+    reactivis.getY(model);
 
     // Compute the domain of the X attribute.
 
@@ -182,14 +111,6 @@ define(["d3", "model"], function (d3, Model) {
     // Update X axis label.
     model.when(["xAxisText", "xAxisLabel"], function (xAxisText, xAxisLabel) {
       xAxisText.text(xAxisLabel);
-    });
-
-    // Generate a function for getting the Y value.
-    // TODO push this into reactivis.
-    model.when(["data", "yColumn"], function (data, yColumn) {
-      if(yColumn !== None){
-        model.getY = function (d) { return d[yColumn]; };
-      }
     });
 
     // Compute the domain of the Y attribute.

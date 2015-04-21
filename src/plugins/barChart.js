@@ -12,17 +12,11 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     // This will serve as the public API for the visualization.
     var model = Model({
       publicProperties: [
-        "xColumn",
-        "yColumn",
         "xAxisLabel",
         "yAxisLabel",
         "xAxisLabelOffset",
         "yAxisLabelOffset"
       ],
-
-      // TODO push these into Reactivis getX, getY
-      xColumn: None,
-      yColumn: None,
 
       // TODO push axis labels down into Reactivis
       xAxisLabel: "",
@@ -40,13 +34,8 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     reactivis.title(model);
     reactivis.margin(model);
     reactivis.color(model);
-
-    // Generate a function for getting the X value.
-    model.when(["data", "xColumn"], function (data, xColumn) {
-      if(xColumn !== None){
-        model.getX = function (d) { return d[xColumn]; };
-      }
-    });
+    reactivis.getX(model);
+    reactivis.getY(model);
 
     // Handle sorting.
     model.when(["sortColumn", "sortOrder", "data"], function (sortColumn, sortOrder, data){
@@ -103,13 +92,6 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     // Update X axis label.
     model.when(["xAxisText", "xAxisLabel"], function (xAxisText, xAxisLabel) {
       xAxisText.text(xAxisLabel);
-    });
-
-    // Generate a function for getting the Y value.
-    model.when(["data", "yColumn"], function (data, yColumn) {
-      if(yColumn !== None){
-        model.getY = function (d) { return d[yColumn]; };
-      }
     });
 
     // Allow the API client to optionally specify fixed min and max values.

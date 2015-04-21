@@ -12,17 +12,11 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     // This will serve as the line chart's public API.
     var model = Model({
       publicProperties: [
-        "xColumn",
-        "yColumn",
         "xAxisLabel",
         "yAxisLabel",
         "xAxisLabelOffset",
         "yAxisLabelOffset"
       ],
-
-      // TODO push these into Reactivis getX, getY
-      xColumn: None,
-      yColumn: None,
 
       // TODO push axis labels down into Reactivis
       xAxisLabel: "",
@@ -39,15 +33,8 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     reactivis.title(model);
     reactivis.margin(model);
     reactivis.color(model);
-
-
-    // Generate a function for getting the X value.
-    model.when(["data", "xColumn"], function (data, xColumn) {
-      if(xColumn !== None){
-        model.getX = function (d) { return d[xColumn]; };
-      }
-    });
-
+    reactivis.getX(model);
+    reactivis.getY(model);
 
     // Append a mouse target for intercepting mouse hover events.
     model.enableHoverLine = false;
@@ -133,13 +120,6 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     // Update X axis label.
     model.when(["xAxisText", "xAxisLabel"], function (xAxisText, xAxisLabel) {
       xAxisText.text(xAxisLabel);
-    });
-
-    // Generate a function for getting the Y value.
-    model.when(["data", "yColumn"], function (data, yColumn) {
-      if(yColumn !== None){
-        model.getY = function (d) { return d[yColumn]; };
-      }
     });
 
     // Compute the domain of the Y attribute.
