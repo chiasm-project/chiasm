@@ -20,12 +20,16 @@ define(["d3", "model"], function (d3, Model) {
         "text",
 
         // The width in pixels of lines for the X.
-        "lineWidth"
+        "lineWidth",
+
+        // The relative size of this component, used by the layout plugin.
+        "size"
       ],
 
       color: "white",
       text: "",
-      lineWidth: 8
+      lineWidth: 8,
+      size: 1
     });
 
     // Append an SVG to the chiasm container.

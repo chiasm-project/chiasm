@@ -31,6 +31,14 @@ function SimplePlugin(){
   });
 }
 
+function PointPlugin(){
+  return Model({
+    publicProperties: ["x", "y"],
+    x: 0,
+    y: 0
+  });
+}
+
 // This plugin is invalid because no default property values are provided.
 // Default values must be explicit, because the runtime engine must know
 // what values to use when the property is "unset" - when the property is
@@ -158,13 +166,31 @@ describe("chiasm", function () {
     });
   });
 
-  it("create a component, set state with a single property", function(done) {
+  it("report error when attempting to set a property without a default value", function(done) {
     var chiasm = Chiasm();
     chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    chiasm.config = {
+    chiasm.setConfig({
       foo: {
         plugin: "simplestPlugin",
+        state: {
+          message: "Hello"
+        }
+      }
+    }).catch(function(err){
+      expect(err.message).to.equal("Default value for public property 'message' " +
+                                   "not specified for component with alias 'foo'.");
+      done();
+    });
+  });
+
+  it("create a component, set state with a single property", function(done) {
+    var chiasm = Chiasm();
+    chiasm.plugins.simplePlugin = SimplePlugin;
+    
+    chiasm.config = {
+      foo: {
+        plugin: "simplePlugin",
         state: {
           message: "Hello"
         }
@@ -182,11 +208,11 @@ describe("chiasm", function () {
 
   it("create a component, set state with two properties", function(done) {
     var chiasm = Chiasm();
-    chiasm.plugins.simplestPlugin = SimplestPlugin;
+    chiasm.plugins.pointPlugin = PointPlugin;
     
     chiasm.config = {
       foo: {
-        plugin: "simplestPlugin",
+        plugin: "pointPlugin",
         state: {
           x: 5,
           y: 10
@@ -206,11 +232,11 @@ describe("chiasm", function () {
 
   it("propagate changes from config to components", function(done) {
     var chiasm = Chiasm();
-    chiasm.plugins.simplestPlugin = SimplestPlugin;
+    chiasm.plugins.pointPlugin = PointPlugin;
     
     chiasm.config = {
       foo: {
-        plugin: "simplestPlugin",
+        plugin: "pointPlugin",
         state: {
           x: 5
         }
@@ -222,7 +248,7 @@ describe("chiasm", function () {
         expect(x).to.equal(5);
         chiasm.config = {
           foo: {
-            plugin: "simplestPlugin",
+            plugin: "pointPlugin",
             state: {
               x: 5,
               y: 10
@@ -526,11 +552,21 @@ describe("chiasm", function () {
     };
 
     chiasm.plugins.barChart = function(){
-      return Model({ pluginName: "barChart" });
+      return Model({
+        pluginName: "barChart",
+        publicProperties: ["markColumn", "sizeColumn"],
+        markColumn: Model.None,
+        sizeColumn: Model.None
+      });
     };
 
     chiasm.plugins.pieChart = function(){
-      return Model({ pluginName: "pieChart" });
+      return Model({
+        pluginName: "pieChart",
+        publicProperties: ["markColumn", "sizeColumn"],
+        markColumn: Model.None,
+        sizeColumn: Model.None
+      });
     };
 
     chiasm.config = config1;

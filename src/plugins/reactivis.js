@@ -130,7 +130,7 @@ define(["model"], function (Model){
     model.when(["colorColumn", "colorScale", "colorDefault"],
         function(colorColumn, colorScale, colorDefault){
       if(colorColumn !== None && colorScale !== None){
-        model.color = function(d){ return colorScale(d[colorColumn]); }
+        model.color = function(d){ return colorScale(d[colorColumn]); };
       }
       else {
         model.color = colorDefault;

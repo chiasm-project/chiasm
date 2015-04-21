@@ -242,17 +242,17 @@ define(["model", "lodash"], function (Model, _) {
     // These methods unpack Action objects and invoke corresponding
     // functions that execute them. Each method returns a promise.
     var methods = {
-      create: function (action, callback) {
-        return create(action.alias, action.plugin, callback);
+      create: function (action) {
+        return create(action.alias, action.plugin);
       },
-      destroy: function (action, callback) {
-        return destroy(action.alias, callback);
+      destroy: function (action) {
+        return destroy(action.alias);
       },
-      set: function (action, callback) {
-        return set(action.alias, action.property, action.value, callback);
+      set: function (action) {
+        return set(action.alias, action.property, action.value);
       },
-      unset: function (action, callback) {
-        return unset(action.alias, action.property, callback);
+      unset: function (action) {
+        return unset(action.alias, action.property);
       }
     };
 
@@ -463,16 +463,6 @@ define(["model", "lodash"], function (Model, _) {
         }, reject);
       });
     }
-  //          if( alias in publicPropertyDefaults && property in publicPropertyDefaults[alias] ){
-  //            component[property] = value;
-  //            callback();
-  //          } else {
-  //            callback(new Error([
-  //              "Any property set from a Chiasm configuration must be ",
-  //              "declared as a public property by the plugin, and must have ",
-  //              "a default value provided."
-  //            ].join("")));
-  //          }
 
     // Applies an "unset" action.
     function unset(alias, property, callback) {
