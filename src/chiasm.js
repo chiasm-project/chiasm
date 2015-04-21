@@ -19,6 +19,33 @@
 // By Curran Kelleher April 2015
 define(["model", "lodash"], function (Model, _) {
 
+  // All error message strings are kept track of here.
+  var ErrorMessages = {
+
+    // This error occurs when a property is set via the configuration
+    // or is declared as a public property but does not have a default value.
+    // Every property set via the configuration must be declared by
+    // the corresponding plugin as a public property, and must have a default value.
+    // Without this strict enforcement , the behavior of Chiasm is unstable in the case that
+    // a property is set, then the property is later removed from the configuration (unset).
+    // The default values tell Chiasm what value to use after a property is unset.
+    // Without default values, unsetting a property would have no effect, which would
+    // make the state of the components out of sync with the configuration after an unset.
+    missingDefault: "Default value for public property '${ property }' " +
+                    "not specified for component with alias '${ alias }'.",
+
+    // This error occurs when a component is requested via `chiasm.getComponent()`,
+    // but it fails to appear after a timeout elapses (`chiasm.timeout`).
+    componentTimeout: "Component with alias '${ alias }' does not exist " +
+                      "after timeout of ${ seconds } seconds exceeded."
+  };
+
+  // Creates a new Error object with a message derived from the 
+  // error message template corresponding to the given type.
+  function createError(type, values){
+    return Error(_.template(ErrorMessages[type])(values));
+  }
+
   // Methods for creating and serializing Action objects.
   // These are used to express differences between configurations.
   //
@@ -264,12 +291,10 @@ define(["model", "lodash"], function (Model, _) {
           } else if ((Date.now() - startTime) < chiasm.timeout){
             setTimeout(poll, 1);
           } else {
-            reject(new Error([
-              "Component with alias '", alias,
-              "' does not exist after timeout of ",
-              (chiasm.timeout / 1000),
-              " seconds exceeded."
-            ].join("")));
+            reject(createError("componentTimeout", {
+              alias: alias,
+              seconds: chiasm.timeout / 1000
+            }));
           }
         }());
       });
@@ -296,21 +321,6 @@ define(["model", "lodash"], function (Model, _) {
       });
     }
 
-    // Computes what the current configured value is for a given property
-    // on the component with the given alias.
-    function getConfiguredValue(alias, property){
-      var options = chiasm.config[alias];
-    
-      // Get the value from `chiasm.config` if it is available there,
-      if("state" in options && property in options.state){
-        return options.state[property];
-      } else {
-
-        // otherwise return the default value.
-        return defaults[property];
-      }
-    }
-
     // Applies a "create" action.
     function create(alias, plugin){
       return new Promise(function(resolve, reject){
@@ -324,7 +334,7 @@ define(["model", "lodash"], function (Model, _) {
             // Store a reference to the component.
             components[alias] = component;
 
-            // Store defaults object reference for later use with "unset".
+            // Create a defaults object for population with values for each public property.
             defaults[alias] = {};
 
             // Handle public properties.
@@ -337,10 +347,10 @@ define(["model", "lodash"], function (Model, _) {
                 if(component[property] === undefined){
 
                   // Throw an exception in order to break out of the current control flow.
-                  throw Error([
-                    "Default value for public property '", property,
-                    "' not specified for component with alias '", alias, "'."
-                  ].join(""));
+                  throw createError("missingDefault", {
+                    property: property,
+                    alias: alias
+                  });
                 }
 
                 // Store default values for public properties.
@@ -429,27 +439,31 @@ define(["model", "lodash"], function (Model, _) {
       return new Promise(function(resolve, reject){
         getComponent(alias).then(function(component){
 
-          // Set this flag so Chiasm knows the change originated from setConfig().
-          settingProperty = true;
+          // Make sure that every property configured through "set" actions
+          // is a public property and has a default value. Without this strict enforcement,
+          // the behavior of Chiasm with "unset" actions is unstable.
+// TODO uncomment this and fix all resulting errors.
+//          if( defaults[alias] && defaults[alias][property] !== undefined ){
 
-          // Set the property on the component. Since the component is a ModelJS model,
-          // simply setting the value like this will propagate the change through the
-          // reactive data dependency graph of the component
-          component[property] = value;
+            // Set this flag so Chiasm knows the change originated from setConfig().
+            settingProperty = true;
 
-          settingProperty = false;
-          resolve();
+            // Set the property on the component. Since the component is a ModelJS model,
+            // simply setting the value like this will propagate the change through the
+            // reactive data dependency graph of the component
+            component[property] = value;
+
+            settingProperty = false;
+            resolve();
+//          } else {
+//            reject(createError("missingDefault", {
+//              property: property,
+//              alias: alias
+//            }));
+//          }
         }, reject);
       });
     }
-  // TODO uncomment this and fix all resulting errors.
-  //          // Strictly enforce that every property set via the configuration
-  //          // is a public property that has a default value.
-  //          // Without this, the behavior of Chiasm is unstable in the case that
-  //          // a property is set, then the property is removed from the configuration (unset).
-  //          // The default values tell Chiasm what value to use after a property is unset.
-  //          // Without default values, unsetting a property would have no effect, which would
-  //          // make the state of the system out of sync the state specified configuration.
   //          if( alias in publicPropertyDefaults && property in publicPropertyDefaults[alias] ){
   //            component[property] = value;
   //            callback();
