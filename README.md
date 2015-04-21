@@ -64,8 +64,6 @@ See also
  * [runtime module](http://curran.github.io/chiasm/client/docs/core/runtime.html) Documents exact configuration structure.
  * [runtime module unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/runtimeTest.js) Contains simple example plugins.
 
-Status: partially implemented.
-
 ## Plugins
 
 Here's [how to create a Chiasm plugin](https://github.com/curran/chiasm/wiki).

@@ -1,8 +1,16 @@
+// This module encapsulates reusable reactive flows
+// common to many D3-based visualizations.
+//
+// Curran Kelleher April 2015
 define(["model"], function (Model){
+
+  // The returned public API object, containing functions that take as input
+  // a Model.js model, and as a side effect add reactive flows within that model.
   var reactivis = {};
 
+  // This value is used for optionally defined public properties
   var None = Model.None;
-
+  
   reactivis.svg = function(model){
 
     // Create the SVG element from the container DOM element.
