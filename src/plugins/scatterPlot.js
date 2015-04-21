@@ -48,25 +48,25 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     reactivis.svg(model);
     reactivis.title(model);
     reactivis.margin(model);
-    reactivis.getX(model);
-    reactivis.getY(model);
+    reactivis.xAccessor(model);
+    reactivis.yAccessor(model);
 
     // Compute the domain of the X attribute.
 
     // Allow the API client to optionally specify fixed min and max values.
     model.xDomainMin = None;
     model.xDomainMax = None;
-    model.when(["data", "getX", "xDomainMin", "xDomainMax"],
-        function (data, getX, xDomainMin, xDomainMax) {
+    model.when(["data", "xAccessor", "xDomainMin", "xDomainMax"],
+        function (data, xAccessor, xDomainMin, xDomainMax) {
 
       if(xDomainMin === None && xDomainMax === None){
-        model.xDomain = d3.extent(data, getX);
+        model.xDomain = d3.extent(data, xAccessor);
       } else {
         if(xDomainMin === None){
-          xDomainMin = d3.min(data, getX);
+          xDomainMin = d3.min(data, xAccessor);
         }
         if(xDomainMax === None){
-          xDomainMax = d3.max(data, getX);
+          xDomainMax = d3.max(data, xAccessor);
         }
         model.xDomain = [xDomainMin, xDomainMax];
       }
@@ -78,8 +78,8 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     });
 
     // Generate a function for getting the scaled X value.
-    model.when(["data", "xScale", "getX"], function (data, xScale, getX) {
-      model.getXScaled = function (d) { return xScale(getX(d)); };
+    model.when(["data", "xScale", "xAccessor"], function (data, xScale, xAccessor) {
+      model.x = function (d) { return xScale(xAccessor(d)); };
     });
 
     // Set up the X axis.
@@ -118,17 +118,17 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     // Allow the API client to optionally specify fixed min and max values.
     model.yDomainMin = None;
     model.yDomainMax = None;
-    model.when(["data", "getY", "yDomainMin", "yDomainMax"],
-        function (data, getY, yDomainMin, yDomainMax) {
+    model.when(["data", "yAccessor", "yDomainMin", "yDomainMax"],
+        function (data, yAccessor, yDomainMin, yDomainMax) {
 
       if(yDomainMin === None && yDomainMax === None){
-        model.yDomain = d3.extent(data, getY);
+        model.yDomain = d3.extent(data, yAccessor);
       } else {
         if(yDomainMin === None){
-          yDomainMin = d3.min(data, getY);
+          yDomainMin = d3.min(data, yAccessor);
         }
         if(yDomainMax === None){
-          yDomainMax = d3.max(data, getY);
+          yDomainMax = d3.max(data, yAccessor);
         }
         model.yDomain = [yDomainMin, yDomainMax];
       }
@@ -140,8 +140,8 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     });
 
     // Generate a function for getting the scaled Y value.
-    model.when(["data", "yScale", "getY"], function (data, yScale, getY) {
-      model.getYScaled = function (d) { return yScale(getY(d)); };
+    model.when(["data", "yScale", "yAccessor"], function (data, yScale, yAccessor) {
+      model.y = function (d) { return yScale(yAccessor(d)); };
     });
 
     // Set up the Y axis.
@@ -225,15 +225,15 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     });
 
     // Draw the circles of the scatter plot.
-    model.when(["data", "circlesG", "getXScaled", "getYScaled", "getSizeScaled", "getColorScaled"],
-        function (data, circlesG, getXScaled, getYScaled, getSizeScaled, getColorScaled){
+    model.when(["data", "circlesG", "x", "y", "getSizeScaled", "getColorScaled"],
+        function (data, circlesG, x, y, getSizeScaled, getColorScaled){
 
       var circles = circlesG.selectAll("circle").data(data);
       circles.enter().append("circle");
       circles
         .transition().duration(500) // TODO make this a model property
-        .attr("cx", getXScaled)
-        .attr("cy", getYScaled)
+        .attr("cx", x)
+        .attr("cy", y)
         .attr("r", getSizeScaled)
         .attr("fill", getColorScaled);
       circles.exit().remove();

@@ -33,8 +33,8 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     reactivis.title(model);
     reactivis.margin(model);
     reactivis.color(model);
-    reactivis.getX(model);
-    reactivis.getY(model);
+    reactivis.xAccessor(model);
+    reactivis.yAccessor(model);
 
     // Append a mouse target for intercepting mouse hover events.
     model.enableHoverLine = false;
@@ -77,8 +77,8 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     });
 
     // Compute the domain of the X attribute.
-    model.when(["data", "getX"], function (data, getX) {
-      model.xDomain = d3.extent(data, getX);
+    model.when(["data", "xAccessor"], function (data, xAccessor) {
+      model.xDomain = d3.extent(data, xAccessor);
     });
 
     // Compute the X scale.
@@ -87,8 +87,8 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     });
 
     // Generate a function for getting the scaled X value.
-    model.when(["data", "xScale", "getX"], function (data, xScale, getX) {
-      model.getXScaled = function (d) { return xScale(getX(d)); };
+    model.when(["data", "xScale", "xAccessor"], function (data, xScale, xAccessor) {
+      model.x = function (d) { return xScale(xAccessor(d)); };
     });
 
     // Set up the X axis.
@@ -123,8 +123,8 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     });
 
     // Compute the domain of the Y attribute.
-    model.when(["data", "getY"], function (data, getY) {
-      model.yDomain = d3.extent(data, getY);
+    model.when(["data", "yAccessor"], function (data, yAccessor) {
+      model.yDomain = d3.extent(data, yAccessor);
     });
 
     // Compute the Y scale.
@@ -133,8 +133,8 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     });
 
     // Generate a function for getting the scaled Y value.
-    model.when(["data", "yScale", "getY"], function (data, yScale, getY) {
-      model.getYScaled = function (d) { return yScale(getY(d)); };
+    model.when(["data", "yScale", "yAccessor"], function (data, yScale, yAccessor) {
+      model.y = function (d) { return yScale(yAccessor(d)); };
     });
 
     // Set up the Y axis.
@@ -174,8 +174,8 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
 
     // Draw the lines.
     model.lineColumn = None;
-    model.when(["lineG", "data", "lineColumn", "getXScaled", "getYScaled", "colorScale"],
-        function (lineG, data, lineColumn, getXScaled, getYScaled, colorScale){
+    model.when(["lineG", "data", "lineColumn", "x", "y", "colorScale"],
+        function (lineG, data, lineColumn, x, y, colorScale){
       var linesData = d3.nest()
             .key(function(d){ 
               if(lineColumn !== None){
@@ -185,7 +185,7 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
               }
             })
             .entries(data),
-          line = d3.svg.line().x(getXScaled).y(getYScaled),
+          line = d3.svg.line().x(x).y(y),
           lines = lineG.selectAll(".line").data(linesData);
 
       lines.enter().append("path").attr("class", "line");

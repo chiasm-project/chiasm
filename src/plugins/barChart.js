@@ -34,8 +34,8 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     reactivis.title(model);
     reactivis.margin(model);
     reactivis.color(model);
-    reactivis.getX(model);
-    reactivis.getY(model);
+    reactivis.xAccessor(model);
+    reactivis.yAccessor(model);
 
     // Handle sorting.
     model.when(["sortColumn", "sortOrder", "data"], function (sortColumn, sortOrder, data){
@@ -47,8 +47,8 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     });
 
     // Compute the domain of the X attribute.
-    model.when(["sortedData", "getX"], function (sortedData, getX) {
-      model.xDomain = sortedData.map(getX);
+    model.when(["sortedData", "xAccessor"], function (sortedData, xAccessor) {
+      model.xDomain = sortedData.map(xAccessor);
     });
 
     // Compute the X scale.
@@ -58,8 +58,8 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     });
 
     // Generate a function for getting the scaled X value.
-    model.when(["data", "xScale", "getX"], function (data, xScale, getX) {
-      model.getXScaled = function (d) { return xScale(getX(d)); };
+    model.when(["xScale", "xAccessor"], function (xScale, xAccessor) {
+      model.x = function (d) { return xScale(xAccessor(d)); };
     });
 
     // Set up the X axis.
@@ -101,11 +101,11 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     model.yDomainMax = None;
 
     // Compute the domain of the Y attribute.
-    model.when(["data", "getY", "yDomainMin", "yDomainMax"],
-        function (data, getY, yDomainMin, yDomainMax) {
+    model.when(["data", "yAccessor", "yDomainMin", "yDomainMax"],
+        function (data, yAccessor, yDomainMin, yDomainMax) {
       model.yDomain = [
-        yDomainMin === None ? d3.min(data, getY): yDomainMin,
-        yDomainMax === None ? d3.max(data, getY): yDomainMax
+        yDomainMin === None ? d3.min(data, yAccessor): yDomainMin,
+        yDomainMax === None ? d3.max(data, yAccessor): yDomainMax
       ];
     });
 
@@ -115,8 +115,8 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     });
 
     // Generate a function for getting the scaled Y value.
-    model.when(["data", "yScale", "getY"], function (data, yScale, getY) {
-      model.getYScaled = function (d) { return yScale(getY(d)); };
+    model.when(["yScale", "yAccessor"], function (yScale, yAccessor) {
+      model.y = function (d) { return yScale(yAccessor(d)); };
     });
 
     // Set up the Y axis.
@@ -149,7 +149,6 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
       yAxisG.call(d3.svg.axis().orient("left").scale(yScale));
     });
 
-
     // Add an SVG group to contain the line.
     model.when("g", function (g) {
       model.barsG = g.append("g");
@@ -164,17 +163,17 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     });
 
     // Draw the bars.
-    model.when(["barsG", "sortedData", "getXScaled", "getYScaled", "xScale", "height", "getColorScaled", "getX"],
-        function (barsG, sortedData, getXScaled, getYScaled, xScale, height, getColorScaled, getX){
-      var bars = barsG.selectAll("rect").data(sortedData, getX);
+    model.when(["barsG", "sortedData", "x", "y", "xScale", "height", "getColorScaled", "xAccessor"],
+        function (barsG, sortedData, x, y, xScale, height, getColorScaled, xAccessor){
+      var bars = barsG.selectAll("rect").data(sortedData, xAccessor);
       bars.enter().append("rect");
       bars
         // TODO generalize transitions
         .transition().ease("linear").duration(200)
-        .attr("x", getXScaled)
-        .attr("y", getYScaled)
+        .attr("x", x)
+        .attr("y", y)
         .attr("width", xScale.rangeBand())
-        .attr("height", function(d) { return height - getYScaled(d); })
+        .attr("height", function(d) { return height - y(d); })
         .attr("fill", getColorScaled);
       bars.exit().remove();
     });

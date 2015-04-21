@@ -115,21 +115,21 @@ define(["model"], function (Model){
   };
 
   // Generates a function for getting the X value.
-  reactivis.getX = function(model){
+  reactivis.xAccessor = function(model){
     addPublicProperty(model, "xColumn", None);
     model.when(["xColumn"], function (xColumn) {
       if(xColumn !== None){
-        model.getX = function (d) { return d[xColumn]; };
+        model.xAccessor = function (d) { return d[xColumn]; };
       }
     });
   };
 
   // Generates a function for getting the Y value.
-  reactivis.getY = function(model){
+  reactivis.yAccessor = function(model){
     model.yColumn = None;
     model.when(["yColumn"], function (yColumn) {
       if(yColumn !== None){
-        model.getY = function (d) { return d[yColumn]; };
+        model.yAccessor = function (d) { return d[yColumn]; };
       }
     });
   };
