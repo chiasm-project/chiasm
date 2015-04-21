@@ -38,12 +38,22 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     reactivis.yAccessor(model);
 
     // Handle sorting.
+    // TODO remove sorting from visualizations,
+    // add it to data preprocessing plugins.
+    model.publicProperties.push("sortColumn");
+    model.sortColumn = None;
+    model.publicProperties.push("sortOrder");
+    model.sortOrder = None;
     model.when(["sortColumn", "sortOrder", "data"], function (sortColumn, sortOrder, data){
-      var sortedData = _.sortBy(data, sortColumn);
-      if(sortOrder === "descending"){
-        sortedData.reverse();
+      if(sortColumn !== None && sortOrder !== None){
+        var sortedData = _.sortBy(data, sortColumn);
+        if(sortOrder === "descending"){
+          sortedData.reverse();
+        }
+        model.sortedData = sortedData;
+      } else {
+        model.sortedData = data;
       }
-      model.sortedData = sortedData;
     });
 
     // Compute the domain of the X attribute.
@@ -154,17 +164,9 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
       model.barsG = g.append("g");
     });
 
-    // For a bar chart, use the X column for color.
-    // TODO change this to unify handling of color across visualizations.
-    model.when(["xColumn", "colorScale"], function(xColumn, colorScale){
-      if(xColumn !== None){
-        model.getColorScaled = function(d){ return colorScale(d[xColumn]); };
-      }
-    });
-
     // Draw the bars.
-    model.when(["barsG", "sortedData", "x", "y", "xScale", "height", "getColorScaled", "xAccessor"],
-        function (barsG, sortedData, x, y, xScale, height, getColorScaled, xAccessor){
+    model.when(["barsG", "sortedData", "x", "y", "xScale", "height", "color", "xAccessor"],
+        function (barsG, sortedData, x, y, xScale, height, color, xAccessor){
       var bars = barsG.selectAll("rect").data(sortedData, xAccessor);
       bars.enter().append("rect");
       bars
@@ -174,7 +176,7 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
         .attr("y", y)
         .attr("width", xScale.rangeBand())
         .attr("height", function(d) { return height - y(d); })
-        .attr("fill", getColorScaled);
+        .attr("fill", color);
       bars.exit().remove();
     });
 

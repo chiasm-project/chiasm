@@ -23,14 +23,6 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
         "colorDefault"
       ],
 
-      // TODO push this into reactivis margin
-      margin: {
-        "top": 32,
-        "right": 2,
-        "bottom": 40,
-        "left": 47
-      },
-
       title:"",
       titleOffset: 0,
 
@@ -50,6 +42,7 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     reactivis.margin(model);
     reactivis.xAccessor(model);
     reactivis.yAccessor(model);
+    reactivis.color(model);
 
     // Compute the domain of the X attribute.
 
@@ -174,12 +167,16 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     });
 
     // Allow the API client to optionally specify a size column.
+    model.publicProperties.push("sizeColumn");
     model.sizeColumn = None;
     
     // The default radius of circles in pixels.
+    model.publicProperties.push("sizeDefault");
     model.sizeDefault = 2;
 
     // The min and max circle radius in pixels.
+    model.publicProperties.push("sizeMin");
+    model.publicProperties.push("sizeMax");
     model.sizeMin = 0.5;
     model.sizeMax = 6;
 
@@ -197,36 +194,14 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
       }
     });
 
-    // Allow the API client to optionally specify a color column.
-    model.colorColumn = None;
-    model.colorDomain = None;
-    model.colorRange = None;
-    
-    // The default color of circles (CSS color string).
-    model.colorDefault = "black";
-
-    // Set up the color scale.
-    model.when(["colorColumn", "data", "colorDefault", "colorDomain", "colorRange"],
-        function (colorColumn, data, colorDefault, colorDomain, colorRange){
-      if(colorColumn !== None && colorDomain !== None && colorRange !== None){
-        var getColor = function (d){ return d[colorColumn]; },
-            colorScale = d3.scale.ordinal()
-              .domain(colorDomain)
-              .range(colorRange);
-        model.getColorScaled = function (d){ return colorScale(getColor(d)); };
-      } else {
-        model.getColorScaled = function (d){ return colorDefault; };
-      }
-    });
-
     // Add an SVG group to contain the marks.
     model.when("g", function (g) {
       model.circlesG = g.append("g");
     });
 
     // Draw the circles of the scatter plot.
-    model.when(["data", "circlesG", "x", "y", "getSizeScaled", "getColorScaled"],
-        function (data, circlesG, x, y, getSizeScaled, getColorScaled){
+    model.when(["data", "circlesG", "x", "y", "getSizeScaled", "color"],
+        function (data, circlesG, x, y, getSizeScaled, color){
 
       var circles = circlesG.selectAll("circle").data(data);
       circles.enter().append("circle");
@@ -235,7 +210,7 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
         .attr("cx", x)
         .attr("cy", y)
         .attr("r", getSizeScaled)
-        .attr("fill", getColorScaled);
+        .attr("fill", color);
       circles.exit().remove();
 
     });

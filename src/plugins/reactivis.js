@@ -56,6 +56,14 @@ define(["model"], function (Model){
   // See http://bl.ocks.org/mbostock/3019563
   reactivis.margin = function(model){
 
+    // Set up the default margin.
+    addPublicProperty(model, "margin",{
+      "top": 32,
+      "right": 2,
+      "bottom": 40,
+      "left": 47
+    });
+
     // Compute the inner box from the outer box and margin.
     model.when(["box", "margin"], function (box, margin) {
       model.width = box.width - margin.left - margin.right;
@@ -66,10 +74,16 @@ define(["model"], function (Model){
     model.when(["g", "margin"], function (g, margin) {
       g.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     });
+
+    // TODO change layout such that size is not added as a property.
+    addPublicProperty(model, "size", 1);
   };
 
   // Adds a text title at the top of the visualization.
   reactivis.title = function(model){
+
+    addPublicProperty(model, "title", "");
+    addPublicProperty(model, "titleOffset", -0.3);
 
     // Create the title text element.
     model.when("g", function (g){
@@ -95,21 +109,31 @@ define(["model"], function (Model){
 
   reactivis.color = function(model){
 
-    // Allow the API client to optionally specify a color column.
-    model.colorColumn = None;
-    model.colorDomain = None;
-    model.colorRange = None;
-    
-    // The default color of circles (CSS color string).
-    model.colorDefault = "black";
+    addPublicProperty(model, "colorColumn", None);
+    addPublicProperty(model, "colorDomain", None);
+    addPublicProperty(model, "colorRange", None);
+    addPublicProperty(model, "colorDefault", "black");
 
     // Set up the color scale.
     model.when(["colorDefault", "colorDomain", "colorRange"],
         function (colorDefault, colorDomain, colorRange){
       if(colorDomain !== None && colorRange !== None){
-        model.colorScale = d3.scale.ordinal().domain(colorDomain).range(colorRange);
+        model.colorScale = d3.scale.ordinal()
+          .domain(colorDomain)
+          .range(colorRange);
       } else {
-        model.colorScale = function (d){ return colorDefault; };
+        model.colorScale = None;
+      }
+    });
+
+    // Set up the color evaluation function.
+    model.when(["colorColumn", "colorScale", "colorDefault"],
+        function(colorColumn, colorScale, colorDefault){
+      if(colorColumn !== None && colorScale !== None){
+        model.color = function(d){ return colorScale(d[colorColumn]); }
+      }
+      else {
+        model.color = colorDefault;
       }
     });
   };
@@ -126,7 +150,7 @@ define(["model"], function (Model){
 
   // Generates a function for getting the Y value.
   reactivis.yAccessor = function(model){
-    model.yColumn = None;
+    addPublicProperty(model, "yColumn", None);
     model.when(["yColumn"], function (yColumn) {
       if(yColumn !== None){
         model.yAccessor = function (d) { return d[yColumn]; };

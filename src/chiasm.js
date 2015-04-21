@@ -442,8 +442,7 @@ define(["model", "lodash"], function (Model, _) {
           // Make sure that every property configured through "set" actions
           // is a public property and has a default value. Without this strict enforcement,
           // the behavior of Chiasm with "unset" actions is unstable.
-// TODO uncomment this and fix all resulting errors.
-//          if( defaults[alias] && defaults[alias][property] !== undefined ){
+          if( defaults[alias] && defaults[alias][property] !== undefined ){
 
             // Set this flag so Chiasm knows the change originated from setConfig().
             settingProperty = true;
@@ -455,12 +454,12 @@ define(["model", "lodash"], function (Model, _) {
 
             settingProperty = false;
             resolve();
-//          } else {
-//            reject(createError("missingDefault", {
-//              property: property,
-//              alias: alias
-//            }));
-//          }
+          } else {
+            reject(createError("missingDefault", {
+              property: property,
+              alias: alias
+            }));
+          }
         }, reject);
       });
     }

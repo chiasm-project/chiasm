@@ -174,8 +174,8 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
 
     // Draw the lines.
     model.lineColumn = None;
-    model.when(["lineG", "data", "lineColumn", "x", "y", "colorScale"],
-        function (lineG, data, lineColumn, x, y, colorScale){
+    model.when(["lineG", "data", "lineColumn", "x", "y", "color"],
+        function (lineG, data, lineColumn, x, y, color){
       var linesData = d3.nest()
             .key(function(d){ 
               if(lineColumn !== None){
@@ -191,7 +191,7 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
       lines.enter().append("path").attr("class", "line");
       lines
         .attr("d", function(d){ return line(d.values); })
-        .style("stroke", function(d){ return colorScale(d.key); });
+        .style("stroke", color);
       lines.exit().remove();
     });
 
