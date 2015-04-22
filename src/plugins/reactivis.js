@@ -158,5 +158,47 @@ define(["model"], function (Model){
     });
   };
 
+  // Adds the X axis and its label text.
+  reactivis.xAxis = function(model){
+
+    addPublicProperty(model, "xAxisLabel", "");
+    addPublicProperty(model, "xAxisLabelOffset", 1.9);
+
+    // Set up the X axis.
+    model.when("g", function (g) {
+      model.xAxisG = g.append("g").attr("class", "x axis");
+      model.xAxisText = model.xAxisG.append("text").style("text-anchor", "middle");
+    });
+
+    // Move the X axis label based on its specified offset.
+    model.when(["xAxisText", "xAxisLabelOffset"], function (xAxisText, xAxisLabelOffset){
+      xAxisText.attr("dy", xAxisLabelOffset + "em");
+    });
+
+    // Update the X axis transform when height changes.
+    model.when(["xAxisG", "height"], function (xAxisG, height) {
+      xAxisG.attr("transform", "translate(0," + height + ")");
+    });
+
+    // Center the X axis label when width changes.
+    model.when(["xAxisText", "width"], function (xAxisText, width) {
+      xAxisText.attr("x", width / 2);
+    });
+
+    // Update the X axis based on the X scale.
+    model.when(["xAxisG", "xScale"], function (xAxisG, xScale) {
+      xAxisG.call(d3.svg.axis().orient("bottom").scale(xScale));
+    });
+
+    // Update X axis label.
+    model.when(["xAxisText", "xAxisLabel"], function (xAxisText, xAxisLabel) {
+      xAxisText.text(xAxisLabel);
+    });
+  };
+
+  // Expose the addPublicProperty function, as it is a useful utility
+  // function for visualizations that build on top of reactivis.
+  reactivis.addPublicProperty = addPublicProperty;
+
   return reactivis;
 });

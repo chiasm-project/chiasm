@@ -12,14 +12,12 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     // This will serve as the line chart's public API.
     var model = Model({
       publicProperties: [
-        "xAxisLabel",
         "yAxisLabel",
         "xAxisLabelOffset",
         "yAxisLabelOffset"
       ],
 
       // TODO push axis labels down into Reactivis
-      xAxisLabel: "",
       yAxisLabel: "",
       xAxisLabelOffset: 0,
       yAxisLabelOffset: 0
@@ -34,6 +32,7 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     reactivis.margin(model);
     reactivis.color(model);
     reactivis.xAccessor(model);
+    reactivis.xAxis(model);
     reactivis.yAccessor(model);
 
     // Append a mouse target for intercepting mouse hover events.
@@ -89,37 +88,6 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     // Generate a function for getting the scaled X value.
     model.when(["data", "xScale", "xAccessor"], function (data, xScale, xAccessor) {
       model.x = function (d) { return xScale(xAccessor(d)); };
-    });
-
-    // Set up the X axis.
-    model.when("g", function (g) {
-      model.xAxisG = g.append("g").attr("class", "x axis");
-      model.xAxisText = model.xAxisG.append("text").style("text-anchor", "middle");
-    });
-
-    // Move the X axis label based on its specified offset.
-    model.when(["xAxisText", "xAxisLabelOffset"], function (xAxisText, xAxisLabelOffset){
-      xAxisText.attr("dy", xAxisLabelOffset + "em");
-    });
-
-    // Update the X axis transform when height changes.
-    model.when(["xAxisG", "height"], function (xAxisG, height) {
-      xAxisG.attr("transform", "translate(0," + height + ")");
-    });
-
-    // Center the X axis label when width changes.
-    model.when(["xAxisText", "width"], function (xAxisText, width) {
-      xAxisText.attr("x", width / 2);
-    });
-
-    // Update the X axis based on the X scale.
-    model.when(["xAxisG", "xScale"], function (xAxisG, xScale) {
-      xAxisG.call(d3.svg.axis().orient("bottom").scale(xScale));
-    });
-
-    // Update X axis label.
-    model.when(["xAxisText", "xAxisLabel"], function (xAxisText, xAxisLabel) {
-      xAxisText.text(xAxisLabel);
     });
 
     // Compute the domain of the Y attribute.

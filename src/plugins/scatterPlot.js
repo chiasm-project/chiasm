@@ -15,19 +15,13 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
       // TODO refactor this, define public properties
       // close to reactive functions that use them.
       publicProperties: [
-        "xAxisLabel",
         "yAxisLabel",
-        "xAxisLabelOffset",
         "yAxisLabelOffset",
         "sizeDefault",
         "colorDefault"
       ],
 
-      title:"",
-      titleOffset: 0,
-
       // TODO push axis labels down into Reactivis
-      xAxisLabel: "",
       yAxisLabel: "",
       xAxisLabelOffset: 0,
       yAxisLabelOffset: 0
@@ -41,10 +35,11 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     reactivis.title(model);
     reactivis.margin(model);
     reactivis.xAccessor(model);
+    reactivis.xAxis(model);
     reactivis.yAccessor(model);
     reactivis.color(model);
 
-    // Compute the domain of the X attribute.
+    // Compute the domain of the X column.
 
     // Allow the API client to optionally specify fixed min and max values.
     model.xDomainMin = None;
@@ -75,38 +70,6 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
       model.x = function (d) { return xScale(xAccessor(d)); };
     });
 
-    // Set up the X axis.
-    model.when("g", function (g) {
-      model.xAxisG = g.append("g").attr("class", "x axis");
-      model.xAxisText = model.xAxisG.append("text").style("text-anchor", "middle");
-    });
-
-    // Move the X axis label based on its specified offset.
-    model.when(["xAxisText", "xAxisLabelOffset"], function (xAxisText, xAxisLabelOffset){
-      xAxisText.attr("dy", xAxisLabelOffset + "em");
-    });
-
-    // Update the X axis transform when height changes.
-    model.when(["xAxisG", "height"], function (xAxisG, height) {
-      xAxisG.attr("transform", "translate(0," + height + ")");
-    });
-
-    // Center the X axis label when width changes.
-    model.when(["xAxisText", "width"], function (xAxisText, width) {
-      xAxisText.attr("x", width / 2);
-    });
-
-    // Update the X axis based on the X scale.
-    model.when(["xAxisG", "xScale"], function (xAxisG, xScale) {
-      xAxisG.call(d3.svg.axis().orient("bottom").scale(xScale));
-    });
-
-    // Update X axis label.
-    model.when(["xAxisText", "xAxisLabel"], function (xAxisText, xAxisLabel) {
-      xAxisText.text(xAxisLabel);
-    });
-
-    // Compute the domain of the Y attribute.
 
     // Allow the API client to optionally specify fixed min and max values.
     model.yDomainMin = None;
