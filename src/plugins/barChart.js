@@ -10,19 +10,7 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
 
     // Create a Model instance for the bar chart.
     // This will serve as the public API for the visualization.
-    var model = Model({
-      publicProperties: [
-        "yAxisLabel",
-        "xAxisLabelOffset",
-        "yAxisLabelOffset"
-      ],
-
-      // TODO push axis labels down into Reactivis
-      yAxisLabel: "",
-      xAxisLabelOffset: 0,
-      yAxisLabelOffset: 0
-
-    });
+    var model = Model();
 
     // TODO move this logic into Chiasm,
     // TODO add to plugin docs.
@@ -34,6 +22,7 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     reactivis.xAccessor(model);
     reactivis.xAxis(model);
     reactivis.yAccessor(model);
+    reactivis.yAxis(model);
     reactivis.color(model);
 
     // Compute the ordinal domain of the X attribute.
@@ -75,36 +64,6 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     // Generate a function for getting the scaled Y value.
     model.when(["yScale", "yAccessor"], function (yScale, yAccessor) {
       model.y = function (d) { return yScale(yAccessor(d)); };
-    });
-
-    // Set up the Y axis.
-    model.when("g", function (g) {
-      model.yAxisG = g.append("g").attr("class", "y axis");
-      model.yAxisText = model.yAxisG.append("text")
-        .style("text-anchor", "middle")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0);
-    });
-    
-    // Move the Y axis label based on its specified offset.
-    model.yAxisLabelOffset = 1.4; // Unit is CSS "em"s
-    model.when(["yAxisText", "yAxisLabelOffset"], function (yAxisText, yAxisLabelOffset){
-      yAxisText.attr("dy", "-" + yAxisLabelOffset + "em");
-    });
-
-    // Center the Y axis label when height changes.
-    model.when(["yAxisText", "height"], function (yAxisText, height) {
-      yAxisText.attr("x", -height / 2);
-    });
-
-    // Update Y axis label.
-    model.when(["yAxisText", "yAxisLabel"], function (yAxisText, yAxisLabel) {
-      yAxisText.text(yAxisLabel);
-    });
-
-    // Update the Y axis based on the Y scale.
-    model.when(["yAxisG", "yScale"], function (yAxisG, yScale) {
-      yAxisG.call(d3.svg.axis().orient("left").scale(yScale));
     });
 
     // Add an SVG group to contain the line.

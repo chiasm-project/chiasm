@@ -196,6 +196,45 @@ define(["model"], function (Model){
     });
   };
 
+  // Adds the Y axis and its label text.
+  reactivis.yAxis = function(model){
+
+    // The text shown as the axis label.
+    addPublicProperty(model, "yAxisLabel", "");
+
+    // The left-right offset of the axis label, unit is CSS "em"s.
+    addPublicProperty(model, "yAxisLabelOffset", 1.4);
+
+    // Set up the Y axis.
+    model.when("g", function (g) {
+      model.yAxisG = g.append("g").attr("class", "y axis");
+      model.yAxisText = model.yAxisG.append("text")
+        .style("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0);
+    });
+    
+    // Move the Y axis label based on its specified offset.
+    model.when(["yAxisText", "yAxisLabelOffset"], function (yAxisText, yAxisLabelOffset){
+      yAxisText.attr("dy", "-" + yAxisLabelOffset + "em");
+    });
+
+    // Center the Y axis label when height changes.
+    model.when(["yAxisText", "height"], function (yAxisText, height) {
+      yAxisText.attr("x", -height / 2);
+    });
+
+    // Update Y axis label.
+    model.when(["yAxisText", "yAxisLabel"], function (yAxisText, yAxisLabel) {
+      yAxisText.text(yAxisLabel);
+    });
+
+    // Update the Y axis based on the Y scale.
+    model.when(["yAxisG", "yScale"], function (yAxisG, yScale) {
+      yAxisG.call(d3.svg.axis().orient("left").scale(yScale));
+    });
+  };
+
   // Expose the addPublicProperty function, as it is a useful utility
   // function for visualizations that build on top of reactivis.
   reactivis.addPublicProperty = addPublicProperty;
