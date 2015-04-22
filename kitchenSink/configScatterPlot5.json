@@ -1,0 +1,80 @@
+{
+  "layout": {
+    "plugin": "layout",
+    "state": {
+      "layout": {
+        "orientation": "horizontal",
+        "children": [
+          "editor",
+          "scatterPlot"
+        ]
+      }
+    }
+  },
+  "editor": {
+    "plugin": "configEditor",
+    "state": {
+      "size": "325px"
+    }
+  },
+  "scatterPlot": {
+    "plugin": "scatterPlot",
+    "state": {
+      "xColumn": "sepal_length",
+      "xAxisLabel": "Sepal Length",
+      "yColumn": "sepal_width",
+      "yAxisLabel": "Sepal Width",
+      "colorColumn": "class",
+      "colorDomain": [
+        "Iris-setosa",
+        "Iris-versicolor",
+        "Iris-virginica"
+      ],
+      "colorRange": [
+        "#f66464",
+        "#02e837",
+        "#00a6f9"
+      ],
+      "margin": {
+        "top": 32,
+        "right": 2,
+        "bottom": 40,
+        "left": 47
+      },
+      "xAxisLabelOffset": 1.9,
+      "yAxisLabelOffset": 1.4,
+      "title": "Iris",
+      "titleOffset": -0.269568,
+      "sizeDefault": 12
+    }
+  },
+  "barChartCSVLoader": {
+    "plugin": "csvLoader",
+    "state": {
+      "csvPath": "simpleBars.csv",
+      "numericColumns": [
+        "frequency"
+      ]
+    }
+  },
+  "iris": {
+    "plugin": "csvLoader",
+    "state": {
+      "csvPath": "iris.csv",
+      "numericColumns": [
+        "sepal_length",
+        "sepal_width",
+        "petal_length",
+        "petal_width"
+      ]
+    }
+  },
+  "links": {
+    "plugin": "links",
+    "state": {
+      "bindings": [
+        "iris.data -> scatterPlot.data"
+      ]
+    }
+  }
+}

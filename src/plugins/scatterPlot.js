@@ -59,8 +59,8 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
 
 
     // Allow the API client to optionally specify fixed min and max values.
-    addPublicProperty("yDomainMin", None);
-    addPublicProperty("yDomainMax", None);
+    addPublicProperty(model, "yDomainMin", None);
+    addPublicProperty(model, "yDomainMax", None);
     model.when(["data", "yAccessor", "yDomainMin", "yDomainMax"],
         function (data, yAccessor, yDomainMin, yDomainMax) {
 
@@ -98,14 +98,14 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     });
 
     // Allow the API client to optionally specify a size column.
-    addPublicProperty("sizeColumn", None);
+    addPublicProperty(model, "sizeColumn", None);
     
     // The default radius of circles in pixels.
-    addPublicProperty("sizeDefault", 3);
+    addPublicProperty(model, "sizeDefault", 3);
 
     // The min and max circle radius in pixels.
-    addPublicProperty("sizeMin", 0.5);
-    addPublicProperty("sizeMax", 6);
+    addPublicProperty(model, "sizeMin", 0.5);
+    addPublicProperty(model, "sizeMax", 6);
 
     // Set up the size scale.
     model.when(["sizeColumn", "data", "sizeDefault", "sizeMin", "sizeMax"],

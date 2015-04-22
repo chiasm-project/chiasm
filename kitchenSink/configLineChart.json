@@ -1,0 +1,48 @@
+{
+  "layout": {
+    "plugin": "layout",
+    "state": {
+      "layout": "lineChart"
+    }
+  },
+  "lineChart": {
+    "plugin": "lineChart",
+    "state": {
+      "xColumn": "timestamp",
+      "xAxisLabel": "Time",
+      "yColumn": "temperature",
+      "yAxisLabel": "Temperature",
+      "margin": {
+        "top": 30,
+        "right": 2,
+        "bottom": 40,
+        "left": 47
+      },
+      "xAxisLabelOffset": 1.9,
+      "yAxisLabelOffset": 1.4,
+      "colorDefault": "#0074db",
+      "title": "Line Chart",
+      "titleOffset": -0.30433148928
+    }
+  },
+  "lineChartCSVLoader": {
+    "plugin": "csvLoader",
+    "state": {
+      "csvPath": "simpleTime.csv",
+      "numericColumns": [
+        "temperature"
+      ],
+      "timeColumns": [
+        "timestamp"
+      ]
+    }
+  },
+  "links": {
+    "plugin": "links",
+    "state": {
+      "bindings": [
+        "lineChartCSVLoader.data -> lineChart.data"
+      ]
+    }
+  }
+}

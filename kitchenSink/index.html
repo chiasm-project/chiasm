@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!--
+      A data visualization editor.
+      Curran Kelleher March 2015
+    -->
+    <title>Visualization Editor</title>
+
+    <link rel="stylesheet" href="//curran.github.io/cdn/inlet/inlet.css">
+    <link rel="stylesheet" href="//curran.github.io/cdn/codemirror-v5.0.0/lib/codemirror.css">
+    <link rel="stylesheet" href="axes.css">
+
+    <style>
+     
+      /* Position the dropdown menu at the top of the page. */
+      #dropdown {
+        position: fixed;
+        left: 2px;
+        top: 2px;
+      }
+
+      /* Make the container fill the page. */
+      #container {
+        position: fixed;
+        left: 0px;
+        right: 0px;
+        top: 20px;
+        bottom: 0px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- The dropdown menu for selecting a configuration to load. -->
+    <div id="dropdown"></div>
+
+    <!-- The container for the runtime environment. -->
+    <div id="container"></div>
+
+    <!-- Use RequireJS for module loading. -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js"></script>
+
+    <!-- Configure AMD modules. -->
+    <script src="requireJSConfig.js"></script>
+
+    <!-- Run the main program. -->
+    <script src="main.js"></script>
+
+  </body>
+</html>
