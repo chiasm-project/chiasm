@@ -20,26 +20,11 @@ define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _
     reactivis.title(model);
     reactivis.margin(model);
     reactivis.xAccessor(model);
+    reactivis.xScale(model, "ordinalBands");
     reactivis.xAxis(model);
     reactivis.yAccessor(model);
     reactivis.yAxis(model);
     reactivis.color(model);
-
-    // Compute the ordinal domain of the X attribute.
-    model.when(["data", "xAccessor"], function (data, xAccessor) {
-      model.xDomain = data.map(xAccessor);
-    });
-
-    // Compute the X scale.
-    model.barPadding = 0.1;
-    model.when(["xDomain", "width", "barPadding"], function (xDomain, width, padding) {
-      model.xScale = d3.scale.ordinal().domain(xDomain).rangeRoundBands([0, width], padding);
-    });
-
-    // Generate a function for getting the scaled X value.
-    model.when(["xScale", "xAccessor"], function (xScale, xAccessor) {
-      model.x = function (d) { return xScale(xAccessor(d)); };
-    });
 
     // Allow the API client to optionally specify fixed min and max values.
     model.publicProperties.push("yDomainMin");

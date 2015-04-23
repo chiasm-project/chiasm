@@ -158,6 +158,71 @@ define(["model"], function (Model){
     });
   };
 
+  // A lookup table for scale constructors based on their type.
+  var scaleConstructors = {
+    linear: d3.scale.linear,
+    time: d3.time.scale,
+    ordinalBands: d3.scale.ordinal
+  };
+
+  // Sets up the X scale.
+  // The argument "xScaleType" should be a string,
+  // one of "linear", "time", or "ordinalBands".
+  reactivis.xScale = function(model, scaleType){
+
+    // Make the scale type a public property so it is configurable at runtime.
+    // Example use case: dynamically switching between linear and log scales.
+    addPublicProperty(model, "xScaleType", scaleType);
+
+    // Allow the API client to optionally specify fixed min and max values.
+    // Relevant only for quantitative scales (linear, time).
+    addPublicProperty(model, "xDomainMin", None);
+    addPublicProperty(model, "xDomainMax", None);
+
+    // The padding between range bands (e.g. the space between bars in a bar chart).
+    // Relevant only for ordinal scales.
+    addPublicProperty(model, "xRangePadding", 0.1);
+
+    // Compute the domain of the X column.
+    model.when(["data", "xScaleType", "xAccessor", "xDomainMin", "xDomainMax"],
+        function (data, xScaleType, xAccessor, xDomainMin, xDomainMax) {
+
+      // Compute the scale domain.
+      if(xScaleType === "linear" || xScaleType === "time"){
+        if(xDomainMin === None && xDomainMax === None){
+          model.xDomain = d3.extent(data, xAccessor);
+        } else {
+          if(xDomainMin === None){
+            xDomainMin = d3.min(data, xAccessor);
+          }
+          if(xDomainMax === None){
+            xDomainMax = d3.max(data, xAccessor);
+          }
+          model.xDomain = [xDomainMin, xDomainMax];
+        }
+      } else if (xScaleType === "ordinalBands"){
+        model.xDomain = data.map(xAccessor);
+      }
+    });
+
+    // Compute the X scale.
+    model.when(["xScaleType", "xDomain", "width", "xRangePadding"],
+        function (xScaleType, xDomain, width, xRangePadding) {
+      var scale = scaleConstructors[xScaleType]().domain(xDomain);
+      if(xScaleType === "ordinalBands"){
+        scale.rangeRoundBands([0, width], xRangePadding);
+      } else {
+        scale.range([0, width]);
+      }
+      model.xScale = scale;
+    });
+
+    // Generate a function for getting the scaled X value.
+    model.when(["data", "xScale", "xAccessor"], function (data, xScale, xAccessor) {
+      model.x = function (d) { return xScale(xAccessor(d)); };
+    });
+  };
+
   // Adds the X axis and its label text.
   reactivis.xAxis = function(model){
 

@@ -21,64 +21,10 @@ define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
     reactivis.margin(model);
     reactivis.color(model);
     reactivis.xAccessor(model);
+    reactivis.xScale(model, "time");
     reactivis.xAxis(model);
     reactivis.yAccessor(model);
     reactivis.yAxis(model);
-
-    // Append a mouse target for intercepting mouse hover events.
-    model.enableHoverLine = false;
-    model.when(["enableHoverLine", "g"], function(enableHoverLine, g){
-      if(enableHoverLine){
-        model.mouseTarget = g.append("rect")
-          .attr("x", 0)
-          .attr("y", 0)
-          .style("fill", "none")
-          .style("pointer-events", "all");
-  
-        model.selectedXLine = g.append("line")
-          .attr("class", "hover-line");
-      }
-    });
-
-    model.when(["mouseTarget", "xScale"], function(mouseTarget, xScale){
-      mouseTarget.on("mousemove", function () {
-        var mouseX = d3.mouse(mouseTarget.node())[0];
-        model.selectedX = xScale.invert(mouseX);
-      });
-    });
-
-    model.when(["selectedX", "selectedXLine", "xScale", "height"],
-        function (selectedX, selectedXLine, xScale, height) {
-      var xPixel = xScale(selectedX);
-      selectedXLine
-        .attr("x1", xPixel)
-        .attr("x2", xPixel)
-        .attr("y1", 0)
-        .attr("y2", height);
-    });
-
-    model.when(["mouseTarget", "width"], function (mouseTarget, width) {
-      mouseTarget.attr("width", width);
-    });
-
-    model.when(["mouseTarget", "height"], function (mouseTarget, height) {
-      mouseTarget.attr("height", height);
-    });
-
-    // Compute the domain of the X attribute.
-    model.when(["data", "xAccessor"], function (data, xAccessor) {
-      model.xDomain = d3.extent(data, xAccessor);
-    });
-
-    // Compute the X scale.
-    model.when(["data", "xDomain", "width"], function (data, xDomain, width) {
-      model.xScale = d3.time.scale().domain(xDomain).range([0, width]);
-    });
-
-    // Generate a function for getting the scaled X value.
-    model.when(["data", "xScale", "xAccessor"], function (data, xScale, xAccessor) {
-      model.x = function (d) { return xScale(xAccessor(d)); };
-    });
 
     // Compute the domain of the Y attribute.
     model.when(["data", "yAccessor"], function (data, yAccessor) {

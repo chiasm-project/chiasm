@@ -21,42 +21,11 @@ define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
     reactivis.title(model);
     reactivis.margin(model);
     reactivis.xAccessor(model);
+    reactivis.xScale(model, "linear");
     reactivis.xAxis(model);
     reactivis.yAccessor(model);
     reactivis.yAxis(model);
     reactivis.color(model);
-
-    // Compute the domain of the X column.
-
-    // Allow the API client to optionally specify fixed min and max values.
-    model.xDomainMin = None;
-    model.xDomainMax = None;
-    model.when(["data", "xAccessor", "xDomainMin", "xDomainMax"],
-        function (data, xAccessor, xDomainMin, xDomainMax) {
-
-      if(xDomainMin === None && xDomainMax === None){
-        model.xDomain = d3.extent(data, xAccessor);
-      } else {
-        if(xDomainMin === None){
-          xDomainMin = d3.min(data, xAccessor);
-        }
-        if(xDomainMax === None){
-          xDomainMax = d3.max(data, xAccessor);
-        }
-        model.xDomain = [xDomainMin, xDomainMax];
-      }
-    });
-
-    // Compute the X scale.
-    model.when(["xDomain", "width"], function (xDomain, width) {
-      model.xScale = d3.scale.linear().domain(xDomain).range([0, width]);
-    });
-
-    // Generate a function for getting the scaled X value.
-    model.when(["data", "xScale", "xAccessor"], function (data, xScale, xAccessor) {
-      model.x = function (d) { return xScale(xAccessor(d)); };
-    });
-
 
     // Allow the API client to optionally specify fixed min and max values.
     addPublicProperty(model, "yDomainMin", None);
