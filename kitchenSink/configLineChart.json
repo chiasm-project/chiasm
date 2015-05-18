@@ -1,12 +1,12 @@
 {
   "layout": {
-    "plugin": "layout",
+    "plugin": "chiasm/plugins/layout",
     "state": {
       "layout": "lineChart"
     }
   },
   "lineChart": {
-    "plugin": "lineChart",
+    "plugin": "chiasm/plugins/lineChart",
     "state": {
       "xColumn": "timestamp",
       "xAxisLabel": "Time",
@@ -26,7 +26,7 @@
     }
   },
   "lineChartCSVLoader": {
-    "plugin": "csvLoader",
+    "plugin": "chiasm/plugins/csvLoader",
     "state": {
       "csvPath": "simpleTime.csv",
       "numericColumns": [
@@ -38,7 +38,7 @@
     }
   },
   "links": {
-    "plugin": "links",
+    "plugin": "chiasm/plugins/links",
     "state": {
       "bindings": [
         "lineChartCSVLoader.data -> lineChart.data"
