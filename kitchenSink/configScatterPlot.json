@@ -1,6 +1,6 @@
 {
   "layout": {
-    "plugin": "layout",
+    "plugin": "chiasm/plugins/layout",
     "state": {
       "layout": {
         "orientation": "horizontal",
@@ -12,13 +12,13 @@
     }
   },
   "editor": {
-    "plugin": "configEditor",
+    "plugin": "chiasm/plugins/configEditor",
     "state": {
       "size": "325px"
     }
   },
   "scatterPlot": {
-    "plugin": "scatterPlot",
+    "plugin": "chiasm/plugins/scatterPlot",
     "state": {
       "xColumn": "sepal_length",
       "xAxisLabel": "Sepal Length",
@@ -37,7 +37,7 @@
     }
   },
   "barChartCSVLoader": {
-    "plugin": "csvLoader",
+    "plugin": "chiasm/plugins/csvLoader",
     "state": {
       "csvPath": "simpleBars.csv",
       "numericColumns": [
@@ -46,7 +46,7 @@
     }
   },
   "iris": {
-    "plugin": "csvLoader",
+    "plugin": "chiasm/plugins/csvLoader",
     "state": {
       "csvPath": "iris.csv",
       "numericColumns": [
@@ -58,7 +58,7 @@
     }
   },
   "links": {
-    "plugin": "links",
+    "plugin": "chiasm/plugins/links",
     "state": {
       "bindings": [
         "iris.data -> scatterPlot.data"
