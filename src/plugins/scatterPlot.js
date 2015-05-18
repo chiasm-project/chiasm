@@ -1,6 +1,6 @@
 // A reusable scatter plot module.
 // Curran Kelleher March 2015
-define(["d3", "model", "reactivis"], function (d3, Model, reactivis) {
+define(["d3", "model", "./reactivis"], function (d3, Model, reactivis) {
 
   var None = Model.None;
 

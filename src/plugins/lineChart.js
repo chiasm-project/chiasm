@@ -1,7 +1,7 @@
 // A reusable line chart module.
 // Draws from D3 line chart example http://bl.ocks.org/mbostock/3883245
 // Curran Kelleher March 2015
-define(["reactivis", "d3", "model"], function (reactivis, d3, Model) {
+define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
 
   var None = Model.None;
 

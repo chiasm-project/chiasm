@@ -2,7 +2,7 @@
 // common to many D3-based visualizations.
 //
 // Curran Kelleher April 2015
-define(["model"], function (Model){
+define(["model","d3"], function (Model,d3){
 
   // The returned public API object, containing functions that take as input
   // a Model.js model, and as a side effect add reactive flows within that model.
