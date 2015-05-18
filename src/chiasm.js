@@ -17,7 +17,7 @@
 //  * https://github.com/curran/overseer/blob/master/src/overseer.js
 //
 // By Curran Kelleher April 2015
-define(["model", "lodash"], function (Model, _) {
+define(["model", "lodash","require"], function (Model, _, require) {
 
   // All error message strings are kept track of here.
   var ErrorMessages = {
@@ -40,7 +40,7 @@ define(["model", "lodash"], function (Model, _) {
                       "after timeout of ${ seconds } seconds exceeded."
   };
 
-  // Creates a new Error object with a message derived from the 
+  // Creates a new Error object with a message derived from the
   // error message template corresponding to the given type.
   function createError(type, values){
     return Error(_.template(ErrorMessages[type])(values));
@@ -55,7 +55,7 @@ define(["model", "lodash"], function (Model, _) {
   // The primary purpose of Action objects is to support editing the
   // JSON application configuration at runtime. To avoid reloading the
   // entire configuration in response to each change, the difference between
-  // two subsequent configurations is computed and expressed as an array of 
+  // two subsequent configurations is computed and expressed as an array of
   // Action objects, then the Action objects are applied to the runtime environment.
   //
   // Based on previous work found at:
@@ -137,12 +137,12 @@ define(["model", "lodash"], function (Model, _) {
       _.difference(newProperties, oldProperties).forEach(function (property) {
         actions.push(Action.set(alias, property, newModel[property]));
       });
-  
+
       // Handle removed properties.
       _.difference(oldProperties, newProperties).forEach(function (property) {
         actions.push(Action.unset(alias, property));
       });
-  
+
       // Handle updated properties.
       _.intersection(newProperties, oldProperties).forEach(function (property) {
         if(!_.isEqual(oldModel[property], newModel[property])){
@@ -176,7 +176,7 @@ define(["model", "lodash"], function (Model, _) {
   }
 
   // The Chiasm constructor function exposed by this AMD module.
-  // 
+  //
   // Accepts a single argument `container`, a DOM element, typically a div.
   // Components created by plugins will append their own DOM elements to this container,
   // and will remove them when they are destroyed.
@@ -187,9 +187,9 @@ define(["model", "lodash"], function (Model, _) {
 
       // `plugins` is An object for setting up plugins before loading a configuration.
       // Chiasm first looks here for plugins, then if a plugin is not found here
-      // it is dynamically loaded at runtime using RequireJS where the plugin name 
+      // it is dynamically loaded at runtime using RequireJS where the plugin name
       // corresponds to an AMD module name or arbitrary URL.
-      // 
+      //
       // * Keys are plugin names.
       // * Values are plugin implementations, which are constructor functions for
       //   runtime components. A plugin constructor function takes as input a reference
@@ -257,7 +257,7 @@ define(["model", "lodash"], function (Model, _) {
     };
 
     // An asynchronous FIFO queue for processing actions.
-    // This is used as essentially a synchronization lock, so multiple synchronous calls 
+    // This is used as essentially a synchronization lock, so multiple synchronous calls
     // to setConfig() do not cause conflicting overlapping asynchronous action sequences.
     var queue = Queue(function (action){
       return methods[action.method](action);
@@ -270,7 +270,7 @@ define(["model", "lodash"], function (Model, _) {
 
     // This flag is set to true when "set" actions are being processed,
     // so Chiasm can distinguish between changes originating from setConfig()
-    // and changes originating from components, possibly via user interactions. 
+    // and changes originating from components, possibly via user interactions.
     var settingProperty = false;
 
     // This flag is set to true inside setConfig() while `chiasm.config` is being set.
@@ -300,7 +300,7 @@ define(["model", "lodash"], function (Model, _) {
       });
     }
 
-    // Loads a plugin by name, returns a promise. 
+    // Loads a plugin by name, returns a promise.
     // First tries to find plugin in `chiasm.plugins`,
     // then uses RequireJS to load the plugin as an AMD module.
     function loadPlugin(plugin){
@@ -316,7 +316,7 @@ define(["model", "lodash"], function (Model, _) {
           // This means that paths for plugins may be set up via RequireJS configuration.
           // This way of loading plugins also allows arbitrary AMD module URLs to be used.
           // See also http://requirejs.org/docs/api.html#config-paths
-          requirejs([plugin], resolve, reject);
+          require([plugin], resolve, reject);
         }
       });
     }
@@ -339,7 +339,7 @@ define(["model", "lodash"], function (Model, _) {
 
             // Handle public properties.
             if("publicProperties" in component){
-          
+
               // Validate that all public properties have default values and store them.
               component.publicProperties.forEach(function(property){
 
@@ -371,12 +371,12 @@ define(["model", "lodash"], function (Model, _) {
                     if(!("state" in chiasm.config[alias])){
                       chiasm.config[alias].state = {};
                     }
-  
+
                     // Surgically change `chiasm.config` so that the diff computation will yield
-                    // no actions. Without this step, the update would propagate from the 
+                    // no actions. Without this step, the update would propagate from the
                     // component to the config and then back again unnecessarily.
                     chiasm.config[alias].state[property] = newValue;
-  
+
                     // This assignment will notify any callbacks that the config has changed,
                     // (e.g. the config editor), but the config diff will yield no actions to execute.
                     chiasm.config = chiasm.config;
@@ -433,7 +433,7 @@ define(["model", "lodash"], function (Model, _) {
         }, reject);
       });
     }
-    
+
     // Applies a "set" action.
     function set(alias, property, value) {
       return new Promise(function(resolve, reject){
@@ -473,7 +473,7 @@ define(["model", "lodash"], function (Model, _) {
           settingProperty = true;
 
           component[property] = defaults[alias][property];
-          
+
           settingProperty = false;
           resolve();
         }, reject);
@@ -490,8 +490,8 @@ define(["model", "lodash"], function (Model, _) {
 
     // Sets the Chiasm configuration, returns a promise.
     function setConfig(newConfig, oldConfig){
-      
-      // The second argument, oldConfig, is optional, and 
+
+      // The second argument, oldConfig, is optional, and
       // defaults to the current value of `chiasm.config`.
       oldConfig = oldConfig || chiasm.config;
 

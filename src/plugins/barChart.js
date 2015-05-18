@@ -1,7 +1,7 @@
 // A reusable bar chart module.
 // Draws from D3 bar chart example http://bl.ocks.org/mbostock/3885304
 // Curran Kelleher April 2015
-define(["reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _) {
+define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model, _) {
 
   var None = Model.None;
 
