@@ -2,12 +2,7 @@
   "layout": {
     "plugin": "chiasm/plugins/layout",
     "state": {
-      "layout": {
-        "orientation": "vertical",
-        "children": [
-          "barChart"
-        ]
-      }
+      "layout": "barChart"
     }
   },
   "barChart": {
