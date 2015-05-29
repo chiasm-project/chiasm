@@ -329,7 +329,7 @@ define(["model", "lodash","require"], function (Model, _, require) {
           try {
 
             // Construct the component using the plugin, passing the chiasm instance.
-            var component = constructor(chiasm);
+            var component = new constructor(chiasm);
 
             // Store a reference to the component.
             components[alias] = component;
