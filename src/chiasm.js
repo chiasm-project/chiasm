@@ -316,7 +316,12 @@ define(["model", "lodash","require"], function (Model, _, require) {
           // This means that paths for plugins may be set up via RequireJS configuration.
           // This way of loading plugins also allows arbitrary AMD module URLs to be used.
           // See also http://requirejs.org/docs/api.html#config-paths
-          require([plugin], resolve, reject);
+          if (typeof System !== 'undefined' && typeof System.amdRequire !== 'undefined') {
+            System.amdRequire([plugin], resolve, reject);
+          } else {
+            require([plugin], resolve, reject);
+          }
+
         }
       });
     }
