@@ -45,7 +45,7 @@ var srcCode = "src/**/*.js",
 var visEnginePublicDir = "../server/visEngine/public/vis_engine/js/";
 
 // This task runs when the "gulp" command is executed with no arguments.
-gulp.task("default", ["lint", "test", /*"docs",*/ "copy-to-engine"]);
+gulp.task("default", ["lint", "test"]);
 
 // Run JSHint.
 gulp.task("lint", function () {
@@ -58,23 +58,4 @@ gulp.task("lint", function () {
 gulp.task("test", ["lint"], function () {
   return gulp.src([testCode])
     .pipe(mocha({ reporter: "spec" }));
-});
-
-// Build documentation.
-//gulp.task("docs", ["docs-clean", "test"], function () {
-//  return gulp.src(srcCode)
-//    .pipe(docco())
-//    .pipe(gulp.dest("docs"));
-//});
-//gulp.task("docs-clean", function (cb) {
-//  del("docs", cb);
-//});
-
-// Copy client-side files into the Rails Engine.
-gulp.task("copy-to-engine", function (){
-  return gulp.src(srcCode)
-    .pipe(gulp.dest(visEnginePublicDir));
-  
-  // TODO implement this
-  // TODO bundle and minify AMD modules
 });

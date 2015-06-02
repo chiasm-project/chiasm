@@ -27,11 +27,8 @@ define(["model","d3"], function (Model,d3){
 
     // Create the SVG element from the container DOM element.
     model.when("container", function (container) {
-
-      // Use CSS `position: absolute;` so setting `left` and `top` CSS
-      // properties later will position the SVG relative to containing div.
       model.svg = d3.select(container).append("svg")
-        .style("position", "absolute");
+        .style("position", "relative");
     });
 
     // Adjust the SVG based on the `box` property.

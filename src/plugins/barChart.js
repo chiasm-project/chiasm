@@ -63,7 +63,6 @@ define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model,
       bars.enter().append("rect");
       bars
         // TODO generalize transitions
-        .transition().ease("linear").duration(200)
         .attr("x", x)
         .attr("y", y)
         .attr("width", xScale.rangeBand())
