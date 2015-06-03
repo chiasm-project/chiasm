@@ -1,4 +1,4 @@
-# Chiasm
+![Chiasm](http://curran.github.io/images/chiasm/chiasm_logo.png)
 
 [![Build Status](https://travis-ci.org/curran/chiasm.svg)](https://travis-ci.org/curran/chiasm)
 
