@@ -232,7 +232,7 @@ define(["model","d3"], function (Model,d3){
   };
   
   // Sets up the Y scale.
-  reactivis.yScale = function(model, scaleType){
+  reactivis.yScale = function(model){
 
     // TODO unify code between X and Y scales.
 

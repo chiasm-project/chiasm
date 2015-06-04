@@ -20,32 +20,19 @@ define(["./reactivis", "d3", "model"], function (reactivis, d3, Model) {
     reactivis.title(model);
     reactivis.margin(model);
     reactivis.color(model);
+
     reactivis.xAccessor(model);
     reactivis.xScale(model, "time");
     reactivis.xAxis(model);
+
     reactivis.yAccessor(model);
+    reactivis.yScale(model);
     reactivis.yAxis(model);
-
-    // Compute the domain of the Y attribute.
-    model.when(["data", "yAccessor"], function (data, yAccessor) {
-      model.yDomain = d3.extent(data, yAccessor);
-    });
-
-    // Compute the Y scale.
-    model.when(["data", "yDomain", "height"], function (data, yDomain, height) {
-      model.yScale = d3.scale.linear().domain(yDomain).range([height, 0]);
-    });
-
-    // Generate a function for getting the scaled Y value.
-    model.when(["data", "yScale", "yAccessor"], function (data, yScale, yAccessor) {
-      model.y = function (d) { return yScale(yAccessor(d)); };
-    });
 
     // Add an SVG group to contain the lines.
     model.when("g", function (g) {
       model.lineG = g.append("g");
     });
-
 
     // Draw the lines.
     model.lineColumn = None;

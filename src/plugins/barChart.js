@@ -19,37 +19,16 @@ define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model,
     reactivis.svg(model);
     reactivis.title(model);
     reactivis.margin(model);
+
     reactivis.xAccessor(model);
     reactivis.xScale(model, "ordinalBands");
     reactivis.xAxis(model);
+
     reactivis.yAccessor(model);
+    reactivis.yScale(model);
     reactivis.yAxis(model);
+
     reactivis.color(model);
-
-    // Allow the API client to optionally specify fixed min and max values.
-    model.publicProperties.push("yDomainMin");
-    model.publicProperties.push("yDomainMax");
-    model.yDomainMin = None;
-    model.yDomainMax = None;
-
-    // Compute the domain of the Y attribute.
-    model.when(["data", "yAccessor", "yDomainMin", "yDomainMax"],
-        function (data, yAccessor, yDomainMin, yDomainMax) {
-      model.yDomain = [
-        yDomainMin === None ? d3.min(data, yAccessor): yDomainMin,
-        yDomainMax === None ? d3.max(data, yAccessor): yDomainMax
-      ];
-    });
-
-    // Compute the Y scale.
-    model.when(["data", "yDomain", "height"], function (data, yDomain, height) {
-      model.yScale = d3.scale.linear().domain(yDomain).range([height, 0]);
-    });
-
-    // Generate a function for getting the scaled Y value.
-    model.when(["yScale", "yAccessor"], function (yScale, yAccessor) {
-      model.y = function (d) { return yScale(yAccessor(d)); };
-    });
 
     // Add an SVG group to contain the line.
     model.when("g", function (g) {
@@ -62,7 +41,6 @@ define(["./reactivis", "d3", "model", "lodash"], function (reactivis, d3, Model,
       var bars = barsG.selectAll("rect").data(data, xAccessor);
       bars.enter().append("rect");
       bars
-        // TODO generalize transitions
         .attr("x", x)
         .attr("y", y)
         .attr("width", xScale.rangeBand())
