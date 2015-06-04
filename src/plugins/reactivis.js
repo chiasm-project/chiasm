@@ -12,6 +12,7 @@ define(["model","d3"], function (Model,d3){
   var None = Model.None;
 
   // Adds a public property to a model.
+  // This makes the property configurable via the Chiasm configuration.
   function addPublicProperty(model, property, defaultValue){
     if(!model.publicProperties){
       model.publicProperties = [];
@@ -27,6 +28,9 @@ define(["model","d3"], function (Model,d3){
 
     // Create the SVG element from the container DOM element.
     model.when("container", function (container) {
+
+      // Use CSS `position: relative` so that setting properties
+      // `left` and `top` will position the SVG relative to the Chiasm container.
       model.svg = d3.select(container).append("svg")
         .style("position", "relative");
     });
@@ -41,6 +45,15 @@ define(["model","d3"], function (Model,d3){
         .style("top", box.y + "px")
         .attr("width", box.width)
         .attr("height", box.height);
+
+      // Use negative margins to eliminate the SVG space taken up
+      // in the layout flow. This is an ugly solution, but the alternatives
+      // don't work - setting position:absolute doesn't work when the
+      // Chiasm container is statically positioned.
+      // http://stackoverflow.com/questions/13722095/how-to-remove-whitespace-that-appears-after-relative-positioning-an-element-with
+      svg
+        .style("margin-right", "-" + box.width + "px")
+        .style("margin-bottom", "-" + box.height + "px");
     });
 
     // Create the SVG group that will contain the visualization.
