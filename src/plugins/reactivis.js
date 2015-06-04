@@ -175,6 +175,25 @@ define(["model","d3"], function (Model,d3){
     ordinalBands: d3.scale.ordinal
   };
 
+  // A generalized function for computing the domain of scales, used for both X and Y scales.
+  function computeDomain(data, scaleType, accessor, domainMin, domainMax) {
+    if(scaleType === "linear" || scaleType === "time"){
+      if(domainMin === None && domainMax === None){
+        return d3.extent(data, accessor);
+      } else {
+        if(domainMin === None){
+          domainMin = d3.min(data, accessor);
+        }
+        if(domainMax === None){
+          domainMax = d3.max(data, accessor);
+        }
+        return [domainMin, domainMax];
+      }
+    } else if (scaleType === "ordinalBands"){
+      return data.map(accessor);
+    }
+  }
+
   // Sets up the X scale.
   reactivis.xScale = function(model, scaleType){
 
@@ -194,23 +213,10 @@ define(["model","d3"], function (Model,d3){
     // Compute the domain of the X column.
     model.when(["data", "xScaleType", "xAccessor", "xDomainMin", "xDomainMax"],
         function (data, xScaleType, xAccessor, xDomainMin, xDomainMax) {
+      
+      // TODO figure out a way to reduce duplication of property names in this code.
+      model.xDomain = computeDomain(data, xScaleType, xAccessor, xDomainMin, xDomainMax);
 
-      // Compute the scale domain.
-      if(xScaleType === "linear" || xScaleType === "time"){
-        if(xDomainMin === None && xDomainMax === None){
-          model.xDomain = d3.extent(data, xAccessor);
-        } else {
-          if(xDomainMin === None){
-            xDomainMin = d3.min(data, xAccessor);
-          }
-          if(xDomainMax === None){
-            xDomainMax = d3.max(data, xAccessor);
-          }
-          model.xDomain = [xDomainMin, xDomainMax];
-        }
-      } else if (xScaleType === "ordinalBands"){
-        model.xDomain = data.map(xAccessor);
-      }
     });
 
     // Compute the X scale.
@@ -239,30 +245,12 @@ define(["model","d3"], function (Model,d3){
     // Allow the API client to optionally specify fixed min and max values.
     addPublicProperty(model, "yDomainMin", None);
     addPublicProperty(model, "yDomainMax", None);
-    model.when(["data", "yAccessor", "yDomainMin", "yDomainMax"],
-        function (data, yAccessor, yDomainMin, yDomainMax) {
+    addPublicProperty(model, "yScaleType", "linear");
+    model.when(["data", "yScaleType", "yAccessor", "yDomainMin", "yDomainMax"],
+        function (data, yScaleType, yAccessor, yDomainMin, yDomainMax) {
 
-      // If min and max are not given, use the data extent.
-      if(yDomainMin === None && yDomainMax === None){
-        model.yDomain = d3.extent(data, yAccessor);
-      } else {
-
-        // When only max is specified,
-        if(yDomainMin === None){
-
-          // compute min from the data.
-          yDomainMin = d3.min(data, yAccessor);
-        }
-
-        // When only min is specified,
-        if(yDomainMax === None){
-
-          // compute max from the data.
-          yDomainMax = d3.max(data, yAccessor);
-        }
-
-        model.yDomain = [yDomainMin, yDomainMax];
-      }
+      // TODO figure out a way to reduce duplication of property names in this code.
+      model.yDomain = computeDomain(data, yScaleType, yAccessor, yDomainMin, yDomainMax);
     });
 
     // Compute the Y scale.
