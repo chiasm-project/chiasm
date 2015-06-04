@@ -8,23 +8,15 @@ Here are [slides from a recent presentation on Chiasm](http://www.slideshare.net
 
 ## Examples
 
-<div style="float:left; padding-top: 5px;">
-  <a href="http://bl.ocks.org/curran/3f0b1128d74308fc8fe1">
-    <img src="http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png" style="float:left;">
-  </a> A demo of the Chiasm configuration editor and nested box layout. Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
-</div>
+| thumbnail | description  |
+|---|---|
+| [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1) | A demo of the Chiasm configuration editor and nested box layout. |
+| [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125) | An example Chiasm configuration with a bar chart and line chart. |
+| [![](http://curran.github.io/images/chiasm/kitchenSink.png)](http://curran.github.io/chiasm/kitchenSink/) | The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart. |
+| [![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632) | An example demonstrating linked views and having a common color scale. |
+| [![](http://bl.ocks.org/curran/raw/19d42e98ce25291eb45d/thumbnail.png)](http://bl.ocks.org/curran/19d42e98ce25291eb45d) | A more complex example with linked views using Crossfilter and loading data from an API. |
 
-<div>
-  <a href="http://curran.github.io/chiasm/kitchenSink/">
-    <img src="http://curran.github.io/images/chiasm/kitchenSink.png" style="float:left;" >
-  </a> The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart.
-</div>
-
-[![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
-[![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632)
-[![](http://bl.ocks.org/curran/raw/19d42e98ce25291eb45d/thumbnail.png)](http://bl.ocks.org/curran/19d42e98ce25291eb45d)
-
-[![Config Editor Demo](http://curran.github.io/images/visEditor/configEditorDemo.png)](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/)
+## Overview
 
 The core concept is that visualizations can be instantiated, configured with data, arranged on the screen, and coupled together to produce interactive linked views. A JSON configuration structure defines the entire state of an application. The configuration refers to plugins by name, which are loaded at runtime and called upon to instantiate instances of visualizations and other components. Configuration changes can be made at runtime, and Chiasm will propagate the changes through the system. The JSON configuration also updates in response to user interactions with visualizations, so can be used to serialize visualization state resulting from user interactions.
 
