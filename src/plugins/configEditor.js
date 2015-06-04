@@ -82,8 +82,8 @@ define(["d3", "model", "lodash", "codemirror/lib/codemirror", "codemirror/mode/j
       // Remove the listener that was added to the CodeMirror instance.
       editor.on("change", changeListener);
 
-      // Remove the CodeMirror DOM element.
-      editor.getWrapperElement().remove();
+      // Remove the editor DOM element.
+      div.remove();
     };
 
     // Augment the editor using Inlet, which gives
