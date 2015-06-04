@@ -176,8 +176,6 @@ define(["model","d3"], function (Model,d3){
   };
 
   // Sets up the X scale.
-  // The argument "xScaleType" should be a string,
-  // one of "linear", "time", or "ordinalBands".
   reactivis.xScale = function(model, scaleType){
 
     // Make the scale type a public property so it is configurable at runtime.
@@ -230,6 +228,51 @@ define(["model","d3"], function (Model,d3){
     // Generate a function for getting the scaled X value.
     model.when(["data", "xScale", "xAccessor"], function (data, xScale, xAccessor) {
       model.x = function (d) { return xScale(xAccessor(d)); };
+    });
+  };
+  
+  // Sets up the Y scale.
+  reactivis.yScale = function(model, scaleType){
+
+    // TODO unify code between X and Y scales.
+
+    // Allow the API client to optionally specify fixed min and max values.
+    addPublicProperty(model, "yDomainMin", None);
+    addPublicProperty(model, "yDomainMax", None);
+    model.when(["data", "yAccessor", "yDomainMin", "yDomainMax"],
+        function (data, yAccessor, yDomainMin, yDomainMax) {
+
+      // If min and max are not given, use the data extent.
+      if(yDomainMin === None && yDomainMax === None){
+        model.yDomain = d3.extent(data, yAccessor);
+      } else {
+
+        // When only max is specified,
+        if(yDomainMin === None){
+
+          // compute min from the data.
+          yDomainMin = d3.min(data, yAccessor);
+        }
+
+        // When only min is specified,
+        if(yDomainMax === None){
+
+          // compute max from the data.
+          yDomainMax = d3.max(data, yAccessor);
+        }
+
+        model.yDomain = [yDomainMin, yDomainMax];
+      }
+    });
+
+    // Compute the Y scale.
+    model.when(["yDomain", "height"], function (yDomain, height) {
+      model.yScale = d3.scale.linear().domain(yDomain).range([height, 0]);
+    });
+
+    // Generate a function for getting the scaled Y value.
+    model.when(["yScale", "yAccessor"], function (yScale, yAccessor) {
+      model.y = function (d) { return yScale(yAccessor(d)); };
     });
   };
 

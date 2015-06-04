@@ -20,51 +20,16 @@ define(["d3", "model", "./reactivis"], function (d3, Model, reactivis) {
     reactivis.svg(model);
     reactivis.title(model);
     reactivis.margin(model);
+
     reactivis.xAccessor(model);
     reactivis.xScale(model, "linear");
     reactivis.xAxis(model);
+
     reactivis.yAccessor(model);
+    reactivis.yScale(model, "linear");
     reactivis.yAxis(model);
+
     reactivis.color(model);
-
-    // Allow the API client to optionally specify fixed min and max values.
-    addPublicProperty(model, "yDomainMin", None);
-    addPublicProperty(model, "yDomainMax", None);
-    model.when(["data", "yAccessor", "yDomainMin", "yDomainMax"],
-        function (data, yAccessor, yDomainMin, yDomainMax) {
-
-      // If min and max are not given, use the data extent.
-      if(yDomainMin === None && yDomainMax === None){
-        model.yDomain = d3.extent(data, yAccessor);
-      } else {
-
-        // When only max is specified,
-        if(yDomainMin === None){
-
-          // compute min from the data.
-          yDomainMin = d3.min(data, yAccessor);
-        }
-
-        // When only min is specified,
-        if(yDomainMax === None){
-
-          // compute max from the data.
-          yDomainMax = d3.max(data, yAccessor);
-        }
-
-        model.yDomain = [yDomainMin, yDomainMax];
-      }
-    });
-
-    // Compute the Y scale.
-    model.when(["yDomain", "height"], function (yDomain, height) {
-      model.yScale = d3.scale.linear().domain(yDomain).range([height, 0]);
-    });
-
-    // Generate a function for getting the scaled Y value.
-    model.when(["yScale", "yAccessor"], function (yScale, yAccessor) {
-      model.y = function (d) { return yScale(yAccessor(d)); };
-    });
 
     // Allow the API client to optionally specify a size column.
     addPublicProperty(model, "sizeColumn", None);
