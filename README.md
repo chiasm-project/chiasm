@@ -19,12 +19,13 @@ See also [Model.js](https://github.com/curran/model), which this project is buil
 Please give this repo a star if you think it is cool. Also feel free to submit issues for feature requests, or reach out to me if you're at all interested in collaborating on this curran.kelleher@gmail.com
 
 ## Examples
+
+<a href="http://curran.github.io/chiasm/kitchenSink/"><img src="http://curran.github.io/images/chiasm/kitchenSink.png" align="left" hspace="10" vspace="6"></a> The Chiasm kitchen sink, showing various configurations including the configuration editor, scatter plot, line chart, and bar chart.
+
 [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1)
 [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
 [![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632)
 [![](http://bl.ocks.org/curran/raw/19d42e98ce25291eb45d/thumbnail.png)](http://bl.ocks.org/curran/19d42e98ce25291eb45d)
-[![](http://curran.github.io/images/chiasm/kitchenSink.png)](http://curran.github.io/chiasm/kitchenSink/)
-
 ## Configuration Structure and Runtime Environment
 
 A configuration is a JSON object encapsulating an application state. This configuration contains specifications for a set of runtime components, each of which has:
