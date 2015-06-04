@@ -8,16 +8,16 @@ Here are [slides from a recent presentation on Chiasm](http://www.slideshare.net
 
 ## Examples
 
-<div>
-  <a href="http://curran.github.io/chiasm/kitchenSink/">
-    <img src="http://curran.github.io/images/chiasm/kitchenSink.png" align="left" hspace="10" vspace="6">
-  </a> The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart.
+<div style="float:left; padding-top: 5px;">
+  <a href="http://bl.ocks.org/curran/3f0b1128d74308fc8fe1">
+    <img src="http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png" style="float:left;">
+  </a> A demo of the Chiasm configuration editor and nested box layout. Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
 </div>
 
 <div>
-  <a href="http://bl.ocks.org/curran/3f0b1128d74308fc8fe1">
-    <img src="http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png" align="left" hspace="10" vspace="6">
-  </a> A demo of the Chiasm configuration editor and nested box layout. Edit the configuration by clicking on numbers and colors in the text on the left, or try clicking and dragging the diagonal lines in the boxes.
+  <a href="http://curran.github.io/chiasm/kitchenSink/">
+    <img src="http://curran.github.io/images/chiasm/kitchenSink.png" style="float:left;" >
+  </a> The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart.
 </div>
 
 [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125)
