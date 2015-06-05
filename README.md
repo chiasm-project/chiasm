@@ -4,7 +4,12 @@
 
 Chiasm is a browser based runtime environment and plugin architecture for interactive visualizations. It allows plugins for data access, data transformation, and interactive visualization to be loaded and configured dynamically.
 
-Here are [slides from a recent presentation on Chiasm](http://www.slideshare.net/currankelleher/chiasm), and a [YouTube video of the presentation](https://www.youtube.com/watch?v=9jh4E3-jxcQ&feature=youtu.be&a).
+Presentations on Chiasm:
+
+ * [Chiasm presentation at Alpine Data Labs](https://www.youtube.com/watch?v=9jh4E3-jxcQ&feature=youtu.be&a) ([slides](http://www.slideshare.net/currankelleher/chiasm)) - June 2015
+ * [Constructing Interactive Data Visualizations - Plans for Chiasm](https://www.youtube.com/watch?v=GxGkHam33Cw) - February 2015
+
+See also [Model.js](https://github.com/curran/model), which this project is built on.
 
 ## Examples
 
@@ -19,10 +24,6 @@ Here are [slides from a recent presentation on Chiasm](http://www.slideshare.net
 ## Overview
 
 The core concept is that visualizations can be instantiated, configured with data, arranged on the screen, and coupled together to produce interactive linked views. A JSON configuration structure defines the entire state of an application. The configuration refers to plugins by name, which are loaded at runtime and called upon to instantiate instances of visualizations and other components. Configuration changes can be made at runtime, and Chiasm will propagate the changes through the system. The JSON configuration also updates in response to user interactions with visualizations, so can be used to serialize visualization state resulting from user interactions.
-
-Here's a [talk on YouTube about Chiasm - Constructing Interactive Data Visualizations](https://www.youtube.com/watch?v=GxGkHam33Cw)
-
-See also [Model.js](https://github.com/curran/model), which this project is built on.
 
 Please give this repo a star if you think it is cool. Also feel free to submit issues for feature requests, or reach out to me if you're at all interested in collaborating on this curran.kelleher@gmail.com
 
