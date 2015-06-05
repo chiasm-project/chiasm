@@ -4,7 +4,7 @@
 
 Chiasm is a browser based runtime environment and plugin architecture for interactive visualizations. It allows plugins for data access, data transformation, and interactive visualization to be loaded and configured dynamically.
 
-Here are [slides from a recent presentation on Chiasm](http://www.slideshare.net/currankelleher/chiasm).
+Here are [slides from a recent presentation on Chiasm](http://www.slideshare.net/currankelleher/chiasm), and a [YouTube video of the presentation](https://www.youtube.com/watch?v=9jh4E3-jxcQ&feature=youtu.be&a).
 
 ## Examples
 
