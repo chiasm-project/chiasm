@@ -65,12 +65,12 @@ This diagram illustrates that
  
 See also
 
- * [runtime module](http://curran.github.io/chiasm/client/docs/core/runtime.html) Documents exact configuration structure.
+ * [runtime module (chiasm.js)](https://github.com/curran/chiasm/blob/gh-pages/src/chiasm.js) Documents exact configuration structure.
  * [runtime module unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/runtimeTest.js) Contains simple example plugins.
 
 ## Plugins
 
-Here's [how to create a Chiasm plugin](https://github.com/curran/chiasm/wiki).
+Here's [documentation on how to create a Chiasm plugin](https://github.com/curran/chiasm/wiki).
 
 The following sections describe foundational plugins that are included in the Chiasm project under `src/plugins`.
 
