@@ -3,16 +3,23 @@ define(["d3"], function (d3){
     return {
       filter: function (predicates){
 
-			  // The API is asynchronous in anticipation of server-side implementations.
-			  return new Promise(function (resolve, reject){
-					var result = data;
-					predicates.forEach(function (predicate){
+				var result = data;
+				predicates.forEach(function (predicate){
+					if("min" in predicate){
 						result = result.filter(function (d){
 							return d[predicate.column] >= predicate.min;
 						});
-					});
-					resolve(result);
+					}
+					if("max" in predicate){
+						result = result.filter(function (d){
+							return d[predicate.column] <= predicate.max;
+						});
+					}
 				});
+
+			  // The API is asynchronous, using Promises, in anticipation of
+				// server-side implementations.
+			  return Promise.resolve(result);
       },
       sample: function (options){
         //options.n
