@@ -1,11 +1,18 @@
 define(["d3"], function (d3){
   return function (data){
     return {
-      filter: function (options){
-        if(options.rowFilter){
-        }
-        if(options.columnFilter){
-        }
+      filter: function (predicates){
+
+			  // The API is asynchronous in anticipation of server-side implementations.
+			  return new Promise(function (resolve, reject){
+					var result = data;
+					predicates.forEach(function (predicate){
+						result = result.filter(function (d){
+							return d[predicate.column] >= predicate.min;
+						});
+					});
+					resolve(result);
+				});
       },
       sample: function (options){
         //options.n
@@ -24,5 +31,5 @@ define(["d3"], function (d3){
         });
       }
     };
-  });
+  };
 });
