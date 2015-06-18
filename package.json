@@ -1,6 +1,6 @@
 {
   "name": "chiasm",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A pluggable interactive visualization runtime environment.",
   "repository": {
     "type": "git",
