@@ -7,4 +7,7 @@ describe("chiasm-bundle", function () {
   it("should contain layout plugin", function() {
     expect("layout" in chiasm.plugins).to.equal(true);
   });
+  it("should contain barChart plugin", function() {
+    expect("barChart" in chiasm.plugins).to.equal(true);
+  });
 });

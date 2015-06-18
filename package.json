@@ -18,6 +18,7 @@
     "browserify": "^10.2.4",
     "browserify-shim": "^3.8.9",
     "chai": "^1.10.0",
+    "d3": "^3.5.5",
     "del": "^1.1.1",
     "express": "^4.11.2",
     "gulp": "^3.8.10",
@@ -31,7 +32,8 @@
   },
   "dependencies": {
     "lodash": "^3.9.3",
-    "model-js": "^0.2.4"
+    "model-js": "^0.2.4",
+    "reactivis": "0.0.1"
   },
   "browserify": {
     "transform": [
