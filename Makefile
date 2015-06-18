@@ -9,4 +9,4 @@ clean:
 	rm -f -- $(GENERATED_FILES)
 
 chiasm-bundle.js: index.js
-	node_modules/.bin/browserify $^ -o $@ -s Chiasm
+	node_modules/.bin/browserify $^ -o $@ -s Chiasm -g browserify-shim
