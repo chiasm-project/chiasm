@@ -1,6 +1,5 @@
 var expect = require("chai").expect,
-    requirejs = require("../configureRequireJS.js"),
-    dataReduction = requirejs("./src/plugins/dataReduction");
+    dataReduction = require("./src/plugins/dataReduction");
 
 describe("plugins/dataReduction", function () {
 

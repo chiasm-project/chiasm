@@ -4,9 +4,8 @@
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
-    requirejs = require("../configureRequireJS.js"),
-    Model = requirejs("model"),
-    Chiasm = requirejs("chiasm");
+    Model = require("model-js"),
+    Chiasm = require("../src/chiasm");
 
 // Use JSDOM for DOM manipulation in Node.
 // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object

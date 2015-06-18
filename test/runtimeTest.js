@@ -13,9 +13,8 @@ var expect = require("chai").expect,
     // Use JSDOM for DOM manipulation in Node.
     // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
     document = require("jsdom").jsdom(),
-    requireJS = require("./configureRequireJS.js"),
-    Chiasm = requireJS("chiasm"),
-    Model = requireJS("model");
+    Chiasm = require("../src/chiasm"),
+    Model = require("model-js");
 
 // The simplest possible plugin just returns a model (using model.js).
 function SimplestPlugin(){
@@ -89,8 +88,6 @@ describe("chiasm", function () {
     // Create a new Chiasm instance by invoking the constructor function.
     var chiasm = Chiasm();
 
-    // Assign the plugin this way so the runtime does not
-    // try to load it dynamically using RequireJS.
     chiasm.plugins.simplestPlugin = SimplestPlugin;
     
     // Set the Chiasm configuration.
@@ -128,24 +125,6 @@ describe("chiasm", function () {
         expect(foo).to.exist();
         done();
       });
-    });
-  });
-
-  it("setConfig(config) should report an error from RequireJS if a plugin doesn't load", function(done) {
-    var chiasm = Chiasm();
-
-    chiasm.plugins.simplestPlugin = SimplestPlugin;
-    
-    // setConfig returns a promise that handles errors.
-    var promise = chiasm.setConfig({
-      foo: {
-        plugin: "nonexistentPlugin"
-      }
-    });
-    
-    promise.then(function(){}, function(err){
-      expect(err.message).to.equal("Tried loading \"nonexistentPlugin\" at ./nonexistentPlugin.js then tried node's require(\"nonexistentPlugin\") and it failed with error: Error: Cannot find module 'nonexistentPlugin'");
-      done();
     });
   });
 
