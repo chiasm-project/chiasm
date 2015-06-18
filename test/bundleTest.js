@@ -16,4 +16,7 @@ describe("chiasm-bundle", function () {
   it("should contain scatterPlot plugin", function() {
     expect("scatterPlot" in chiasm.plugins).to.equal(true);
   });
+  it("should contain links plugin", function() {
+    expect("links" in chiasm.plugins).to.equal(true);
+  });
 });

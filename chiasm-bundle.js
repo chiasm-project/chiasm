@@ -4,6 +4,7 @@ var layout = require("./src/plugins/layout/layout");
 var barChart = require("./src/plugins/barChart/barChart");
 var lineChart = require("./src/plugins/lineChart/lineChart");
 var scatterPlot = require("./src/plugins/scatterPlot/scatterPlot");
+var links = require("./src/plugins/links/links");
 
 module.exports = function (container){
   var chiasm = Chiasm(container);
@@ -11,10 +12,18 @@ module.exports = function (container){
   chiasm.plugins.barChart = barChart;
   chiasm.plugins.lineChart = lineChart;
   chiasm.plugins.scatterPlot = scatterPlot;
+  chiasm.plugins.links = links;
+
+//src/plugins/colorScale.js
+//src/plugins/configEditor.js
+//src/plugins/crossfilter.js
+//src/plugins/csvLoader.js
+//src/plugins/dataReduction.js
+//src/plugins/dummyVis.js
   return chiasm;
 };
 
-},{"./src/chiasm":6,"./src/plugins/barChart/barChart":7,"./src/plugins/layout/layout":9,"./src/plugins/lineChart/lineChart":10,"./src/plugins/scatterPlot/scatterPlot":11}],2:[function(require,module,exports){
+},{"./src/chiasm":6,"./src/plugins/barChart/barChart":7,"./src/plugins/layout/layout":9,"./src/plugins/lineChart/lineChart":10,"./src/plugins/links/links":11,"./src/plugins/scatterPlot/scatterPlot":12}],2:[function(require,module,exports){
 !function() {
   var d3 = {
     version: "3.5.5"
@@ -11060,6 +11069,55 @@ module.exports = LineChart;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"d3":2,"model-js":3,"reactivis":4}],11:[function(require,module,exports){
+// This module implements data binding between components.
+// by Curran Kelleher June 2015
+var d3 = require("d3");
+var Model = require("model-js");
+
+function Links(chiasm) {
+
+  var model = Model({
+    publicProperties: [ "bindings" ],
+    bindings: []
+  });
+
+  model.when("bindings", function (bindings){
+    bindings.forEach(function(bindingExpr){
+
+      // Parse the binding expression of the form
+      // "sourceAlias.sourceProperty -> targetAlias.targetProperty"
+      var parts = bindingExpr.split("->").map(function(str){ return str.trim(); }),
+          source = parts[0].split("."),
+          sourceAlias = source[0],
+          sourceProperty = source[1],
+          target = parts[1].split("."),
+          targetAlias = target[0],
+          targetProperty = target[1];
+
+      // Retreive the source and target components.
+      chiasm.getComponent(sourceAlias).then(function(sourceComponent){
+        // TODO propagate errors to UI
+
+        chiasm.getComponent(targetAlias).then(function(targetComponent){
+          // TODO propagate errors to UI
+          // TODO keep track of listeners and remove old ones when bindings change.
+          // TODO add a test for this
+
+
+          // Add a reactive function that binds the source to the target.
+          sourceComponent.when(sourceProperty, function(value){
+            targetComponent[targetProperty] = value;
+          });
+        });
+      });
+    });
+  });
+
+  return model;
+}
+module.exports = Links;
+
+},{"d3":2,"model-js":3}],12:[function(require,module,exports){
 // A reusable scatter plot module.
 
 // Curran Kelleher June 2015
