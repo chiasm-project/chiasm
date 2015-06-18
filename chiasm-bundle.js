@@ -2,15 +2,17 @@
 var Chiasm = require("./src/chiasm");
 var layout = require("./src/plugins/layout/layout");
 var barChart = require("./src/plugins/barChart/barChart");
+var lineChart = require("./src/plugins/lineChart/lineChart");
 
 module.exports = function (container){
   var chiasm = Chiasm(container);
   chiasm.plugins.layout = layout;
   chiasm.plugins.barChart = barChart;
+  chiasm.plugins.lineChart = lineChart;
   return chiasm;
 };
 
-},{"./src/chiasm":6,"./src/plugins/barChart/barChart":7,"./src/plugins/layout/layout":9}],2:[function(require,module,exports){
+},{"./src/chiasm":6,"./src/plugins/barChart/barChart":7,"./src/plugins/layout/layout":9,"./src/plugins/lineChart/lineChart":10}],2:[function(require,module,exports){
 !function() {
   var d3 = {
     version: "3.5.5"
@@ -10979,5 +10981,81 @@ function Layout(chiasm){
 module.exports = Layout;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./computeLayout":8,"model-js":3}]},{},[1])(1)
+},{"./computeLayout":8,"model-js":3}],10:[function(require,module,exports){
+(function (global){
+// A reusable line chart module.
+// Draws from D3 line chart example http://bl.ocks.org/mbostock/3883245
+// Curran Kelleher June 2015
+var reactivis = require("reactivis");
+var d3 = require("d3");
+var Model = require("model-js");
+var _ = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+
+var None = Model.None;
+
+// The constructor function, accepting default values.
+return function LineChart(chiasm) {
+
+  // Create a Model instance for the line chart.
+  // This will serve as the line chart's public API.
+  var model = Model();
+
+  // TODO move this logic into Chiasm,
+  // TODO add to plugin docs.
+  model.container = chiasm.container;
+
+  reactivis.svg(model);
+  reactivis.title(model);
+  reactivis.margin(model);
+  reactivis.color(model);
+
+  reactivis.xAccessor(model);
+  reactivis.xScale(model, "time");
+  reactivis.xAxis(model);
+
+  reactivis.yAccessor(model);
+  reactivis.yScale(model);
+  reactivis.yAxis(model);
+
+  // Add an SVG group to contain the lines.
+  model.when("g", function (g) {
+    model.lineG = g.append("g");
+  });
+
+  // Draw the lines.
+  model.lineColumn = None;
+  model.when(["lineG", "data", "lineColumn", "x", "y", "color"],
+      function (lineG, data, lineColumn, x, y, color){
+    var linesData = d3.nest()
+          .key(function(d){ 
+            if(lineColumn !== None){
+              return d[lineColumn]; // Have multiple lines.
+            } else {
+              return "X";// have only a single line.
+            }
+          })
+          .entries(data),
+        line = d3.svg.line().x(x).y(y),
+        lines = lineG.selectAll(".line").data(linesData);
+
+    lines.enter().append("path").attr("class", "line");
+    lines
+      .attr("d", function(d){ return line(d.values); })
+      .style("stroke", color);
+    lines.exit().remove();
+  });
+
+  model.destroy = function(){
+    if(model.container && model.svg){
+      model.svg.node().innerHTML = "";
+      model.container.removeChild(model.svg.node());
+    }
+  };
+
+  return model;
+}
+module.exports = LineChart;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"d3":2,"model-js":3,"reactivis":4}]},{},[1])(1)
 });
