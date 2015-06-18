@@ -1,6 +1,6 @@
 // A reusable bar chart module.
 // Draws from D3 bar chart example http://bl.ocks.org/mbostock/3885304
-// Curran Kelleher April 2015
+// Curran Kelleher June 2015
 var reactivis = require("reactivis");
 var d3 = require("d3");
 var Model = require("model-js");

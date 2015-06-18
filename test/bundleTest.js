@@ -13,4 +13,7 @@ describe("chiasm-bundle", function () {
   it("should contain lineChart plugin", function() {
     expect("lineChart" in chiasm.plugins).to.equal(true);
   });
+  it("should contain scatterPlot plugin", function() {
+    expect("scatterPlot" in chiasm.plugins).to.equal(true);
+  });
 });
