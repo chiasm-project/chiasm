@@ -1,3 +1,7 @@
+//Simulate browser globals
+d3 = require("d3");
+_ = require("lodash");
+
 var ChiasmBundle = require("../chiasm-bundle");
 var chiasm = new ChiasmBundle();
 
@@ -18,5 +22,8 @@ describe("chiasm-bundle", function () {
   });
   it("should contain links plugin", function() {
     expect("links" in chiasm.plugins).to.equal(true);
+  });
+  it("should contain dummyVis plugin", function() {
+    expect("dummyVis" in chiasm.plugins).to.equal(true);
   });
 });

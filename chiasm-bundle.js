@@ -5,6 +5,7 @@ var barChart = require("./src/plugins/barChart/barChart");
 var lineChart = require("./src/plugins/lineChart/lineChart");
 var scatterPlot = require("./src/plugins/scatterPlot/scatterPlot");
 var links = require("./src/plugins/links/links");
+var dummyVis = require("./src/plugins/dummyVis/dummyVis");
 
 module.exports = function (container){
   var chiasm = Chiasm(container);
@@ -13,6 +14,7 @@ module.exports = function (container){
   chiasm.plugins.lineChart = lineChart;
   chiasm.plugins.scatterPlot = scatterPlot;
   chiasm.plugins.links = links;
+  chiasm.plugins.dummyVis = dummyVis;
 
 //src/plugins/colorScale.js
 //src/plugins/configEditor.js
@@ -23,7 +25,7 @@ module.exports = function (container){
   return chiasm;
 };
 
-},{"./src/chiasm":4,"./src/plugins/barChart/barChart":5,"./src/plugins/layout/layout":7,"./src/plugins/lineChart/lineChart":8,"./src/plugins/links/links":9,"./src/plugins/scatterPlot/scatterPlot":10}],2:[function(require,module,exports){
+},{"./src/chiasm":4,"./src/plugins/barChart/barChart":5,"./src/plugins/dummyVis/dummyVis":6,"./src/plugins/layout/layout":8,"./src/plugins/lineChart/lineChart":9,"./src/plugins/links/links":10,"./src/plugins/scatterPlot/scatterPlot":11}],2:[function(require,module,exports){
 // ModelJS v0.2.1
 //
 // https://github.com/curran/model
@@ -1175,6 +1177,150 @@ module.exports = BarChart;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"model-js":2,"reactivis":3}],6:[function(require,module,exports){
 (function (global){
+// This module implements a dummy visualization
+// for testing the visualization dashboard framework.
+//
+// Draws from previous work found at
+// https://github.com/curran/phd/blob/gh-pages/prototype/src/dummyVis.js
+// https://github.com/curran/model-contrib/blob/gh-pages/modules/dummyVis.js
+//
+// Created by Curran Kelleher Feb 2015
+
+var d3 = (typeof window !== "undefined" ? window.d3 : typeof global !== "undefined" ? global.d3 : null);
+var Model = require("model-js");
+
+function DummyVis(chiasm) {
+
+  var model = Model({
+    publicProperties: [
+
+      // The background color, a CSS color string.
+      "color",
+
+      // The string that gets displayed in the center of the box.
+      "text",
+
+      // The width in pixels of lines for the X.
+      "lineWidth",
+
+      // The relative size of this component, used by the layout plugin.
+      "size"
+    ],
+
+    color: "white",
+    text: "",
+    lineWidth: 8,
+    size: 1
+  });
+
+  // Append an SVG to the chiasm container.
+  // Use CSS `position: absolute;` so setting `left` and `top` CSS
+  // properties later will position the SVG relative to containing div.
+  var svg = d3.select(chiasm.container).append("svg")
+    .style("position", "absolute");
+
+  // Add a background rectangle to the SVG.
+  // The location of the rect will be fixed at (0, 0)
+  // with respect to the containing SVG.
+  var rect = svg.append("rect")
+    .attr("x", 0)
+    .attr("y", 0);
+
+  // Add a text element to the SVG,
+  // which will render the `text` model property.
+  var text = svg.append("text")
+    .attr("font-size", "7em")
+    .attr("text-anchor", "middle")
+    .attr("alignment-baseline", "middle");
+
+  // Make the X lines draggable. This shows how to add
+  // interaction to visualization modules.
+  var lineDrag = (function () {
+    var x1, x2;
+    return d3.behavior.drag()
+      .on("dragstart", function (d) {
+        x1 = d3.event.sourceEvent.pageX;
+      })
+      .on("drag", function (d) {
+        var x2 = d3.event.sourceEvent.pageX,
+            newLineWidth = model.lineWidth + x2 - x1;
+        newLineWidth = newLineWidth < 1 ? 1 : newLineWidth;
+
+        // dragging updates the `lineWidth` model property,
+        // which is visible to other visualizations in the chiasm.
+        model.lineWidth = newLineWidth;
+        x1 = x2;
+      });
+  }());
+
+  // Update the color and text based on the model.
+  model.when("color", function(color){
+    rect.attr("fill", color);
+  });
+
+  // Update the text based on the model.
+  model.when("text", text.text, text);
+
+  // When the size of the visualization is set
+  // by the chiasm layout engine,
+  model.when("box", function (box) {
+
+    // Set the CSS `left` and `top` properties to move the
+    // SVG to `(box.x, box.y)` relative to its container.
+    svg
+      .style("left", box.x + "px")
+      .style("top", box.y + "px");
+
+    // Set the size of the SVG and background rect.
+    svg
+      .attr("width", box.width)
+      .attr("height", box.height);
+    rect
+      .attr("width", box.width)
+      .attr("height", box.height);
+
+    // Update the text label to be centered.
+    text
+      .attr("x", box.width / 2)
+      .attr("y", box.height / 2);
+
+  });
+
+  // Update the X lines whenever either
+  // the `box` or `lineWidth` model properties change.
+  model.when(["box", "lineWidth"], function (box, lineWidth) {
+    var w = box.width,
+        h = box.height,
+        lines = svg.selectAll("line").data([
+          {x1: 0, y1: 0, x2: w, y2: h},
+          {x1: 0, y1: h, x2: w, y2: 0}
+        ]);
+    lines.enter().append("line");
+    lines
+      .attr("x1", function (d) { return d.x1; })
+      .attr("y1", function (d) { return d.y1; })
+      .attr("x2", function (d) { return d.x2; })
+      .attr("y2", function (d) { return d.y2; })
+      .style("stroke-width", lineWidth)
+      .style("stroke-opacity", 0.2)
+      .style("stroke", "black")
+      .call(lineDrag);
+  });
+
+  // Clean up the DOM elements when the component is destroyed.
+  model.destroy = function(){
+    // TODO test this.
+    chiasm.container.removeChild(svg.node());
+  };
+
+  return model;
+}
+
+module.exports = DummyVis;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"model-js":2}],7:[function(require,module,exports){
+(function (global){
 // This module provides a function that computes a nested box layout.
 //
 // Created by Curran Kelleher June 2015
@@ -1345,7 +1491,7 @@ function quantize(box){
 module.exports = computeLayout;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 // This plugin uses the computeLayout module
 // to assign sizes to visible components.
@@ -1487,7 +1633,7 @@ function Layout(chiasm){
 module.exports = Layout;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./computeLayout":6,"model-js":2}],8:[function(require,module,exports){
+},{"./computeLayout":7,"model-js":2}],9:[function(require,module,exports){
 (function (global){
 // A reusable line chart module.
 // Draws from D3 line chart example http://bl.ocks.org/mbostock/3883245
@@ -1563,7 +1709,7 @@ return function LineChart(chiasm) {
 module.exports = LineChart;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"model-js":2,"reactivis":3}],9:[function(require,module,exports){
+},{"model-js":2,"reactivis":3}],10:[function(require,module,exports){
 (function (global){
 // This module implements data binding between components.
 // by Curran Kelleher June 2015
@@ -1614,7 +1760,7 @@ function Links(chiasm) {
 module.exports = Links;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"model-js":2}],10:[function(require,module,exports){
+},{"model-js":2}],11:[function(require,module,exports){
 (function (global){
 // A reusable scatter plot module.
 
