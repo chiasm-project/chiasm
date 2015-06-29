@@ -1,12 +1,12 @@
 {
   "layout": {
-    "plugin": "chiasm/plugins/layout",
+    "plugin": "layout",
     "state": {
       "layout": "barChart"
     }
   },
   "barChart": {
-    "plugin": "chiasm/plugins/barChart",
+    "plugin": "barChart",
     "state": {
       "xColumn": "letter",
       "xAxisLabel": "Letter",
@@ -21,7 +21,7 @@
     }
   },
   "barChartCSVLoader": {
-    "plugin": "chiasm/plugins/csvLoader",
+    "plugin": "csvLoader",
     "state": {
       "csvPath": "simpleBars.csv",
       "numericColumns": [
@@ -30,7 +30,7 @@
     }
   },
   "links": {
-    "plugin": "chiasm/plugins/links",
+    "plugin": "links",
     "state": {
       "bindings": [
         "barChartCSVLoader.data -> barChart.data"

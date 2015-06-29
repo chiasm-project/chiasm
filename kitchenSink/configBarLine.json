@@ -1,30 +1,18 @@
 {
   "layout": {
-    "plugin": "chiasm/plugins/layout",
+    "plugin": "layout",
     "state": {
       "layout": {
-        "orientation": "horizontal",
+        "orientation": "vertical",
         "children": [
-          "editor",
-          {
-            "orientation": "vertical",
-            "children": [
-              "barChart",
-              "lineChart"
-            ]
-          }
+          "barChart",
+          "lineChart"
         ]
       }
     }
   },
-  "editor": {
-    "plugin": "chiasm/plugins/configEditor",
-    "state": {
-      "size": "325px"
-    }
-  },
   "barChart": {
-    "plugin": "chiasm/plugins/barChart",
+    "plugin": "barChart",
     "state": {
       "xColumn": "letter",
       "xAxisLabel": "Letter",
@@ -45,7 +33,7 @@
     }
   },
   "lineChart": {
-    "plugin": "chiasm/plugins/lineChart",
+    "plugin": "lineChart",
     "state": {
       "xColumn": "timestamp",
       "xAxisLabel": "Time",
@@ -65,7 +53,7 @@
     }
   },
   "barChartCSVLoader": {
-    "plugin": "chiasm/plugins/csvLoader",
+    "plugin": "csvLoader",
     "state": {
       "csvPath": "simpleBars.csv",
       "numericColumns": [
@@ -74,7 +62,7 @@
     }
   },
   "lineChartCSVLoader": {
-    "plugin": "chiasm/plugins/csvLoader",
+    "plugin": "csvLoader",
     "state": {
       "csvPath": "simpleTime.csv",
       "numericColumns": [
@@ -86,7 +74,7 @@
     }
   },
   "links": {
-    "plugin": "chiasm/plugins/links",
+    "plugin": "links",
     "state": {
       "bindings": [
         "barChartCSVLoader.data -> barChart.data",
