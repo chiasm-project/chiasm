@@ -26,4 +26,7 @@ describe("chiasm-bundle", function () {
   it("should contain dummyVis plugin", function() {
     expect("dummyVis" in chiasm.plugins).to.equal(true);
   });
+  it("should contain csvLoader plugin", function() {
+    expect("csvLoader" in chiasm.plugins).to.equal(true);
+  });
 });

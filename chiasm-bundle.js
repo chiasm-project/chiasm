@@ -1,4 +1,7 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Chiasm = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// This is the top-level Chiasm bundle that includes visualization plugins.
+// Work-in-progress regarding how to bundle. Considering using Rollup in future iterations
+// Curran Kelleher 6/29/15
 var Chiasm = require("./src/chiasm");
 var layout = require("./src/plugins/layout/layout");
 var barChart = require("./src/plugins/barChart/barChart");
@@ -6,6 +9,7 @@ var lineChart = require("./src/plugins/lineChart/lineChart");
 var scatterPlot = require("./src/plugins/scatterPlot/scatterPlot");
 var links = require("./src/plugins/links/links");
 var dummyVis = require("./src/plugins/dummyVis/dummyVis");
+var csvLoader = require("./src/plugins/csvLoader/csvLoader");
 
 module.exports = function (container){
   var chiasm = Chiasm(container);
@@ -15,17 +19,16 @@ module.exports = function (container){
   chiasm.plugins.scatterPlot = scatterPlot;
   chiasm.plugins.links = links;
   chiasm.plugins.dummyVis = dummyVis;
+  chiasm.plugins.csvLoader = csvLoader;
 
 //src/plugins/colorScale.js
 //src/plugins/configEditor.js
 //src/plugins/crossfilter.js
-//src/plugins/csvLoader.js
 //src/plugins/dataReduction.js
-//src/plugins/dummyVis.js
   return chiasm;
 };
 
-},{"./src/chiasm":4,"./src/plugins/barChart/barChart":5,"./src/plugins/dummyVis/dummyVis":6,"./src/plugins/layout/layout":8,"./src/plugins/lineChart/lineChart":9,"./src/plugins/links/links":10,"./src/plugins/scatterPlot/scatterPlot":11}],2:[function(require,module,exports){
+},{"./src/chiasm":4,"./src/plugins/barChart/barChart":5,"./src/plugins/csvLoader/csvLoader":6,"./src/plugins/dummyVis/dummyVis":7,"./src/plugins/layout/layout":9,"./src/plugins/lineChart/lineChart":10,"./src/plugins/links/links":11,"./src/plugins/scatterPlot/scatterPlot":12}],2:[function(require,module,exports){
 // ModelJS v0.2.1
 //
 // https://github.com/curran/model
@@ -1177,6 +1180,51 @@ module.exports = BarChart;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"model-js":2,"reactivis":3}],6:[function(require,module,exports){
 (function (global){
+// This module implements CSV file loading.
+// by Curran Kelleher April 2015
+var d3 = (typeof window !== "undefined" ? window.d3 : typeof global !== "undefined" ? global.d3 : null);
+var Model = require("model-js");
+
+function csvLoader() {
+
+  var model = Model({
+    publicProperties: [ "csvPath", "numericColumns", "timeColumns" ],
+    csvPath: Model.None,
+    numericColumns: [],
+    timeColumns: []
+  });
+
+  model.when(["csvPath", "numericColumns", "timeColumns"],
+      function (csvPath, numericColumns, timeColumns){
+
+    if(csvPath !== Model.None){
+
+      d3.csv(csvPath, function(d){
+
+        // Parse strings into numbers for numeric columns.
+        numericColumns.forEach(function(column){
+          d[column] = +d[column];
+        });
+
+        // Parse strings into dates for time columns.
+        timeColumns.forEach(function(column){
+          d[column] = new Date(d[column]);
+        });
+
+        return d;
+      }, function(err, data){
+        model.data = data;
+      });
+    }
+  });
+
+  return model;
+}
+module.exports = csvLoader;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"model-js":2}],7:[function(require,module,exports){
+(function (global){
 // This module implements a dummy visualization
 // for testing the visualization dashboard framework.
 //
@@ -1319,7 +1367,7 @@ function DummyVis(chiasm) {
 module.exports = DummyVis;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"model-js":2}],7:[function(require,module,exports){
+},{"model-js":2}],8:[function(require,module,exports){
 (function (global){
 // This module provides a function that computes a nested box layout.
 //
@@ -1491,7 +1539,7 @@ function quantize(box){
 module.exports = computeLayout;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 // This plugin uses the computeLayout module
 // to assign sizes to visible components.
@@ -1633,7 +1681,7 @@ function Layout(chiasm){
 module.exports = Layout;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./computeLayout":7,"model-js":2}],9:[function(require,module,exports){
+},{"./computeLayout":8,"model-js":2}],10:[function(require,module,exports){
 (function (global){
 // A reusable line chart module.
 // Draws from D3 line chart example http://bl.ocks.org/mbostock/3883245
@@ -1709,7 +1757,7 @@ return function LineChart(chiasm) {
 module.exports = LineChart;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"model-js":2,"reactivis":3}],10:[function(require,module,exports){
+},{"model-js":2,"reactivis":3}],11:[function(require,module,exports){
 (function (global){
 // This module implements data binding between components.
 // by Curran Kelleher June 2015
@@ -1760,7 +1808,7 @@ function Links(chiasm) {
 module.exports = Links;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"model-js":2}],11:[function(require,module,exports){
+},{"model-js":2}],12:[function(require,module,exports){
 (function (global){
 // A reusable scatter plot module.
 
