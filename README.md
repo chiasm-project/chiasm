@@ -17,7 +17,7 @@ See also [Model.js](https://github.com/curran/model), which this project is buil
 |---|---|
 | [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1) | A demo of the Chiasm configuration editor and nested box layout. |
 | [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125) | An example Chiasm configuration with a bar chart and line chart. |
-| [![](http://curran.github.io/images/chiasm/kitchenSink.png)](http://curran.github.io/chiasm/kitchenSink/) | The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart. |
+| [![](http://curran.github.io/images/chiasm/kitchenSink.png)](http://bl.ocks.org/curran/70ae30ab3b3eea62f84e) | The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart. |
 | [![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632) | An example demonstrating linked views and having a common color scale. |
 | [![](http://bl.ocks.org/curran/raw/19d42e98ce25291eb45d/thumbnail.png)](http://bl.ocks.org/curran/19d42e98ce25291eb45d) | A more complex example with linked views using Crossfilter and loading data from an API. |
 
@@ -133,9 +133,7 @@ The following features are also present:
 
 See also:
 
- * [computeLayout module](http://curran.github.io/chiasm/client/docs/plugins/computeLayout.html) This implements the nested box layout algorithm.
  * [computeLayout module unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/computeLayoutTest.js)
- * [layout plugin](http://curran.github.io/chiasm/client/docs/plugins/layout.html) This provides the interface between the runtime and nested box layout algorithm.
  * [layout plugin unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/plugins/layout.js)
 
 ### JSON Editor
@@ -144,7 +142,6 @@ The JSON Editor is an enhanced text editor for editing the configuration at runt
 
 See also:
 
- * [configEditor plugin](http://curran.github.io/chiasm/client/docs/plugins/configEditor.html)
  * [CodeMirror](http://codemirror.net/) - This provides the syntax highlighted code editor.
  * [Inlet](http://enjalot.github.io/Inlet/) - This provides interactive sliders and color pickers.
 
@@ -165,19 +162,11 @@ Features include:
  * Text in front of the X.
  * A progress indicator when a special property `pending` is set.
 
-See also:
-
- * [dummyVis plugin](http://curran.github.io/chiasm/client/docs/plugins/dummyVis.html)
-
 ### Links
 
 The Links plugin is for establishing bindings between runtime components. By specifying a link using the Links plugin in a configuration, the output resulting from a user interaction in one view can be used as input to another view. This is the foundation for linked views.
 
 Plugins may be created for components that make requests to a server. The inputs and outputs of such components may also be bound to visualizations in order to establish linked views with an asynchronous step that leverages server-side capabilities.
-
-See also:
-
- * [links plugin](http://curran.github.io/chiasm/client/docs/plugins/links.html)
 
 # The word "[Chiasm](http://www.merriam-webster.com/audio.php?file=chiasm02&word=chiasm&text=)"
 
