@@ -287,7 +287,9 @@ function Chiasm(container){
     var startTime = Date.now();
     return new Promise(function(resolve, reject){
       (function poll(){
-        if(alias in components){
+        if(alias === 'self') {
+          resolve(chiasm);
+        } else if(alias in components){
           resolve(components[alias]);
         } else if ((Date.now() - startTime) < chiasm.timeout){
           setTimeout(poll, 1);
