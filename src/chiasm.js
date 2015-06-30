@@ -310,13 +310,9 @@ function Chiasm(container){
       // If the plugin has been set up in `chiasm.plugins`, use it.
       if(plugin in chiasm.plugins){
         resolve(chiasm.plugins[plugin]);
+      } else if (typeof System !== 'undefined' && typeof System.amdRequire !== 'undefined') {
+        System.amdRequire([plugin], resolve, reject);
       }
-      
-      // TODO think about how to support dynamic fetching of plugins,
-      // and also how to support loading ES6 modules via SystemJS
-      //else if (typeof System !== 'undefined' && typeof System.amdRequire !== 'undefined') {
-      //  System.amdRequire([plugin], resolve, reject);
-      //}
     });
   }
 
