@@ -33,6 +33,10 @@ function Layout(chiasm){
 
   // Update `model.box` on resize
   window.addEventListener("resize", setBox);
+  
+  model.destroy = function(){
+    window.removeEventListener("resize", setBox);
+  };
 
   // Respond to changes is box and layout.
   model.when(["layout", "sizes", "box"], function(layout, sizes, box){
