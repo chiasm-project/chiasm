@@ -25,10 +25,11 @@
     "requirejs": "^2.1.15"
   },
   "dependencies": {
+    "d3": "^3.5.5",
+    "data-reduction": "*",
     "lodash": "^3.9.3",
     "model-js": "^0.2.4",
-    "reactivis": "0.0.1",
-    "d3": "^3.5.5"
+    "reactivis": "0.0.1"
   },
   "browserify-shim": {
     "d3": "global:d3",

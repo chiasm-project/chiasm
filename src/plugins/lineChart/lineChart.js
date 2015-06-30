@@ -9,7 +9,7 @@ var _ = require("lodash");
 var None = Model.None;
 
 // The constructor function, accepting default values.
-return function LineChart(chiasm) {
+function LineChart(chiasm) {
 
   // Create a Model instance for the line chart.
   // This will serve as the line chart's public API.

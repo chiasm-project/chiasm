@@ -29,4 +29,7 @@ describe("chiasm-bundle", function () {
   it("should contain csvLoader plugin", function() {
     expect("csvLoader" in chiasm.plugins).to.equal(true);
   });
+  it("should contain dataReduction plugin", function() {
+    expect("dataReduction" in chiasm.plugins).to.equal(true);
+  });
 });
