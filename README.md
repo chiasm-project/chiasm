@@ -66,7 +66,7 @@ This diagram illustrates that
 See also
 
  * [runtime module (chiasm.js)](https://github.com/curran/chiasm/blob/gh-pages/src/chiasm.js) Documents exact configuration structure.
- * [runtime module unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/runtimeTest.js) Contains simple example plugins.
+ * [runtime module unit tests](https://github.com/curran/chiasm/blob/gh-pages/test/runtimeTest.js) Contains simple example plugins.
 
 ## Plugins
 
@@ -76,9 +76,9 @@ The following sections describe foundational plugins that are included in the Ch
 
 ### Visualization Plugins
 
- * [bar chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/barChart.js)
- * [line chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/lineChart.js)
- * [Scatter Plot](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/scatterPlot.js)
+ * [bar chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/barChart/barChart.js)
+ * [line chart](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/lineChart/lineChart.js)
+ * [Scatter Plot](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/scatterPlot/scatterPlot.js)
  * [Crossfilter](https://github.com/curran/chiasm/blob/gh-pages/src/plugins/crossfilter.js)
 
 Targets for implementation as plugins include the following visualizations:
@@ -133,8 +133,8 @@ The following features are also present:
 
 See also:
 
- * [computeLayout module unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/computeLayoutTest.js)
- * [layout plugin unit tests](https://github.com/curran/chiasm/blob/gh-pages/client/tests/plugins/layout.js)
+ * [computeLayout module unit tests](https://github.com/curran/chiasm/blob/gh-pages/test/computeLayoutTest.js)
+ * [layout plugin unit tests](https://github.com/curran/chiasm/blob/gh-pages/test/plugins/layout.js)
 
 ### JSON Editor
 
