@@ -498,7 +498,7 @@ function Chiasm(container){
 
       // Store the new config.
       settingConfig = true;
-      chiasm.config = _.cloneDeep(newConfig);
+      chiasm.config = newConfig;
       settingConfig = false;
 
       // Queue the actions from the diff to be executed in sequence,

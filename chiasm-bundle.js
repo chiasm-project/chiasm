@@ -1415,7 +1415,7 @@ module.exports = index;
 //
 // Curran Kelleher June 2015
 var Model = require("model-js");
-var d3 = (typeof window !== "undefined" ? window.d3 : typeof global !== "undefined" ? global.d3 : null);
+var d3 = (typeof window !== "undefined" ? window['d3'] : typeof global !== "undefined" ? global['d3'] : null);
 
 // The returned public API object, containing functions that take as input
 // a Model.js model, and as a side effect add reactive flows within that model.
@@ -1783,7 +1783,7 @@ module.exports = reactivis;
 //
 // By Curran Kelleher June 2015
 var Model = require("model-js");
-var _ = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
 // All error message strings are kept track of here.
 var ErrorMessages = {
@@ -2052,7 +2052,9 @@ function Chiasm(container){
     var startTime = Date.now();
     return new Promise(function(resolve, reject){
       (function poll(){
-        if(alias in components){
+        if(alias === 'self') {
+          resolve(chiasm);
+        } else if(alias in components){
           resolve(components[alias]);
         } else if ((Date.now() - startTime) < chiasm.timeout){
           setTimeout(poll, 1);
@@ -2073,13 +2075,9 @@ function Chiasm(container){
       // If the plugin has been set up in `chiasm.plugins`, use it.
       if(plugin in chiasm.plugins){
         resolve(chiasm.plugins[plugin]);
+      } else if (typeof System !== 'undefined' && typeof System.amdRequire !== 'undefined') {
+        System.amdRequire([plugin], resolve, reject);
       }
-      
-      // TODO think about how to support dynamic fetching of plugins,
-      // and also how to support loading ES6 modules via SystemJS
-      //else if (typeof System !== 'undefined' && typeof System.amdRequire !== 'undefined') {
-      //  System.amdRequire([plugin], resolve, reject);
-      //}
     });
   }
 
@@ -2265,7 +2263,7 @@ function Chiasm(container){
 
       // Store the new config.
       settingConfig = true;
-      chiasm.config = _.cloneDeep(newConfig);
+      chiasm.config = newConfig;
       settingConfig = false;
 
       // Queue the actions from the diff to be executed in sequence,
@@ -2306,9 +2304,9 @@ module.exports = Chiasm;
 // Draws from D3 bar chart example http://bl.ocks.org/mbostock/3885304
 // Curran Kelleher June 2015
 var reactivis = require("reactivis");
-var d3 = (typeof window !== "undefined" ? window.d3 : typeof global !== "undefined" ? global.d3 : null);
+var d3 = (typeof window !== "undefined" ? window['d3'] : typeof global !== "undefined" ? global['d3'] : null);
 var Model = require("model-js");
-var _ = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
 var None = Model.None;
 
@@ -2371,7 +2369,7 @@ module.exports = BarChart;
 (function (global){
 // This module implements CSV file loading.
 // by Curran Kelleher April 2015
-var d3 = (typeof window !== "undefined" ? window.d3 : typeof global !== "undefined" ? global.d3 : null);
+var d3 = (typeof window !== "undefined" ? window['d3'] : typeof global !== "undefined" ? global['d3'] : null);
 var Model = require("model-js");
 
 function csvLoader() {
@@ -2459,7 +2457,7 @@ module.exports = DataReduction;
 //
 // Created by Curran Kelleher Feb 2015
 
-var d3 = (typeof window !== "undefined" ? window.d3 : typeof global !== "undefined" ? global.d3 : null);
+var d3 = (typeof window !== "undefined" ? window['d3'] : typeof global !== "undefined" ? global['d3'] : null);
 var Model = require("model-js");
 
 function DummyVis(chiasm) {
@@ -2597,7 +2595,7 @@ module.exports = DummyVis;
 // This module provides a function that computes a nested box layout.
 //
 // Created by Curran Kelleher June 2015
-var _ = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
 // Takes as input the following arguments:
 //
@@ -2775,7 +2773,7 @@ module.exports = computeLayout;
 // By Curran Kelleher June 2015
 var computeLayout = require("./computeLayout");
 var Model = require("model-js");
-var _ = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
 // The layout Chiasm plugin constructor function.
 function Layout(chiasm){
@@ -2801,6 +2799,10 @@ function Layout(chiasm){
 
   // Update `model.box` on resize
   window.addEventListener("resize", setBox);
+  
+  model.destroy = function(){
+    window.removeEventListener("resize", setBox);
+  };
 
   // Respond to changes is box and layout.
   model.when(["layout", "sizes", "box"], function(layout, sizes, box){
@@ -2912,9 +2914,9 @@ module.exports = Layout;
 // Draws from D3 line chart example http://bl.ocks.org/mbostock/3883245
 // Curran Kelleher June 2015
 var reactivis = require("reactivis");
-var d3 = (typeof window !== "undefined" ? window.d3 : typeof global !== "undefined" ? global.d3 : null);
+var d3 = (typeof window !== "undefined" ? window['d3'] : typeof global !== "undefined" ? global['d3'] : null);
 var Model = require("model-js");
-var _ = (typeof window !== "undefined" ? window._ : typeof global !== "undefined" ? global._ : null);
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
 var None = Model.None;
 
@@ -2986,7 +2988,7 @@ module.exports = LineChart;
 (function (global){
 // This module implements data binding between components.
 // by Curran Kelleher June 2015
-var d3 = (typeof window !== "undefined" ? window.d3 : typeof global !== "undefined" ? global.d3 : null);
+var d3 = (typeof window !== "undefined" ? window['d3'] : typeof global !== "undefined" ? global['d3'] : null);
 var Model = require("model-js");
 
 function Links(chiasm) {
@@ -3039,7 +3041,7 @@ module.exports = Links;
 
 // Curran Kelleher June 2015
 var reactivis = require("reactivis");
-var d3 = (typeof window !== "undefined" ? window.d3 : typeof global !== "undefined" ? global.d3 : null);
+var d3 = (typeof window !== "undefined" ? window['d3'] : typeof global !== "undefined" ? global['d3'] : null);
 var Model = require("model-js");
 
 var None = Model.None;
