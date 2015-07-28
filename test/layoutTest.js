@@ -5,9 +5,7 @@
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
     Model = require("model-js"),
-    Chiasm = require("../src/chiasm"),
-    dummyVis = require("../src/plugins/dummyVis/dummyVis"),
-    layout = require("../src/plugins/layout/layout");
+    Chiasm = require("../index");
 
 // Use JSDOM for DOM manipulation in Node.
 // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
@@ -47,9 +45,6 @@ function expectValues(chiasm, values, callback){
 function initChiasm(){
   var div = document.createElement("div");
   var chiasm = Chiasm(div);
-
-  chiasm.plugins.dummyVis = dummyVis;
-  chiasm.plugins.layout = layout;
 
   // Set the width and height that the layout will use.
   div.clientHeight = div.clientWidth = 100;
