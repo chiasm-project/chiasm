@@ -2435,8 +2435,8 @@ function DataReduction() {
       options.filter = filter;
     }
 
-    if(aggregage !== Model.None){
-      options.aggregage = aggregage;
+    if(aggregate !== Model.None){
+      options.aggregate = aggregate;
     }
 
     model.dataOut = dataReduction(dataIn, options);

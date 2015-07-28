@@ -81,7 +81,7 @@ function DOMPlugin(chiasm){
   return model;
 }
 
-describe("chiasm", function () {
+describe("chiasm runtime", function () {
 
   it("create a component via setConfig(config)", function(done) {
 
