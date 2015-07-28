@@ -15,17 +15,14 @@ function DataReduction() {
   });
 
   model.when(["filter", "aggregate", "dataIn"], function (filter, aggregate, dataIn) {
-    
     var options = {};
 
     if(filter !== Model.None){
       options.filter = filter;
     }
-
     if(aggregate !== Model.None){
       options.aggregate = aggregate;
     }
-
     model.dataOut = dataReduction(dataIn, options);
   });
 

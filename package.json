@@ -27,6 +27,7 @@
   "dependencies": {
     "d3": "^3.5.5",
     "data-reduction": "*",
+    "dsv-dataset": "0.0.2",
     "lodash": "^3.9.3",
     "model-js": "^0.2.4",
     "reactivis": "0.0.1"
