@@ -14,6 +14,7 @@ var links = require("./src/plugins/links/links");
 var dummyVis = require("./src/plugins/dummyVis/dummyVis");
 var csvLoader = require("./src/plugins/csvLoader/csvLoader");
 var dataReduction = require("./src/plugins/dataReduction/dataReduction");
+var dsvDataset = require("./src/plugins/dsvDataset/dsvDataset");
 
 module.exports = function (container){
   var chiasm = Chiasm(container);
@@ -25,6 +26,7 @@ module.exports = function (container){
   chiasm.plugins.dummyVis = dummyVis;
   chiasm.plugins.csvLoader = csvLoader;
   chiasm.plugins.dataReduction = dataReduction;
+  chiasm.plugins.dsvDataset = dsvDataset;
 
 //src/plugins/colorScale.js
 //src/plugins/configEditor.js

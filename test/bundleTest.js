@@ -32,4 +32,7 @@ describe("chiasm-bundle", function () {
   it("should contain dataReduction plugin", function() {
     expect("dataReduction" in chiasm.plugins).to.equal(true);
   });
+  it("should contain dsvDataset plugin", function() {
+    expect("dsvDataset" in chiasm.plugins).to.equal(true);
+  });
 });

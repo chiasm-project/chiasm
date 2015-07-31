@@ -14,7 +14,10 @@ function dsvDatasetPlugin() {
 
   model.when(["dsvString", "metadata"], function (dsvString, metadata) {
     if(metadata !== Model.None){
-      model.data = dsvDataset.parse(dsvString, metadata);
+      model.data = dsvDataset.parse({
+        dsvString: dsvString,
+        metadata: metadata
+      }).data;
     }
   });
 
