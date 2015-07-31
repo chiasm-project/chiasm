@@ -23,7 +23,7 @@ function DataReduction() {
     if(aggregate !== Model.None){
       options.aggregate = aggregate;
     }
-    model.dataOut = dataReduction(dataIn, options);
+    model.dataOut = dataReduction(dataIn, options).data;
   });
 
   return model;

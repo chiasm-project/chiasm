@@ -38,14 +38,23 @@ module.exports = function (container){
 
 function filter(data, predicates){
   predicates.forEach(function (predicate){
+    var column = predicate.column;
     if("min" in predicate){
+      var min = predicate.min;
       data = data.filter(function (d){
-        return d[predicate.column] >= predicate.min;
+        return d[column] >= min;
       });
     }
     if("max" in predicate){
+      var max = predicate.max;
       data = data.filter(function (d){
-        return d[predicate.column] <= predicate.max;
+        return d[column] <= max;
+      });
+    }
+    if("equal" in predicate){
+      var equal = predicate.equal;
+      data = data.filter(function (d){
+        return d[column] == equal;
       });
     }
   });
@@ -1208,8 +1217,11 @@ function dataReduction(data, options){
     });
     data = aggregate(data, options.aggregate);
   }
-  data.metadata = metadata;
-  return data;
+
+  return {
+    data: data,
+    metadata: metadata
+  };
 }
 ;
 
@@ -2436,7 +2448,7 @@ function DataReduction() {
     if(aggregate !== Model.None){
       options.aggregate = aggregate;
     }
-    model.dataOut = dataReduction(dataIn, options);
+    model.dataOut = dataReduction(dataIn, options).data;
   });
 
   return model;
