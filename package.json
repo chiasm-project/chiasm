@@ -1,6 +1,7 @@
 {
   "name": "chiasm",
   "version": "0.1.8",
+  "main": "index.js",
   "description": "A pluggable interactive visualization runtime environment.",
   "repository": {
     "type": "git",
