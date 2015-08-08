@@ -1,7 +1,7 @@
 // A reusable line chart module.
 // Draws from D3 line chart example http://bl.ocks.org/mbostock/3883245
 // Curran Kelleher June 2015
-var reactivis = require("reactivis");
+var reactivis = require("../../reactivis");
 var d3 = require("d3");
 var Model = require("model-js");
 var _ = require("lodash");

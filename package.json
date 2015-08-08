@@ -30,8 +30,7 @@
     "data-reduction": "^0.1.0",
     "dsv-dataset": "^0.1.1",
     "lodash": "^3.9.3",
-    "model-js": "^0.2.4",
-    "reactivis": "0.0.1"
+    "model-js": "^0.2.4"
   },
   "browserify-shim": {
     "d3": "global:d3",

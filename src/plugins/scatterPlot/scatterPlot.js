@@ -1,7 +1,7 @@
 // A reusable scatter plot module.
 
 // Curran Kelleher June 2015
-var reactivis = require("reactivis");
+var reactivis = require("../../reactivis");
 var d3 = require("d3");
 var Model = require("model-js");
 
