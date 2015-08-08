@@ -2,7 +2,7 @@
   "name": "chiasm",
   "version": "0.1.9",
   "main": "index.js",
-  "description": "A pluggable interactive visualization runtime environment.",
+  "description": "An interactive data visualization system.",
   "repository": {
     "type": "git",
     "url": "https://github.com/curran/visEditor.git"
@@ -11,7 +11,8 @@
     "visualization"
   ],
   "scripts": {
-    "test": "make test"
+    "pretest": "browserify -o chiasm-bundle.js -s Chiasm -g browserify-shim index.js",
+    "test": "mocha"
   },
   "author": "Curran Kelleher",
   "license": "MIT",
