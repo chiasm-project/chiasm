@@ -47,7 +47,7 @@ The configuration structure can be summarized as follows.
 }
 ```
 
-The runtime environment is responsible for synchronizing the JSON configuration with the running application. The runtime environment loads plugins referred to in the configuration using [RequireJS](http://requirejs.org/). Each plugin is an [AMD module](http://requirejs.org/docs/whyamd.html) that provides functionality to
+The runtime environment is responsible for synchronizing the JSON configuration with the running application. The runtime environment loads plugins referred to in the configuration using the contents of a special property on the Chiasm instance, `chiasm.plugins`. Plugins are aggregated into a single JavaScript file, `chiasm-bundle.js`, using [Browserify](http://browserify.org/). Each plugin is a CommonJS module that provides functionality to
 
  * create a runtime component,
  * manipulate the state of the component, 
