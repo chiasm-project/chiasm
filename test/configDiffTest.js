@@ -4,7 +4,7 @@
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
-    Chiasm = require("../"),
+    Chiasm = require("../index"),
     configDiff = Chiasm.configDiff,
     Action = Chiasm.Action;
 

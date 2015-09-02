@@ -13,7 +13,7 @@ var expect = require("chai").expect,
     // Use JSDOM for DOM manipulation in Node.
     // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
     document = require("jsdom").jsdom(),
-    Chiasm = require("../"),
+    Chiasm = require("../index"),
     Model = require("model-js");
 
 // The simplest possible plugin just returns a model (using model.js).
