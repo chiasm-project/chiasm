@@ -9,10 +9,6 @@
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
-
-    // Use JSDOM for DOM manipulation in Node.
-    // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
-    document = require("jsdom").jsdom(),
     Chiasm = require("../index"),
     Model = require("model-js");
 
