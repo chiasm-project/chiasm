@@ -4,7 +4,11 @@
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
+<<<<<<< HEAD
     Chiasm = require("../index"),
+=======
+    Chiasm = require("../src/chiasm"),
+>>>>>>> gh-pages
     configDiff = Chiasm.configDiff,
     Action = Chiasm.Action;
 

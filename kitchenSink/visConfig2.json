@@ -1,0 +1,90 @@
+{
+  "layout": {
+    "plugin": "chiasm/plugins/layout",
+    "state": {
+      "layout": {
+        "orientation": "horizontal",
+        "children": [
+          "editor",
+          {
+            "orientation": "vertical",
+            "children": [
+              "barChart",
+              "pieChart"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "editor": {
+    "plugin": "chiasm/plugins/configEditor",
+    "state": {
+      "size": "325px"
+    }
+  },
+  "barChart": {
+    "plugin": "chiasm/plugins/barChart",
+    "state": {
+      "xColumn": "letter",
+      "xAxisLabel": "Letter",
+      "yColumn": "frequency",
+      "yAxisLabel": "Frequency",
+      "sortColumn": "frequency",
+      "sortOrder": "descending",
+      "margin": {
+        "top": 32,
+        "right": 2,
+        "bottom": 40,
+        "left": 47
+      },
+      "xAxisLabelOffset": 1.9,
+      "yAxisLabelOffset": 1.4,
+      "colorDefault": "#059e00",
+      "title": "Bar Chart",
+      "titleOffset": -0.269568,
+      "yDomainMin": 0
+    }
+  },
+  "pieChart": {
+    "plugin": "chiasm/plugins/barChart",
+    "state": {
+      "xColumn": "letter",
+      "xAxisLabel": "Letter",
+      "yColumn": "frequency",
+      "yAxisLabel": "Frequency",
+      "sortColumn": "frequency",
+      "sortOrder": "descending",
+      "margin": {
+        "top": 32,
+        "right": 2,
+        "bottom": 40,
+        "left": 47
+      },
+      "xAxisLabelOffset": 1.9,
+      "yAxisLabelOffset": 1.4,
+      "colorDefault": "#059e00",
+      "title": "Bar Chart",
+      "titleOffset": -0.269568,
+      "yDomainMin": 0
+    }
+  },
+  "dataLoader": {
+    "plugin": "chiasm/plugins/csvLoader",
+    "state": {
+      "csvPath": "simpleBars.csv",
+      "numericColumns": [
+        "frequency"
+      ]
+    }
+  },
+  "links": {
+    "plugin": "chiasm/plugins/links",
+    "state": {
+      "bindings": [
+        "dataLoader.data -> barChart.data",
+        "dataLoader.data -> pieChart.data"
+      ]
+    }
+  }
+}

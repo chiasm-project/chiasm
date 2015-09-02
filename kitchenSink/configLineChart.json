@@ -1,0 +1,39 @@
+{
+  "layout": {
+    "plugin": "layout",
+    "state": {
+      "layout": "lineChart"
+    }
+  },
+  "lineChart": {
+    "plugin": "lineChart",
+    "state": {
+      "xColumn": "timestamp",
+      "xAxisLabel": "Time",
+      "yColumn": "temperature",
+      "yAxisLabel": "Temperature",
+      "colorDefault": "#0074db",
+      "title": "Line Chart"
+    }
+  },
+  "lineChartCSVLoader": {
+    "plugin": "csvLoader",
+    "state": {
+      "csvPath": "simpleTime.csv",
+      "numericColumns": [
+        "temperature"
+      ],
+      "timeColumns": [
+        "timestamp"
+      ]
+    }
+  },
+  "links": {
+    "plugin": "links",
+    "state": {
+      "bindings": [
+        "lineChartCSVLoader.data -> lineChart.data"
+      ]
+    }
+  }
+}

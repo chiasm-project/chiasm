@@ -9,7 +9,15 @@
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
+<<<<<<< HEAD
     Chiasm = require("../index"),
+=======
+
+    // Use JSDOM for DOM manipulation in Node.
+    // https://github.com/tmpvar/jsdom#creating-a-browser-like-window-object
+    document = require("jsdom").jsdom(),
+    Chiasm = require("../src/chiasm"),
+>>>>>>> gh-pages
     Model = require("model-js");
 
 // The simplest possible plugin just returns a model (using model.js).
@@ -263,6 +271,78 @@ describe("chiasm runtime", function () {
     });
   });
 
+<<<<<<< HEAD
+=======
+  it("append a component DOM node to the Chiasm container", function(done) {
+    var container = document.createElement("div");
+    var chiasm = Chiasm(container);
+
+    chiasm.plugins.domPlugin = DOMPlugin;
+    
+    chiasm.config = {
+      foo: {
+        plugin: "domPlugin",
+        state: {
+          message: "Hello"
+        }
+      }
+    };
+
+    chiasm.getComponent("foo").then(function(foo){
+      expect(container).to.exist();
+      expect(container.children.length).to.equal(1);
+
+      foo.when("message", function(message){
+        expect(message).to.equal("Hello");
+        expect(container.children[0].innerHTML).to.equal("Hello");
+        done();
+      });
+    });
+  });
+
+  it("clean up DOM node when component destroyed", function(done) {
+    var chiasm = Chiasm(document.createElement("container"));
+    chiasm.plugins.domPlugin = DOMPlugin;
+    
+    chiasm.config = {
+      foo: {
+        plugin: "domPlugin",
+        state: {
+          message: "Hello"
+        }
+      }
+    };
+
+    chiasm.when("config", function(config){
+      if("foo" in config){
+        chiasm.getComponent("foo").then(function(foo){
+          expect(chiasm.container).to.exist();
+          expect(chiasm.container.children.length).to.equal(1);
+
+          // Removing "foo" from the config should cause its
+          // destroy() method to be invoked.
+          chiasm.config = {};
+        });
+      } else {
+
+        // Use setTimeout here to queue the test to run AFTER
+        // the config update has been processed. This is necessary because
+        // config update processing is done on an async queue.
+        setTimeout(function(){
+
+          // Test that foo.destroy() removed foo's container.
+          expect(chiasm.container.children.length).to.equal(0);
+
+          // Test that the component has been removed internally.
+          expect(chiasm.componentExists("foo")).to.equal(false);
+
+          done();
+        },0);
+      }
+    });
+  });
+
+>>>>>>> gh-pages
   it("do not propagate from component to config after component destroyed", function(done) {
     var chiasm = Chiasm();
     chiasm.plugins.simplePlugin = SimplePlugin;

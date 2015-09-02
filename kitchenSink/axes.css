@@ -1,0 +1,32 @@
+/* Style the axes and labels for visualizations.
+   Curran Kelleher March 2015 */
+
+/* Tick mark labels */
+.axis .tick text {
+  font: 8pt sans-serif;
+}
+
+/* Axis labels */
+.axis text {
+  font: 14pt sans-serif;
+}
+
+/* Lines within axes. */
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+
+/* Style the title text at the top of the visualization. */
+.title-text {
+  text-anchor: middle;
+  font: 20pt sans-serif;
+}

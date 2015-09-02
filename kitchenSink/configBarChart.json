@@ -1,0 +1,40 @@
+{
+  "layout": {
+    "plugin": "layout",
+    "state": {
+      "layout": "barChart"
+    }
+  },
+  "barChart": {
+    "plugin": "barChart",
+    "state": {
+      "xColumn": "letter",
+      "xAxisLabel": "Letter",
+      "yColumn": "frequency",
+      "yAxisLabel": "Frequency",
+      "xAxisLabelOffset": 1.9,
+      "yAxisLabelOffset": 1.4,
+      "colorDefault": "#059e00",
+      "title": "Bar Chart",
+      "titleOffset": -0.269568,
+      "yDomainMin": 0
+    }
+  },
+  "barChartCSVLoader": {
+    "plugin": "csvLoader",
+    "state": {
+      "csvPath": "simpleBars.csv",
+      "numericColumns": [
+        "frequency"
+      ]
+    }
+  },
+  "links": {
+    "plugin": "links",
+    "state": {
+      "bindings": [
+        "barChartCSVLoader.data -> barChart.data"
+      ]
+    }
+  }
+}
