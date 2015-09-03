@@ -2,9 +2,10 @@
 (function (global){
 // chiasm.js
 // v0.2.0
+// github.com/chiasm-project/chiasm
 //
 // This file contains the core implementation of Chiasm, a runtime environment
-// and plugin architecture for interactive visualizations.
+// and plugin architecture for interactive data visualizations in the browser.
 //
 // The main purpose of this module is to maintain synchronization between a
 // dynamic JSON configuration structure and a set of components instantiated by
@@ -12,12 +13,8 @@
 // executed as component lifecycle actions that
 //
 //  * create components (plugin instances)
-//
 //  * set component properties
-//
-//  * unset component properties (reset default values when a property is
-//  removed from the configuration)
-//
+//  * unset component properties (reset default values when a property is removed from the configuration)
 //  * destroy components
 //
 // Draws from previous work found at
@@ -32,15 +29,16 @@ var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefi
 // All error message strings are kept track of here.
 var ErrorMessages = {
 
-  // This error occurs when a property is set via the configuration
-  // or is declared as a public property but does not have a default value.
-  // Every property set via the configuration must be declared by
-  // the corresponding plugin as a public property, and must have a default value.
-  // Without this strict enforcement , the behavior of Chiasm is unstable in the case that
-  // a property is set, then the property is later removed from the configuration (unset).
-  // The default values tell Chiasm what value to use after a property is unset.
-  // Without default values, unsetting a property would have no effect, which would
-  // make the state of the components out of sync with the configuration after an unset.
+  // This error occurs when a property is set via the configuration or is
+  // declared as a public property but does not have a default value.  Every
+  // property set via the configuration must be declared by the corresponding
+  // plugin as a public property, and must have a default value.  Without this
+  // strict enforcement , the behavior of Chiasm is unstable in the case that a
+  // property is set, then the property is later removed from the configuration
+  // (unset).  The default values tell Chiasm what value to use after a
+  // property is unset.  Without default values, unsetting a property would
+  // have no effect, which would make the state of the components out of sync
+  // with the configuration after an unset.
   missingDefault: "Default value for public property '${ property }' " +
                   "not specified for component with alias '${ alias }'.",
 
@@ -56,22 +54,23 @@ function createError(type, values){
   return Error(_.template(ErrorMessages[type])(values));
 }
 
-// Methods for creating and serializing Action objects.
-// These are used to express differences between configurations.
+// Methods for creating and serializing Action objects.  These are used to
+// express differences between configurations.
 //
-// Actions encapsulate all lifecycle events required to create,
-// manipulate, and tear down components.
+// Actions encapsulate all lifecycle events required to create, manipulate, and
+// tear down components.
 //
-// The primary purpose of Action objects is to support editing the
-// JSON application configuration at runtime. To avoid reloading the
-// entire configuration in response to each change, the difference between
-// two subsequent configurations is computed and expressed as an array of
-// Action objects, then the Action objects are applied to the runtime environment.
+// The primary purpose of Action objects is to support editing the JSON
+// application configuration at runtime. To avoid reloading the entire
+// configuration in response to each change, the difference between two
+// subsequent configurations is computed and expressed as an array of Action
+// objects, then the Action objects are applied to the runtime environment.
 //
 // Based on previous work found at:
 // https://github.com/curran/overseer/blob/master/src/action.js
 //
-// This architecture lays the foundation for undo/redo and real-time synchronization.
+// This architecture lays the foundation for undo/redo and real-time
+// synchronization.
 //
 // For synchronization, these Action objects should be directly translatable
 // into ShareJS operations for JSON transformation, documented at
