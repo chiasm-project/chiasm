@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/curran/chiasm.svg)](https://travis-ci.org/curran/chiasm)
 
-**Notice** This project is currently undergoing a massive refactoring and being split up into many modules. The full project state before the refactoring can be found on the [gh-pages branch](https://github.com/curran/chiasm/tree/gh-pages).
+**Notice** This project is currently undergoing a massive refactoring and being split up into many modules. The full project state before the refactoring can be found on the [archive_v0.1.9 branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
 
 Chiasm is a browser based runtime environment and plugin architecture for interactive visualizations. It allows plugins for data access, data transformation, and interactive visualization to be loaded and configured dynamically.
 
