@@ -287,6 +287,7 @@ function Chiasm(){
   // when this is called, but may be in the process of loading. In this case the
   // function polls for existence of the component until the timeout has elapsed.
   function getComponent(alias){
+
     var startTime = Date.now();
     return new Promise(function(resolve, reject){
       (function poll(){
@@ -323,6 +324,7 @@ function Chiasm(){
   function create(alias, plugin){
     return new Promise(function(resolve, reject){
       loadPlugin(plugin).then(function (constructor) {
+
 
         try {
 
@@ -477,6 +479,8 @@ function Chiasm(){
       }, reject);
     });
   }
+
+  // TODO get rid of this confusing dual API business for setting the config.
 
   // Handle setting configuration via `chiasm.config = ...`.
   // This will work, but any errors that occur will be thrown as exceptions.

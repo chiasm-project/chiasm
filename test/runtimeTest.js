@@ -53,52 +53,22 @@ function SimplePluginWithDefaults(){
   });
 }
 
-// This plugin demonstrates basic use of the DOM.
-// Notice that the chiasm instance is passed into the plugin,
-// and the chiasm has its own container DOM element, `chiasm.container`,
-// that components can access.
-function DOMPlugin(chiasm){
-  var model = Model({
-        publicProperties: ["message"],
-        message: ""
-      }),
-      div = document.createElement("div");
-  
-  chiasm.container.appendChild(div);
-
-  model.when("message", function(message){
-    div.innerHTML = message;
-  });
-
-  model.destroy = function(){
-    chiasm.container.removeChild(div);
-  };
-  
-  return model;
-}
-
 describe("chiasm runtime", function () {
 
   it("create a component via setConfig(config)", function(done) {
 
-    // Create a new Chiasm instance by invoking the constructor function.
     var chiasm = Chiasm();
 
     chiasm.plugins.simplestPlugin = SimplestPlugin;
     
-    // Set the Chiasm configuration.
     chiasm.setConfig({
       foo: {
         plugin: "simplestPlugin"
       }
     });
 
-    // Get the component created by the plugin.
     chiasm.getComponent("foo").then(function(foo){
-
-      // Make sure the component exists.
-      expect(foo).to.exist();
-
+      expect(foo).to.exist;
       done();
     });
   });
@@ -118,7 +88,7 @@ describe("chiasm runtime", function () {
     
     promise.then(function(){
       chiasm.getComponent("foo").then(function(foo){
-        expect(foo).to.exist();
+        expect(foo).to.exist;
         done();
       });
     });
@@ -136,7 +106,7 @@ describe("chiasm runtime", function () {
     };
 
     chiasm.getComponent("foo").then(function(foo){
-      expect(foo).to.exist();
+      expect(foo).to.exist;
       done();
     });
   });
@@ -173,7 +143,7 @@ describe("chiasm runtime", function () {
     };
 
     chiasm.getComponent("foo").then(function(foo){
-      expect(foo).to.exist();
+      expect(foo).to.exist;
       foo.when("message", function(message){
         expect(message).to.equal("Hello");
         done();
@@ -196,7 +166,7 @@ describe("chiasm runtime", function () {
     };
 
     chiasm.getComponent("foo").then(function(foo){
-      expect(foo).to.exist();
+      expect(foo).to.exist;
       foo.when(["x", "y"], function(x, y){
         expect(x).to.equal(5);
         expect(y).to.equal(10);
@@ -345,7 +315,7 @@ describe("chiasm runtime", function () {
     };
 
     chiasm.getComponent("foo").then(function(foo){
-      expect(foo).to.exist();
+      expect(foo).to.exist;
       foo.when("x", function(x){
         if(x === 50){
           chiasm.config = {
@@ -375,7 +345,7 @@ describe("chiasm runtime", function () {
       }
     }).then(function (){
       chiasm.getComponent("foo").then(function(foo){
-        expect(foo).to.exist();
+        expect(foo).to.exist;
         expect(foo.message).to.equal("Hello");
         chiasm.setConfig({
           foo: {
@@ -501,7 +471,7 @@ describe("chiasm runtime", function () {
     chiasm.timeout = 100;
     
     chiasm.getComponent("chart").catch(function(err){
-      expect(err).to.exist();
+      expect(err).to.exist;
       expect(err.message).to.equal("Component with alias 'chart' does not exist after timeout of 0.1 seconds exceeded.");
       done();
     });
