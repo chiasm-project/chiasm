@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/curran/chiasm.git"
+    "url": "https://github.com/chiasm-project/chiasm.git"
   },
   "keywords": [
     "data",
@@ -18,9 +18,9 @@
   "author": "Curran Kelleher",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/curran/chiasm/issues"
+    "url": "https://github.com/chiasm-project/chiasm/issues"
   },
-  "homepage": "https://github.com/curran/chiasm",
+  "homepage": "https://github.com/chiasm-project/chiasm",
   "dependencies": {
     "chai": "^3.2.0",
     "lodash": "^3.10.1",
