@@ -1,10 +1,17 @@
 ![Chiasm](http://curran.github.io/images/chiasm/chiasm_logo.png)
 
-[![Build Status](https://travis-ci.org/curran/chiasm.svg)](https://travis-ci.org/curran/chiasm)
+[![Build
+Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm)
 
-**Notice** This project is currently undergoing a massive refactoring and being split up into many modules. The full project state before the refactoring can be found on the [archive_v0.1.9 branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
+**Notice** This project is currently undergoing a massive refactoring and being
+split up into many modules. The full project state before the refactoring can be
+found on the [archive_v0.1.9
+branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
 
-Chiasm is a browser based runtime environment and plugin architecture for interactive visualizations. It allows plugins for data access, data transformation, and interactive visualization to be loaded and configured dynamically.
+Chiasm is a browser based runtime environment and plugin architecture for
+interactive visualizations. It allows plugins for data access, data
+transformation, and interactive visualization to be loaded and configured
+dynamically.
 
 Presentations on Chiasm:
 
@@ -24,19 +31,33 @@ Presentations on Chiasm:
 
 ## Overview
 
-The core concept is that visualizations can be instantiated, configured with data, arranged on the screen, and coupled together to produce interactive linked views. A JSON configuration structure defines the entire state of an application. The configuration refers to plugins by name, which are loaded at runtime and called upon to instantiate instances of visualizations and other components. Configuration changes can be made at runtime, and Chiasm will propagate the changes through the system. The JSON configuration also updates in response to user interactions with visualizations, so can be used to serialize visualization state resulting from user interactions.
+The core concept is that visualizations can be instantiated, configured with
+data, arranged on the screen, and coupled together to produce interactive linked
+views. A JSON configuration structure defines the entire state of an
+application. The configuration refers to plugins by name, which are loaded at
+runtime and called upon to instantiate instances of visualizations and other
+components. Configuration changes can be made at runtime, and Chiasm will
+propagate the changes through the system. The JSON configuration also updates in
+response to user interactions with visualizations, so can be used to serialize
+visualization state resulting from user interactions.
 
-Please give this repo a star if you think it is cool. Also feel free to submit issues for feature requests and bugs, or reach out to me if you're at all interested in collaborating on this curran.kelleher@gmail.com
+Please give this repo a star if you think it is cool. Also feel free to submit
+issues for feature requests and bugs, or reach out to me if you're at all
+interested in collaborating on this curran.kelleher@gmail.com
 
 ## Configuration Structure and Runtime Environment
 
-A configuration is a JSON object encapsulating an application state. This configuration contains specifications for a set of runtime components, each of which has:
+A configuration is a JSON object encapsulating an application state. This
+configuration contains specifications for a set of runtime components, each of
+which has:
 
  * a unique name (called the "alias" of the component),
  * an associated plugin that creates the runtime component, and
  * a key-value dictionary specifying the state of the runtime component.
 
-This organization allows a dynamic configuration structure to drive the state of the application, and also allows changes resulting from user interactions with runtime components to be propagated back to the configuration.
+This organization allows a dynamic configuration structure to drive the state of
+the application, and also allows changes resulting from user interactions with
+runtime components to be propagated back to the configuration.
 
 ![Runtime Diagram](http://curran.github.io/images/visEditor/Runtime.png)
 
@@ -48,8 +69,15 @@ This diagram illustrates that
 
 # The word "[Chiasm](http://www.merriam-webster.com/audio.php?file=chiasm02&word=chiasm&text=)"
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/1543%2CVisalius%27OpticChiasma.jpg" width=200>
+
 > The optic nerve fibres on the nasal sides of each retina cross over to the opposite side of the brain via the optic nerve at the optic **chiasm**. -- [Wikipedia](http://en.wikipedia.org/wiki/Optic_chiasm)
 
 > The **Chiasm** was a junction of interdimensional networks and corridors that allowed for instantaneous travel over long distances of space. - [Dr. Who](http://tardis.wikia.com/wiki/Chiasm)
 
-**Chiasm**, this project, relates to the above meanings of the word "Chiasm" in that it connects the "brain" of data to the "eyes" of users through interactive visualization. When Chiasm is set up to use an interactive data transformation like [Crossfilter](http://square.github.io/crossfilter/), the visualization system is an intersection of multidimensional "corridors" in data space, and interacting with it allows users to rapidly pivot and navigate through the data.
+**Chiasm**, this project, relates to the above meanings of the word "Chiasm" in
+that it connects the "brain" of data to the "eyes" of users through interactive
+visualization. When Chiasm is set up to use an interactive data transformation
+like [Crossfilter](http://square.github.io/crossfilter/), the visualization
+system is an intersection of multidimensional "corridors" in data space, and
+interacting with it allows users to rapidly pivot and navigate through the data.
