@@ -15,6 +15,7 @@ dynamically.
 
 Presentations on Chiasm:
 
+ * [Chiasm presentation at the Houston Data Visualization Meetup](https://www.youtube.com/watch?v=ivPSdm7Bz3o) - August 2015
  * [Lightning Demo (2 min) at San Francisco D3 Meetup](https://youtu.be/OJBwvSUgqQQ?t=5m58s) - July 2015
  * [Chiasm presentation at Alpine Data Labs](https://www.youtube.com/watch?v=9jh4E3-jxcQ&feature=youtu.be&a) ([slides](http://www.slideshare.net/currankelleher/chiasm)) - May 2015
  * [Constructing Interactive Data Visualizations - Plans for Chiasm](https://www.youtube.com/watch?v=GxGkHam33Cw) - February 2015
@@ -23,6 +24,9 @@ Presentations on Chiasm:
 
 | thumbnail | description  |
 |---|---|
+|
+[![](http://bl.ocks.org/curran/raw/b4aa88691528c0f0b1fa/thumbnail.png)](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa)
+| A self-contained example showing the new v0.2.0 plugin API. |
 | [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1) | A demo of the Chiasm configuration editor and nested box layout. |
 | [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125) | An example Chiasm configuration with a bar chart and line chart. |
 | [![](http://curran.github.io/images/chiasm/kitchenSink.png)](http://bl.ocks.org/curran/70ae30ab3b3eea62f84e) | The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart. |
