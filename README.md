@@ -24,6 +24,7 @@ Presentations on Chiasm:
 
 | thumbnail | description  |
 |---|---|
+| [![](http://bl.ocks.org/curran/raw/01aa2685f083b6c1b9fb/thumbnail.png)](http://bl.ocks.org/curran/01aa2685f083b6c1b9fb) | Map & Globe based on [Leaflet.js](leafletjs.com) and [This is a Globe](http://bl.ocks.org/mbostock/ba63c55dd2dbc3ab0127). |
 | [![](http://bl.ocks.org/curran/raw/b4aa88691528c0f0b1fa/thumbnail.png)](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa) | A self-contained example showing the new v0.2.0 plugin API. |
 | [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1) | A demo of the Chiasm configuration editor and nested box layout. |
 | [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125) | An example Chiasm configuration with a bar chart and line chart. |
