@@ -21,165 +21,19 @@
 //
 //  * https://github.com/curran/overseer/blob/master/src/overseer.js
 //
+//  * https://github.com/curran/dashboardScaffold
 var Model = require("model-js");
 var _ = require("lodash");
 
-// All error message strings are kept track of here.
-var ErrorMessages = {
-
-  // This error occurs when a property is set via the configuration or is
-  // declared as a public property but does not have a default value.  Every
-  // property set via the configuration must be declared by the corresponding
-  // plugin as a public property, and must have a default value.  Without this
-  // strict enforcement , the behavior of Chiasm is unstable in the case that a
-  // property is set, then the property is later removed from the configuration
-  // (unset).  The default values tell Chiasm what value to use after a
-  // property is unset.  Without default values, unsetting a property would
-  // have no effect, which would make the state of the components out of sync
-  // with the configuration after an unset.
-  missingDefault: "Default value for public property '${ property }' " +
-                  "not specified for component with alias '${ alias }'.",
-
-  // This error occurs when a component is requested via `chiasm.getComponent()`,
-  // but it fails to appear after a timeout elapses (`chiasm.timeout`).
-  componentTimeout: "Component with alias '${ alias }' does not exist " +
-                    "after timeout of ${ seconds } seconds exceeded."
-};
+var ErrorMessages = require("./src/error-messages");
+var Action = require("./src/action");
+var configDiff = require("./src/config-diff");
+var Queue = require("./src/queue");
 
 // Creates a new Error object with a message derived from the
 // error message template corresponding to the given type.
 function createError(type, values){
   return Error(_.template(ErrorMessages[type])(values));
-}
-
-// Methods for creating and serializing Action objects.  These are used to
-// express differences between configurations.
-//
-// Actions encapsulate all lifecycle events required to create, manipulate, and
-// tear down components.
-//
-// The primary purpose of Action objects is to support editing the JSON
-// application configuration at runtime. To avoid reloading the entire
-// configuration in response to each change, the difference between two
-// subsequent configurations is computed and expressed as an array of Action
-// objects, then the Action objects are applied to the runtime environment.
-//
-// Based on previous work found at:
-// https://github.com/curran/overseer/blob/master/src/action.js
-//
-// This architecture lays the foundation for undo/redo and real-time
-// synchronization.
-//
-// For synchronization, these Action objects should be directly translatable
-// into ShareJS operations for JSON transformation, documented at
-// https://github.com/ottypes/json0
-var Action = {
-  create: function (alias, plugin) {
-    return { method: "create", alias: alias, plugin: plugin };
-  },
-  destroy: function (alias) {
-    return { method: "destroy", alias: alias };
-  },
-  set: function (alias, property, value) {
-    return { method: "set", alias: alias, property: property, value: value };
-  },
-  unset: function (alias, property) {
-    return { method: "unset", alias: alias, property: property};
-  },
-  toString: function (action) {
-    return [
-      action.method + "(",
-      action.alias,
-      action.property !== undefined ? ", " + action.property : "",
-      action.value !== undefined ? ", " + action.value : "",
-      action.plugin !== undefined ? ", " + action.plugin : "",
-      ")"
-    ].join("");
-  }
-};
-
-// This function computes the difference ("diff") between two configurations.
-// The diff is returned as an array of Action objects.
-//
-// Based on pervious work found at
-// https://github.com/curran/overseer/blob/master/src/configDiff.js
-function configDiff(oldConfig, newConfig){
-  var actions = [],
-      newAliases = _.keys(newConfig),
-      oldAliases = _.keys(oldConfig);
-
-  // Handle removed aliases.
-  _.difference(oldAliases, newAliases).forEach(function (alias) {
-    actions.push(Action.destroy(alias));
-  });
-
-  // Handle updated aliases.
-  newAliases.forEach(function (alias) {
-    var oldModel = alias in oldConfig ? oldConfig[alias].state || {} : null,
-        newModel = newConfig[alias].state || {},
-        oldProperties = oldModel ? _.keys(oldModel) : [],
-        newProperties = _.keys(newModel),
-        oldPlugin = alias in oldConfig ? oldConfig[alias].plugin : null,
-        newPlugin = newConfig[alias].plugin;
-
-    // Handle changed plugin.
-    if(oldModel && (oldPlugin !== newPlugin)){
-
-      // Destroy the old component that used the old plugin.
-      actions.push(Action.destroy(alias));
-
-      // Create a new component that uses the new plugin.
-      oldModel = null;
-
-      // Set all properties on the newly created component.
-      oldProperties = [];
-    }
-
-    // Handle added aliases.
-    if(!oldModel){
-      actions.push(Action.create(alias, newConfig[alias].plugin));
-    }
-
-    // Handle added properties.
-    _.difference(newProperties, oldProperties).forEach(function (property) {
-      actions.push(Action.set(alias, property, newModel[property]));
-    });
-
-    // Handle removed properties.
-    _.difference(oldProperties, newProperties).forEach(function (property) {
-      actions.push(Action.unset(alias, property));
-    });
-
-    // Handle updated properties.
-    _.intersection(newProperties, oldProperties).forEach(function (property) {
-      if(!_.isEqual(oldModel[property], newModel[property])){
-        actions.push(Action.set(alias, property, newModel[property]));
-      }
-    });
-  });
-  return actions;
-}
-
-// An asynchronous batch queue for processing Actions using Promises.
-// Draws from https://www.promisejs.org/patterns/#all
-// The argument `process` is a function that takes as input
-// an item to process, and returns a promise.
-function Queue(process){
-
-  // This promise is replaced as each item is processed.
-  var ready = Promise.resolve(null);
-
-  // This function queues a batch of items and returns a promise for that batch.
-  return function(items){
-    return new Promise(function(resolve, reject){
-      items.forEach(function(item){
-        ready = ready.then(function() {
-          return process(item);
-        });
-      });
-      ready = ready.then(resolve, reject);
-    });
-  };
 }
 
 // Constructs a Chiasm instance.
@@ -287,6 +141,7 @@ function Chiasm(){
   // function polls for existence of the component until the timeout has elapsed.
   function getComponent(alias){
 
+    // TODO use queue for getting components to avoid race conditions.
     var startTime = Date.now();
     return new Promise(function(resolve, reject){
       (function poll(){
@@ -323,7 +178,6 @@ function Chiasm(){
   function create(alias, plugin){
     return new Promise(function(resolve, reject){
       loadPlugin(plugin).then(function (constructor) {
-
 
         try {
 
