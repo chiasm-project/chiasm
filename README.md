@@ -3,22 +3,36 @@
 [![Build
 Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm)
 
-**Notice** This project is currently undergoing a massive refactoring and being
-split up into many modules. The full project state before the refactoring can be
-found on the [archive_v0.1.9
-branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
+**Notice** This project is currently undergoing restructuring and being split up
+into many modules that live under
+[github.com/chiasm-project](https://github.com/chiasm-project). The full project
+state before the refactoring (including visualization and data loading plugins)
+can be found on the [archive_v0.1.9 branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
 
 Chiasm is a browser based runtime environment and plugin architecture for
 interactive visualizations. It allows plugins for data access, data
 transformation, and interactive visualization to be loaded and configured
 dynamically.
 
+This repository contains `chiasm.js`, the core runtime environment. Also check
+out these other projects under
+[github.com/chiasm-project](https://github.com/chiasm-project/):
+
+ * [chiasm-component](https://github.com/chiasm-project/chiasm-component) A common base for Chiasm plugins.
+ * [chiasm-layout](https://github.com/chiasm-project/chiasm-layout) Nested box layout for Chiasm components.
+
+Please give this repo a star if you think it is cool. Also feel free to submit
+GitHub issues for feature requests and bugs. For questions on using Chiasm and
+discussion in general, please post to the [Chiasm Google
+Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
+
 Presentations on Chiasm:
 
- * [Chiasm presentation at the Houston Data Visualization Meetup](https://www.youtube.com/watch?v=ivPSdm7Bz3o) - August 2015
+ * [Chiasm @ Houston Data Visualization Meetup](https://www.youtube.com/watch?v=ivPSdm7Bz3o) - August 2015
  * [Lightning Demo (2 min) at San Francisco D3 Meetup](https://youtu.be/OJBwvSUgqQQ?t=5m58s) - July 2015
  * [Chiasm presentation at Alpine Data Labs](https://www.youtube.com/watch?v=9jh4E3-jxcQ&feature=youtu.be&a) ([slides](http://www.slideshare.net/currankelleher/chiasm)) - May 2015
  * [Constructing Interactive Data Visualizations - Plans for Chiasm](https://www.youtube.com/watch?v=GxGkHam33Cw) - February 2015
+ * [Visualizing the Universal Data Cube](https://youtu.be/XVHyygdD1Kg?t=47m22s) - November 2014 - Doctoral dissertation defense including the blueprint for Chiasm.
 
 ## Examples
 
@@ -43,10 +57,6 @@ components. Configuration changes can be made at runtime, and Chiasm will
 propagate the changes through the system. The JSON configuration also updates in
 response to user interactions with visualizations, so can be used to serialize
 visualization state resulting from user interactions.
-
-Please give this repo a star if you think it is cool. Also feel free to submit
-issues for feature requests and bugs, or reach out to me if you're at all
-interested in collaborating on this curran.kelleher@gmail.com
 
 ## Configuration Structure and Runtime Environment
 
