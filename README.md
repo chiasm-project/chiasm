@@ -3,12 +3,6 @@
 [![Build
 Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm)
 
-**Notice** This project is currently undergoing restructuring and being split up
-into many modules that live under
-[github.com/chiasm-project](https://github.com/chiasm-project). The full project
-state before the refactoring (including visualization and data loading plugins)
-can be found on the [archive_v0.1.9 branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
-
 Chiasm is a browser based runtime environment and plugin architecture for
 interactive visualizations. It allows plugins for data access, data
 transformation, and interactive visualization to be loaded and configured
@@ -33,6 +27,12 @@ Presentations on Chiasm:
  * [Chiasm presentation at Alpine Data Labs](https://www.youtube.com/watch?v=9jh4E3-jxcQ&feature=youtu.be&a) ([slides](http://www.slideshare.net/currankelleher/chiasm)) - May 2015
  * [Constructing Interactive Data Visualizations - Plans for Chiasm](https://www.youtube.com/watch?v=GxGkHam33Cw) - February 2015
  * [Visualizing the Universal Data Cube](https://youtu.be/XVHyygdD1Kg?t=47m22s) - November 2014 - Doctoral dissertation defense including the blueprint for Chiasm.
+
+**Notice:** This project is currently undergoing restructuring and being split up
+into many modules that live under
+[github.com/chiasm-project](https://github.com/chiasm-project). The full project
+state before the refactoring (including visualization and data loading plugins)
+can be found on the [archive_v0.1.9 branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
 
 ## Examples
 
