@@ -1,5 +1,5 @@
 ![Chiasm](http://curran.github.io/images/chiasm/chiasm_logo.png)
-
+[github.com/chiasm-project](https://github.com/chiasm-project)
 [![Build
 Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm)
 
