@@ -17,12 +17,7 @@ out these other projects under
  * [chiasm-component](https://github.com/chiasm-project/chiasm-component) A common base for Chiasm plugins.
  * [chiasm-layout](https://github.com/chiasm-project/chiasm-layout) Nested box layout for Chiasm components.
 
-Please give this repo a star if you think it is cool. Also feel free to submit
-GitHub issues for feature requests and bugs. For questions on using Chiasm and
-discussion in general, please post to the [Chiasm Google
-Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
-
-Presentations on Chiasm:
+**Presentations on Chiasm:**
 
  * [Chiasm @ Houston Data Visualization Meetup](https://www.youtube.com/watch?v=ivPSdm7Bz3o) - August 2015
  * [Lightning Demo (2 min) at San Francisco D3 Meetup](https://youtu.be/OJBwvSUgqQQ?t=5m58s) - July 2015
@@ -36,10 +31,17 @@ into many modules that live under
 state before the refactoring (including visualization and data loading plugins)
 can be found on the [archive_v0.1.9 branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
 
+Please give this repo a star if you think it is cool. Also feel free to submit
+GitHub issues for feature requests and bugs. For questions on using Chiasm and
+discussion in general, please post to the [Chiasm Google
+Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
+
 ## Examples
 
 | thumbnail | description  |
 |---|---|
+| [![](http://bl.ocks.org/curran/raw/f01e2a07ece4a9ad62cb/thumbnail.png)](http://bl.ocks.org/curran/f01e2a07ece4a9ad62cb) | Thumbnails of visualization techniques from a 1984 paper. |
+
 | [![](https://gist.githubusercontent.com/curran/01aa2685f083b6c1b9fb/raw/d20ddb8e5b42360234654d1a0d9344e8e15ae716/thumbnail.png)](http://bl.ocks.org/curran/01aa2685f083b6c1b9fb) | Map & Globe based on [Leaflet.js](leafletjs.com) and [This is a Globe](http://bl.ocks.org/mbostock/ba63c55dd2dbc3ab0127). |
 | [![](http://bl.ocks.org/curran/raw/b4aa88691528c0f0b1fa/thumbnail.png)](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa) | A self-contained example showing the new v0.2.0 plugin API. |
 | [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1) | A demo of the Chiasm configuration editor and nested box layout. |
