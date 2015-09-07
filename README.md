@@ -41,6 +41,7 @@ Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
 | thumbnail | description  |
 |---|---|
 | [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
+| [![](http://bl.ocks.org/curran/raw/3cc1a2a289dddbd64688/thumbnail.png)](http://bl.ocks.org/curran/3cc1a2a289dddbd64688) | Fundamental visualization techniques in Chiasm. |
 | [![](http://bl.ocks.org/curran/raw/f01e2a07ece4a9ad62cb/thumbnail.png)](http://bl.ocks.org/curran/f01e2a07ece4a9ad62cb) | Thumbnails of visualization techniques from a 1984 paper. |
 | [![](https://gist.githubusercontent.com/curran/01aa2685f083b6c1b9fb/raw/d20ddb8e5b42360234654d1a0d9344e8e15ae716/thumbnail.png)](http://bl.ocks.org/curran/01aa2685f083b6c1b9fb) | Map & Globe based on [Leaflet.js](leafletjs.com) and [This is a Globe](http://bl.ocks.org/mbostock/ba63c55dd2dbc3ab0127). |
 | [![](http://bl.ocks.org/curran/raw/b4aa88691528c0f0b1fa/thumbnail.png)](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa) | A self-contained example showing the new v0.2.0 plugin API. |
