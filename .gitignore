@@ -1,6 +1,2 @@
 node_modules
-<<<<<<< HEAD
-=======
-bower_components
-chiasm-bundle.js
->>>>>>> gh-pages
+chiasm.js
