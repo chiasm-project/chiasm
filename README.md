@@ -13,6 +13,20 @@ You can include it in your page like this:
 <script src="http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js"></script>
 ```
 
+Chiasm can also be used as an [NPM module](https://www.npmjs.com/package/chiasm). To install, run
+
+```
+npm install -S chiasm
+```
+
+To use in your CommonJS JavaScript, you can require it like this:
+
+```
+var Chiasm = require("chiasm");
+```
+
+The resulting `Chiasm` variable is a constructor function for instances of the Chiasm runtime environment.
+
 ## Examples
 
 | thumbnail | description  |
