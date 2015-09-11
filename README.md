@@ -5,13 +5,28 @@
 [![Build
 Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm)
 
-Latest version: [http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js](http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js)
+Latest version: [chiasm-v0.2.0.js](http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js)
 
 You can include it in your page like this:
 
 ```html
 <script src="http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js"></script>
 ```
+
+## Examples
+
+| thumbnail | description  |
+|---|---|
+| [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
+| [![](https://gist.githubusercontent.com/curran/3cc1a2a289dddbd64688/raw/5a938f66c0cb728da8eaa28e15816fea74e57ae8/thumbnail.png)](http://bl.ocks.org/curran/3cc1a2a289dddbd64688) | Fundamental visualization techniques in Chiasm. |
+| [![](http://bl.ocks.org/curran/raw/f01e2a07ece4a9ad62cb/thumbnail.png)](http://bl.ocks.org/curran/f01e2a07ece4a9ad62cb) | Thumbnails of visualization techniques from a 1984 paper. |
+| [![](https://gist.githubusercontent.com/curran/01aa2685f083b6c1b9fb/raw/d20ddb8e5b42360234654d1a0d9344e8e15ae716/thumbnail.png)](http://bl.ocks.org/curran/01aa2685f083b6c1b9fb) | Map & Globe based on [Leaflet.js](leafletjs.com) and [This is a Globe](http://bl.ocks.org/mbostock/ba63c55dd2dbc3ab0127). |
+| [![](http://bl.ocks.org/curran/raw/b4aa88691528c0f0b1fa/thumbnail.png)](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa) | A self-contained example showing the new v0.2.0 plugin API. |
+| [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1) | A demo of the Chiasm configuration editor and nested box layout. |
+| [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125) | An example Chiasm configuration with a bar chart and line chart. |
+| [![](http://curran.github.io/images/chiasm/kitchenSink.png)](http://bl.ocks.org/curran/70ae30ab3b3eea62f84e) | The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart. |
+| [![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632) | An example demonstrating linked views and having a common color scale. |
+| [![](http://bl.ocks.org/curran/raw/19d42e98ce25291eb45d/thumbnail.png)](http://bl.ocks.org/curran/19d42e98ce25291eb45d) | A more complex example with linked views using Crossfilter and loading data from an API. |
 
 ## Overview
 
@@ -24,8 +39,9 @@ This repository contains `chiasm.js`, the core runtime environment. Also check
 out these other projects under
 [github.com/chiasm-project](https://github.com/chiasm-project/):
 
- * [chiasm-component](https://github.com/chiasm-project/chiasm-component) A common base for Chiasm plugins.
+ * [chiasm-component](https://github.com/chiasm-project/chiasm-component) A common base for components.
  * [chiasm-layout](https://github.com/chiasm-project/chiasm-layout) Nested box layout for Chiasm components.
+ * [chiasm-links](https://github.com/chiasm-project/chiasm-links) Data binding for Chiasm components.
 
 ## Presentations on Chiasm
 
@@ -51,32 +67,20 @@ Feel free to submit GitHub issues for feature requests, bugs, and feedback in ge
 
 There is also a [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
 
-## Examples
 
-| thumbnail | description  |
-|---|---|
-| [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
-| [![](https://gist.githubusercontent.com/curran/3cc1a2a289dddbd64688/raw/5a938f66c0cb728da8eaa28e15816fea74e57ae8/thumbnail.png)](http://bl.ocks.org/curran/3cc1a2a289dddbd64688) | Fundamental visualization techniques in Chiasm. |
-| [![](http://bl.ocks.org/curran/raw/f01e2a07ece4a9ad62cb/thumbnail.png)](http://bl.ocks.org/curran/f01e2a07ece4a9ad62cb) | Thumbnails of visualization techniques from a 1984 paper. |
-| [![](https://gist.githubusercontent.com/curran/01aa2685f083b6c1b9fb/raw/d20ddb8e5b42360234654d1a0d9344e8e15ae716/thumbnail.png)](http://bl.ocks.org/curran/01aa2685f083b6c1b9fb) | Map & Globe based on [Leaflet.js](leafletjs.com) and [This is a Globe](http://bl.ocks.org/mbostock/ba63c55dd2dbc3ab0127). |
-| [![](http://bl.ocks.org/curran/raw/b4aa88691528c0f0b1fa/thumbnail.png)](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa) | A self-contained example showing the new v0.2.0 plugin API. |
-| [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1) | A demo of the Chiasm configuration editor and nested box layout. |
-| [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125) | An example Chiasm configuration with a bar chart and line chart. |
-| [![](http://curran.github.io/images/chiasm/kitchenSink.png)](http://bl.ocks.org/curran/70ae30ab3b3eea62f84e) | The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart. |
-| [![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632) | An example demonstrating linked views and having a common color scale. |
-| [![](http://bl.ocks.org/curran/raw/19d42e98ce25291eb45d/thumbnail.png)](http://bl.ocks.org/curran/19d42e98ce25291eb45d) | A more complex example with linked views using Crossfilter and loading data from an API. |
+# Background
 
-## Overview
-
-The core concept is that visualizations can be instantiated, configured with
+The core concept of this project is that interactive graphics, particularly data visualizations, can be instantiated, configured with
 data, arranged on the screen, and coupled together to produce interactive linked
-views. A JSON configuration structure defines the entire state of an
-application. The configuration refers to plugins by name, which are loaded at
-runtime and called upon to instantiate instances of visualizations and other
+views.
+
+A JSON configuration structure defines the entire state of a Chiasm
+application. The configuration refers to plugins by name, which are invoked to instantiate instances of 
 components. Configuration changes can be made at runtime, and Chiasm will
 propagate the changes through the system. The JSON configuration also updates in
-response to user interactions with visualizations, so can be used to serialize
-visualization state resulting from user interactions.
+response to changes in the state of the component's [Model](https://github.com/curran/model) at runtime.
+
+With visualizations, this means that the state users arrived at by interacting with the system (customizing visualization parameters, changing the columns visualized, or changing colors) can be serialized. This makes it possible to build a system that stores and retrieves editable Chiasm configurations.
 
 ## Configuration Structure and Runtime Environment
 
