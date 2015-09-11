@@ -7,11 +7,15 @@ Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://
 
 Latest version: [chiasm-v0.2.0.js](http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js)
 
+## Usage
+
 You can include it in your page like this:
 
 ```html
 <script src="http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js"></script>
 ```
+
+This will introduce a global variable `Chiasm`, which is a constructor function for instances of the Chiasm runtime environment.
 
 Chiasm can also be used as an [NPM module](https://www.npmjs.com/package/chiasm). To install, run
 
@@ -24,8 +28,6 @@ To use in your CommonJS JavaScript, you can require it like this:
 ```
 var Chiasm = require("chiasm");
 ```
-
-The resulting `Chiasm` variable is a constructor function for instances of the Chiasm runtime environment.
 
 ## Examples
 
