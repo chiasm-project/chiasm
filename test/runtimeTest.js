@@ -9,7 +9,7 @@
 // Use the "expect" assert style.
 // See http://chaijs.com/guide/styles/
 var expect = require("chai").expect,
-    Chiasm = require("../index"),
+    Chiasm = require("../src/index"),
     Model = require("model-js");
 
 // The simplest possible plugin just returns a model (using model.js).

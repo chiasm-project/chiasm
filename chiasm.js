@@ -1,4 +1,144 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Chiasm = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// Methods for creating and serializing Action objects.  These are used to
+// express differences between configurations.
+//
+// Actions encapsulate all lifecycle events required to create, manipulate, and
+// tear down components.
+//
+// The primary purpose of Action objects is to support editing the JSON
+// application configuration at runtime. To avoid reloading the entire
+// configuration in response to each change, the difference between two
+// subsequent configurations is computed and expressed as an array of Action
+// objects, then the Action objects are applied to the runtime environment.
+//
+// Based on previous work found at:
+// https://github.com/curran/overseer/blob/master/src/action.js
+//
+// This architecture lays the foundation for undo/redo and real-time
+// synchronization.
+//
+// For synchronization, these Action objects should be directly translatable
+// into ShareJS operations for JSON transformation, documented at
+// https://github.com/ottypes/json0
+var Action = {
+  create: function (alias, plugin) {
+    return { method: "create", alias: alias, plugin: plugin };
+  },
+  destroy: function (alias) {
+    return { method: "destroy", alias: alias };
+  },
+  set: function (alias, property, value) {
+    return { method: "set", alias: alias, property: property, value: value };
+  },
+  unset: function (alias, property) {
+    return { method: "unset", alias: alias, property: property};
+  },
+  toString: function (action) {
+    return [
+      action.method + "(",
+      action.alias,
+      action.property !== undefined ? ", " + action.property : "",
+      action.value !== undefined ? ", " + action.value : "",
+      action.plugin !== undefined ? ", " + action.plugin : "",
+      ")"
+    ].join("");
+  }
+};
+
+module.exports = Action;
+
+},{}],2:[function(require,module,exports){
+(function (global){
+// This function computes the difference ("diff") between two configurations.
+// The diff is returned as an array of Action objects.
+
+var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
+var Action = require("./action");
+
+function configDiff(oldConfig, newConfig){
+  var actions = [],
+      newAliases = _.keys(newConfig),
+      oldAliases = _.keys(oldConfig);
+
+  // Handle removed aliases.
+  _.difference(oldAliases, newAliases).forEach(function (alias) {
+    actions.push(Action.destroy(alias));
+  });
+
+  // Handle updated aliases.
+  newAliases.forEach(function (alias) {
+    var oldModel = alias in oldConfig ? oldConfig[alias].state || {} : null,
+        newModel = newConfig[alias].state || {},
+        oldProperties = oldModel ? _.keys(oldModel) : [],
+        newProperties = _.keys(newModel),
+        oldPlugin = alias in oldConfig ? oldConfig[alias].plugin : null,
+        newPlugin = newConfig[alias].plugin;
+
+    // Handle changed plugin.
+    if(oldModel && (oldPlugin !== newPlugin)){
+
+      // Destroy the old component that used the old plugin.
+      actions.push(Action.destroy(alias));
+
+      // Create a new component that uses the new plugin.
+      oldModel = null;
+
+      // Set all properties on the newly created component.
+      oldProperties = [];
+    }
+
+    // Handle added aliases.
+    if(!oldModel){
+      actions.push(Action.create(alias, newConfig[alias].plugin));
+    }
+
+    // Handle added properties.
+    _.difference(newProperties, oldProperties).forEach(function (property) {
+      actions.push(Action.set(alias, property, newModel[property]));
+    });
+
+    // Handle removed properties.
+    _.difference(oldProperties, newProperties).forEach(function (property) {
+      actions.push(Action.unset(alias, property));
+    });
+
+    // Handle updated properties.
+    _.intersection(newProperties, oldProperties).forEach(function (property) {
+      if(!_.isEqual(oldModel[property], newModel[property])){
+        actions.push(Action.set(alias, property, newModel[property]));
+      }
+    });
+  });
+  return actions;
+}
+module.exports = configDiff;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./action":1}],3:[function(require,module,exports){
+// All error message strings are kept track of here.
+var ErrorMessages = {
+
+  // This error occurs when a property is set via the configuration or is
+  // declared as a public property but does not have a default value.  Every
+  // property set via the configuration must be declared by the corresponding
+  // plugin as a public property, and must have a default value.  Without this
+  // strict enforcement , the behavior of Chiasm is unstable in the case that a
+  // property is set, then the property is later removed from the configuration
+  // (unset).  The default values tell Chiasm what value to use after a
+  // property is unset.  Without default values, unsetting a property would
+  // have no effect, which would make the state of the components out of sync
+  // with the configuration after an unset.
+  missingDefault: "Default value for public property '${ property }' " +
+                  "not specified for component with alias '${ alias }'.",
+
+  // This error occurs when a component is requested via `chiasm.getComponent()`,
+  // but it fails to appear after a timeout elapses (`chiasm.timeout`).
+  componentTimeout: "Component with alias '${ alias }' does not exist " +
+                    "after timeout of ${ seconds } seconds exceeded."
+};
+module.exports = ErrorMessages;
+
+},{}],4:[function(require,module,exports){
 (function (global){
 // chiasm.js
 // v0.2.0
@@ -27,10 +167,11 @@
 var Model = (typeof window !== "undefined" ? window['Model'] : typeof global !== "undefined" ? global['Model'] : null);
 var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
 
-var ErrorMessages = require("./src/error-messages");
-var Action = require("./src/action");
-var configDiff = require("./src/config-diff");
-var Queue = require("./src/queue");
+// Load core Chiasm modules.
+var configDiff    = require("./config-diff");
+var Action        = require("./action");
+var Queue         = require("./queue");
+var ErrorMessages = require("./error-messages");
 
 // Creates a new Error object with a message derived from the
 // error message template corresponding to the given type.
@@ -395,147 +536,7 @@ Chiasm.Action = Action;
 module.exports = Chiasm;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./src/action":2,"./src/config-diff":3,"./src/error-messages":4,"./src/queue":5}],2:[function(require,module,exports){
-// Methods for creating and serializing Action objects.  These are used to
-// express differences between configurations.
-//
-// Actions encapsulate all lifecycle events required to create, manipulate, and
-// tear down components.
-//
-// The primary purpose of Action objects is to support editing the JSON
-// application configuration at runtime. To avoid reloading the entire
-// configuration in response to each change, the difference between two
-// subsequent configurations is computed and expressed as an array of Action
-// objects, then the Action objects are applied to the runtime environment.
-//
-// Based on previous work found at:
-// https://github.com/curran/overseer/blob/master/src/action.js
-//
-// This architecture lays the foundation for undo/redo and real-time
-// synchronization.
-//
-// For synchronization, these Action objects should be directly translatable
-// into ShareJS operations for JSON transformation, documented at
-// https://github.com/ottypes/json0
-var Action = {
-  create: function (alias, plugin) {
-    return { method: "create", alias: alias, plugin: plugin };
-  },
-  destroy: function (alias) {
-    return { method: "destroy", alias: alias };
-  },
-  set: function (alias, property, value) {
-    return { method: "set", alias: alias, property: property, value: value };
-  },
-  unset: function (alias, property) {
-    return { method: "unset", alias: alias, property: property};
-  },
-  toString: function (action) {
-    return [
-      action.method + "(",
-      action.alias,
-      action.property !== undefined ? ", " + action.property : "",
-      action.value !== undefined ? ", " + action.value : "",
-      action.plugin !== undefined ? ", " + action.plugin : "",
-      ")"
-    ].join("");
-  }
-};
-
-module.exports = Action;
-
-},{}],3:[function(require,module,exports){
-(function (global){
-// This function computes the difference ("diff") between two configurations.
-// The diff is returned as an array of Action objects.
-
-var _ = (typeof window !== "undefined" ? window['_'] : typeof global !== "undefined" ? global['_'] : null);
-var Action = require("./action");
-
-function configDiff(oldConfig, newConfig){
-  var actions = [],
-      newAliases = _.keys(newConfig),
-      oldAliases = _.keys(oldConfig);
-
-  // Handle removed aliases.
-  _.difference(oldAliases, newAliases).forEach(function (alias) {
-    actions.push(Action.destroy(alias));
-  });
-
-  // Handle updated aliases.
-  newAliases.forEach(function (alias) {
-    var oldModel = alias in oldConfig ? oldConfig[alias].state || {} : null,
-        newModel = newConfig[alias].state || {},
-        oldProperties = oldModel ? _.keys(oldModel) : [],
-        newProperties = _.keys(newModel),
-        oldPlugin = alias in oldConfig ? oldConfig[alias].plugin : null,
-        newPlugin = newConfig[alias].plugin;
-
-    // Handle changed plugin.
-    if(oldModel && (oldPlugin !== newPlugin)){
-
-      // Destroy the old component that used the old plugin.
-      actions.push(Action.destroy(alias));
-
-      // Create a new component that uses the new plugin.
-      oldModel = null;
-
-      // Set all properties on the newly created component.
-      oldProperties = [];
-    }
-
-    // Handle added aliases.
-    if(!oldModel){
-      actions.push(Action.create(alias, newConfig[alias].plugin));
-    }
-
-    // Handle added properties.
-    _.difference(newProperties, oldProperties).forEach(function (property) {
-      actions.push(Action.set(alias, property, newModel[property]));
-    });
-
-    // Handle removed properties.
-    _.difference(oldProperties, newProperties).forEach(function (property) {
-      actions.push(Action.unset(alias, property));
-    });
-
-    // Handle updated properties.
-    _.intersection(newProperties, oldProperties).forEach(function (property) {
-      if(!_.isEqual(oldModel[property], newModel[property])){
-        actions.push(Action.set(alias, property, newModel[property]));
-      }
-    });
-  });
-  return actions;
-}
-module.exports = configDiff;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./action":2}],4:[function(require,module,exports){
-// All error message strings are kept track of here.
-var ErrorMessages = {
-
-  // This error occurs when a property is set via the configuration or is
-  // declared as a public property but does not have a default value.  Every
-  // property set via the configuration must be declared by the corresponding
-  // plugin as a public property, and must have a default value.  Without this
-  // strict enforcement , the behavior of Chiasm is unstable in the case that a
-  // property is set, then the property is later removed from the configuration
-  // (unset).  The default values tell Chiasm what value to use after a
-  // property is unset.  Without default values, unsetting a property would
-  // have no effect, which would make the state of the components out of sync
-  // with the configuration after an unset.
-  missingDefault: "Default value for public property '${ property }' " +
-                  "not specified for component with alias '${ alias }'.",
-
-  // This error occurs when a component is requested via `chiasm.getComponent()`,
-  // but it fails to appear after a timeout elapses (`chiasm.timeout`).
-  componentTimeout: "Component with alias '${ alias }' does not exist " +
-                    "after timeout of ${ seconds } seconds exceeded."
-};
-module.exports = ErrorMessages;
-
-},{}],5:[function(require,module,exports){
+},{"./action":1,"./config-diff":2,"./error-messages":3,"./queue":5}],5:[function(require,module,exports){
 // An asynchronous batch queue for processing Actions using Promises.
 // Draws from https://www.promisejs.org/patterns/#all
 // The argument `process` is a function that takes as input
@@ -559,5 +560,5 @@ function Queue(process){
 }
 module.exports = Queue;
 
-},{}]},{},[1])(1)
+},{}]},{},[4])(4)
 });

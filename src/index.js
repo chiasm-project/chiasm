@@ -25,10 +25,11 @@
 var Model = require("model-js");
 var _ = require("lodash");
 
-var ErrorMessages = require("./src/error-messages");
-var Action = require("./src/action");
-var configDiff = require("./src/config-diff");
-var Queue = require("./src/queue");
+// Load core Chiasm modules.
+var configDiff    = require("./config-diff");
+var Action        = require("./action");
+var Queue         = require("./queue");
+var ErrorMessages = require("./error-messages");
 
 // Creates a new Error object with a message derived from the
 // error message template corresponding to the given type.

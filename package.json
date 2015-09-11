@@ -2,9 +2,9 @@
   "name": "chiasm",
   "version": "0.2.0",
   "description": "A browser based environment for interactive data visualizations.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "pretest": "browserify -o chiasm.js -s Chiasm index.js",
+    "pretest": "browserify -o chiasm.js -s Chiasm src/index.js",
     "test": "mocha"
   },
   "repository": {
