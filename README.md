@@ -78,15 +78,6 @@ into many modules that live under
 state before the refactoring (including visualization and data loading plugins)
 can be found on the [archive_v0.1.9 branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
 
-## Contributing
-
-Please give this repo a star if you think it is cool.
-
-Feel free to submit GitHub issues for feature requests, bugs, and feedback in general.
-
-There is also a [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
-
-
 # Background
 
 The core concept of this project is that interactive graphics, particularly data visualizations, can be instantiated, configured with
@@ -137,3 +128,12 @@ visualization. When Chiasm is set up to use an interactive data transformation
 like [Crossfilter](http://square.github.io/crossfilter/), the visualization
 system is an intersection of multidimensional "corridors" in data space, and
 interacting with it allows users to rapidly pivot and navigate through the data.
+
+
+## Contributing
+
+Please give this repository a star if you think it is cool.
+
+Feel free to submit GitHub issues for feature requests, bugs, and feedback in general.
+
+There is also a [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project) for general discussion. If you have made anything using Chiasm, please post a link there.
