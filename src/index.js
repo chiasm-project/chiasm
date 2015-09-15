@@ -169,8 +169,9 @@ function Chiasm(){
       // If the plugin has been set up in `chiasm.plugins`, use it.
       if(plugin in chiasm.plugins){
         resolve(chiasm.plugins[plugin]);
-      } else if (typeof System !== "undefined" && typeof System.amdRequire !== "undefined") {
-        System.amdRequire([plugin], resolve, reject);
+      } else {
+        reject(new Error("Plugin '" + plugin + "' has not defined in chiasm.plugins."));
+        // TODO think about adding a hook for dynamic plugin loading
       }
     });
   }
