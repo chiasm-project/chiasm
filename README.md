@@ -1,12 +1,31 @@
 ![Chiasm](http://curran.github.io/images/chiasm/chiasm_logo.png)
 
-[github.com/chiasm-project](https://github.com/chiasm-project) [![Build
+[![Build
 Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm) Latest version: [chiasm-v0.2.0.js](http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js)
 
 Chiasm is a browser based runtime environment and component architecture for
 interactive data visualizations. It allows plugins for data access, data
 transformation, and interactive visualization to be loaded and configured
-dynamically. This repository contains `chiasm.js`, the core runtime environment.
+dynamically.
+
+## Examples
+
+| thumbnail | description  |
+|---|---|
+| [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
+| [![](http://bl.ocks.org/curran/raw/f01e2a07ece4a9ad62cb/thumbnail.png)](http://bl.ocks.org/curran/f01e2a07ece4a9ad62cb) | Thumbnails of visualization techniques from a 1984 paper. |
+| [![](https://gist.githubusercontent.com/curran/3cc1a2a289dddbd64688/raw/5a938f66c0cb728da8eaa28e15816fea74e57ae8/thumbnail.png)](http://bl.ocks.org/curran/3cc1a2a289dddbd64688) | Fundamental visualization techniques in Chiasm.  |
+| [![](http://bl.ocks.org/curran/raw/d5252d37917ab6eab032/thumbnail.png)](http://bl.ocks.org/curran/d5252d37917ab6eab032) | Focus + Context Area Charts.|
+| [![](http://bl.ocks.org/curran/raw/87d038562333a7ad4a64/thumbnail.png)](http://bl.ocks.org/curran/87d038562333a7ad4a64) | Crossfilter & Chiasm.|
+| [![](http://bl.ocks.org/curran/raw/d1e9ea2850047562be09/thumbnail.png)](http://bl.ocks.org/curran/d1e9ea2850047562be09) | Focus + Context Scatter Plots.|
+| [![](https://gist.githubusercontent.com/curran/01aa2685f083b6c1b9fb/raw/d20ddb8e5b42360234654d1a0d9344e8e15ae716/thumbnail.png)](http://bl.ocks.org/curran/01aa2685f083b6c1b9fb) | Map & Globe based on [Leaflet.js](leafletjs.com) and [This is a Globe](http://bl.ocks.org/mbostock/ba63c55dd2dbc3ab0127). |
+| [![](http://bl.ocks.org/curran/raw/81271937fa94fdbdd854/thumbnail.png)](http://bl.ocks.org/curran/81271937fa94fdbdd854) | Migrant Deaths Map with Leaflet. |
+| [![](http://bl.ocks.org/curran/raw/b4aa88691528c0f0b1fa/thumbnail.png)](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa) | A self-contained example showing the new v0.2.0 plugin API. |
+| [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1) | A demo of the Chiasm configuration editor and nested box layout. |
+| [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125) | An example Chiasm configuration with a bar chart and line chart. |
+| [![](http://curran.github.io/images/chiasm/kitchenSink.png)](http://bl.ocks.org/curran/70ae30ab3b3eea62f84e) | The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart. |
+| [![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632) | An example demonstrating linked views and having a common color scale. |
+| [![](http://bl.ocks.org/curran/raw/19d42e98ce25291eb45d/thumbnail.png)](http://bl.ocks.org/curran/19d42e98ce25291eb45d) | A more complex example with linked views using Crossfilter and loading data from an API. |
 
 ## Usage
 
@@ -29,25 +48,6 @@ To use in your CommonJS JavaScript, you can require it like this:
 ```
 var Chiasm = require("chiasm");
 ```
-
-## Examples
-
-| thumbnail | description  |
-|---|---|
-| [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
-| [![](http://bl.ocks.org/curran/raw/f01e2a07ece4a9ad62cb/thumbnail.png)](http://bl.ocks.org/curran/f01e2a07ece4a9ad62cb) | Thumbnails of visualization techniques from a 1984 paper. |
-| [![](https://gist.githubusercontent.com/curran/3cc1a2a289dddbd64688/raw/5a938f66c0cb728da8eaa28e15816fea74e57ae8/thumbnail.png)](http://bl.ocks.org/curran/3cc1a2a289dddbd64688) | Fundamental visualization techniques in Chiasm.  |
-| [![](http://bl.ocks.org/curran/raw/d5252d37917ab6eab032/thumbnail.png)](http://bl.ocks.org/curran/d5252d37917ab6eab032) | Focus + Context Area Charts.|
-| [![](http://bl.ocks.org/curran/raw/87d038562333a7ad4a64/thumbnail.png)](http://bl.ocks.org/curran/87d038562333a7ad4a64) | Crossfilter & Chiasm.|
-| [![](http://bl.ocks.org/curran/raw/d1e9ea2850047562be09/thumbnail.png)](http://bl.ocks.org/curran/d1e9ea2850047562be09) | Focus + Context Scatter Plots.|
-| [![](https://gist.githubusercontent.com/curran/01aa2685f083b6c1b9fb/raw/d20ddb8e5b42360234654d1a0d9344e8e15ae716/thumbnail.png)](http://bl.ocks.org/curran/01aa2685f083b6c1b9fb) | Map & Globe based on [Leaflet.js](leafletjs.com) and [This is a Globe](http://bl.ocks.org/mbostock/ba63c55dd2dbc3ab0127). |
-| [![](http://bl.ocks.org/curran/raw/81271937fa94fdbdd854/thumbnail.png)](http://bl.ocks.org/curran/81271937fa94fdbdd854) | Migrant Deaths Map with Leaflet. |
-| [![](http://bl.ocks.org/curran/raw/b4aa88691528c0f0b1fa/thumbnail.png)](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa) | A self-contained example showing the new v0.2.0 plugin API. |
-| [![](http://bl.ocks.org/curran/raw/3f0b1128d74308fc8fe1/thumbnail.png)](http://bl.ocks.org/curran/3f0b1128d74308fc8fe1) | A demo of the Chiasm configuration editor and nested box layout. |
-| [![](http://bl.ocks.org/curran/raw/4ce2ee825811f1c32125/thumbnail.png)](http://bl.ocks.org/curran/4ce2ee825811f1c32125) | An example Chiasm configuration with a bar chart and line chart. |
-| [![](http://curran.github.io/images/chiasm/kitchenSink.png)](http://bl.ocks.org/curran/70ae30ab3b3eea62f84e) | The Chiasm kitchen sink (<a href="https://github.com/curran/chiasm/tree/gh-pages/kitchenSink">code</a>), showing various configurations including scatter plot, line chart, and bar chart. |
-| [![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632) | An example demonstrating linked views and having a common color scale. |
-| [![](http://bl.ocks.org/curran/raw/19d42e98ce25291eb45d/thumbnail.png)](http://bl.ocks.org/curran/19d42e98ce25291eb45d) | A more complex example with linked views using Crossfilter and loading data from an API. |
 
 ## Components
 
@@ -133,11 +133,6 @@ like [Crossfilter](http://square.github.io/crossfilter/), the visualization
 system is an intersection of multidimensional "corridors" in data space, and
 interacting with it allows users to rapidly pivot and navigate through the data.
 
-
 ## Contributing
 
-Please give this repository a star if you think it is cool.
-
-Feel free to submit GitHub issues for feature requests, bugs, and feedback in general.
-
-There is also a [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project) for general discussion. If you have made anything using Chiasm, please post a link there.
+Any contributions or involvement is welcome. Feel free to [submit an issue](https://github.com/chiasm-project/chiasm/issues) for feature requests and bugs. For feedback and discussion in general, please post to the [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
