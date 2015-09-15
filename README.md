@@ -64,7 +64,8 @@ There are also the following other components that exist in various examples:
  * [chiasm-crossfilter.js](https://gist.github.com/curran/87d038562333a7ad4a64#file-chiasm-crossfilter-js) An integration with [Crossfilter.js](https://github.com/square/crossfilter).
  * [coloredRectangle.js](https://gist.github.com/curran/1af08ad6cdb01707c33f#file-coloredrectangle-js) in [Chiasm Boilerplate](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) A colored rectangle that changes color when you click on it.
  * [dummyVis.js](https://gist.github.com/curran/b4aa88691528c0f0b1fa#file-dummyvis-js) in [Chiasm Foundation](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa). A colored rectangle with a draggable X and text label.
- * [chiasm-leaflet.js](https://gist.github.com/curran/81271937fa94fdbdd854#file-chiasm-leaflet-js) An integration with [Leaflet.js](leafletjs.com).
+ * [chiasm-leaflet.js](https://gist.github.com/curran/81271937fa94fdbdd854#file-chiasm-leaflet-js) in [Migrant Deaths Map](http://bl.ocks.org/curran/81271937fa94fdbdd854) and [Map & Globe](http://bl.ocks.org/curran/01aa2685f083b6c1b9fb) An integration with [Leaflet.js](leafletjs.com).
+   * [bubble-map.js](https://gist.github.com/curran/81271937fa94fdbdd854#file-bubble-map-js) from [Migrant Deaths Map](http://bl.ocks.org/curran/81271937fa94fdbdd854) An extension of chiasm-leaflet.js that visualizes data using circles on a map.
 
 ## Presentations on Chiasm
 
