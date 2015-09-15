@@ -50,21 +50,19 @@ var Chiasm = require("chiasm");
 
 ## Components
 
+The subproject [chiasm-component](https://github.com/chiasm-project/chiasm-component) defines a common base for Chiasm components.
 
-A component runtime environment is nothing without components.
-
-The Chiasm subproject [chiasm-component](https://github.com/chiasm-project/chiasm-component) defines a common base for Chiasm components. For an example component that defines an interactive graphic (), see .
-
-Several core components are subprojects under [github.com/chiasm-project](https://github.com/chiasm-project/):
+Several components are also subprojects under [github.com/chiasm-project](https://github.com/chiasm-project/):
 
  * [chiasm-layout](https://github.com/chiasm-project/chiasm-layout) Nested box layout for Chiasm components.
  * [chiasm-links](https://github.com/chiasm-project/chiasm-links) Data binding for Chiasm components.
 
 There are also the following other components that exist in various examples:
 
+ * [dataLoader.js](https://gist.github.com/curran/d1e9ea2850047562be09#file-dataloader-js) in [Focus + Context Scatter Plots](http://bl.ocks.org/curran/d1e9ea2850047562be09) A component that loads and parses CSV files.
+ * [chiasm-crossfilter.js](https://gist.github.com/curran/87d038562333a7ad4a64#file-chiasm-crossfilter-js) An integration with [Crossfilter.js](https://github.com/square/crossfilter).
  * [coloredRectangle.js](https://gist.github.com/curran/1af08ad6cdb01707c33f#file-coloredrectangle-js) in [Chiasm Boilerplate](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) A colored rectangle that changes color when you click on it.
  * [dummyVis.js](https://gist.github.com/curran/b4aa88691528c0f0b1fa#file-dummyvis-js) in [Chiasm Foundation](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa). A colored rectangle with a draggable X and text label.
- * [chiasm-crossfilter.js](https://gist.github.com/curran/87d038562333a7ad4a64#file-chiasm-crossfilter-js) An integration with [Crossfilter.js](https://github.com/square/crossfilter).
  * [chiasm-leaflet.js](https://gist.github.com/curran/81271937fa94fdbdd854#file-chiasm-leaflet-js) An integration with [Leaflet.js](leafletjs.com).
 
 ## Presentations on Chiasm
