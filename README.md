@@ -1,15 +1,16 @@
 ![Chiasm](http://curran.github.io/images/chiasm/chiasm_logo.png)
 
-[github.com/chiasm-project](https://github.com/chiasm-project)
+[github.com/chiasm-project](https://github.com/chiasm-project) [![Build
+Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm) Latest version: [chiasm-v0.2.0.js](http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js)
 
-[![Build
-Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm)
-
-Latest version: [chiasm-v0.2.0.js](http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js)
+Chiasm is a browser based runtime environment and component architecture for
+interactive data visualizations. It allows plugins for data access, data
+transformation, and interactive visualization to be loaded and configured
+dynamically. This repository contains `chiasm.js`, the core runtime environment.
 
 ## Usage
 
-You can include it in your page like this:
+You can include Chiasm in your page like this:
 
 ```html
 <script src="http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js"></script>
@@ -49,11 +50,8 @@ var Chiasm = require("chiasm");
 
 ## Components
 
-Chiasm is a browser based runtime environment and component architecture for
-interactive data visualizations. It allows plugins for data access, data
-transformation, and interactive visualization to be loaded and configured
-dynamically. This repository contains `chiasm.js`, the core runtime environment,
-but a component runtime environment is nothing without components.
+
+A component runtime environment is nothing without components.
 
 The Chiasm subproject [chiasm-component](https://github.com/chiasm-project/chiasm-component) defines a common base for Chiasm components. Components should extend this base using composition (not inheritence). For an example of a simple plugin that defines an interactive graphic, see [Chiasm Boilerplate](http://bl.ocks.org/curran/1af08ad6cdb01707c33f).
 
