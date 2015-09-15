@@ -47,20 +47,26 @@ var Chiasm = require("chiasm");
 | [![](http://bl.ocks.org/curran/raw/5a9767b5c23982c89632/thumbnail.png)](http://bl.ocks.org/curran/5a9767b5c23982c89632) | An example demonstrating linked views and having a common color scale. |
 | [![](http://bl.ocks.org/curran/raw/19d42e98ce25291eb45d/thumbnail.png)](http://bl.ocks.org/curran/19d42e98ce25291eb45d) | A more complex example with linked views using Crossfilter and loading data from an API. |
 
-## Overview
+## Components
 
-Chiasm is a browser based runtime environment and plugin architecture for
-interactive visualizations. It allows plugins for data access, data
+Chiasm is a browser based runtime environment and component architecture for
+interactive data visualizations. It allows plugins for data access, data
 transformation, and interactive visualization to be loaded and configured
-dynamically.
+dynamically. This repository contains `chiasm.js`, the core runtime environment,
+but a component runtime environment is nothing without components.
 
-This repository contains `chiasm.js`, the core runtime environment. Also check
-out these other projects under
-[github.com/chiasm-project](https://github.com/chiasm-project/):
+The Chiasm subproject [chiasm-component](https://github.com/chiasm-project/chiasm-component) defines a common base for Chiasm components. Components should extend this base using composition (not inheritence). For an example of a simple plugin that defines an interactive graphic, see [Chiasm Boilerplate](http://bl.ocks.org/curran/1af08ad6cdb01707c33f).
 
- * [chiasm-component](https://github.com/chiasm-project/chiasm-component) A common base for components.
+Several core components are subprojects within [github.com/chiasm-project](https://github.com/chiasm-project/):
+
  * [chiasm-layout](https://github.com/chiasm-project/chiasm-layout) Nested box layout for Chiasm components.
  * [chiasm-links](https://github.com/chiasm-project/chiasm-links) Data binding for Chiasm components.
+
+There are also the following other components that exist in examples:
+
+ * [coloredRectangle.js](https://gist.github.com/curran/1af08ad6cdb01707c33f#file-coloredrectangle-js)
+ * [chiasm-crossfilter.js](https://gist.github.com/curran/87d038562333a7ad4a64#file-chiasm-crossfilter-js) An integration with [Crossfilter.js](https://github.com/square/crossfilter)
+ * [chiasm-leaflet.js](https://gist.github.com/curran/81271937fa94fdbdd854#file-chiasm-leaflet-js) An integration with [Leaflet.js](leafletjs.com)
 
 ## Presentations on Chiasm
 
