@@ -94,22 +94,22 @@ describe("chiasm runtime", function () {
     });
   });
 
-  it("create a component via chiasm.config = config", function(done) {
-    var chiasm = Chiasm();
+  //it("create a component via chiasm.config = config", function(done) {
+  //  var chiasm = Chiasm();
 
-    chiasm.plugins.simplestPlugin = SimplestPlugin;
-    
-    chiasm.config = {
-      foo: {
-        plugin: "simplestPlugin"
-      }
-    };
+  //  chiasm.plugins.simplestPlugin = SimplestPlugin;
+  //  
+  //  chiasm.config = {
+  //    foo: {
+  //      plugin: "simplestPlugin"
+  //    }
+  //  };
 
-    chiasm.getComponent("foo").then(function(foo){
-      expect(foo).to.exist;
-      done();
-    });
-  });
+  //  chiasm.getComponent("foo").then(function(foo){
+  //    expect(foo).to.exist;
+  //    done();
+  //  });
+  //});
 
   it("report error when attempting to set a property without a default value", function(done) {
     var chiasm = Chiasm();
@@ -133,14 +133,14 @@ describe("chiasm runtime", function () {
     var chiasm = Chiasm();
     chiasm.plugins.simplePlugin = SimplePlugin;
     
-    chiasm.config = {
+    chiasm.setConfig({
       foo: {
         plugin: "simplePlugin",
         state: {
           message: "Hello"
         }
       }
-    };
+    });
 
     chiasm.getComponent("foo").then(function(foo){
       expect(foo).to.exist;
@@ -155,7 +155,7 @@ describe("chiasm runtime", function () {
     var chiasm = Chiasm();
     chiasm.plugins.pointPlugin = PointPlugin;
     
-    chiasm.config = {
+    chiasm.setConfig({
       foo: {
         plugin: "pointPlugin",
         state: {
@@ -163,7 +163,7 @@ describe("chiasm runtime", function () {
           y: 10
         }
       }
-    };
+    });
 
     chiasm.getComponent("foo").then(function(foo){
       expect(foo).to.exist;
@@ -179,19 +179,19 @@ describe("chiasm runtime", function () {
     var chiasm = Chiasm();
     chiasm.plugins.pointPlugin = PointPlugin;
     
-    chiasm.config = {
+    chiasm.setConfig({
       foo: {
         plugin: "pointPlugin",
         state: {
           x: 5
         }
       }
-    };
+    });
 
     chiasm.getComponent("foo").then(function(foo){
       foo.when(["x"], function(x){
         expect(x).to.equal(5);
-        chiasm.config = {
+        chiasm.setConfig({
           foo: {
             plugin: "pointPlugin",
             state: {
@@ -199,7 +199,7 @@ describe("chiasm runtime", function () {
               y: 10
             }
           }
-        };
+        });
         foo.when(["y"], function(y){
           expect(y).to.equal(10);
           done();
@@ -212,14 +212,14 @@ describe("chiasm runtime", function () {
     var chiasm = Chiasm();
     chiasm.plugins.simplePlugin = SimplePlugin;
     
-    chiasm.config = {
+    chiasm.setConfig({
       foo: {
         plugin: "simplePlugin",
         state: {
           message: "Hello"
         }
       }
-    };
+    });
 
     chiasm.getComponent("foo").then(function(foo){
       chiasm.when("config", function(config) {
@@ -237,14 +237,14 @@ describe("chiasm runtime", function () {
     var chiasm = Chiasm();
     chiasm.plugins.simplePlugin = SimplePlugin;
     
-    chiasm.config = {
+    chiasm.setConfig({
       foo: {
         plugin: "simplePlugin",
         state: {
           message: "Hello"
         }
       }
-    };
+    });
 
     chiasm.getComponent("foo").then(function(foo){
       chiasm.when("config", function(config){

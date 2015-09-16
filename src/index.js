@@ -44,40 +44,39 @@ function Chiasm(){
 
   // This is the public API object returned by the constructor.
   // TODO reconsider if it is a good idea to have Chiasm be a model-js Model.
-  var chiasm = Model({
+  var chiasm = Model();
 
-    // `plugins` is An object for setting up plugins before loading a configuration.
-    // Chiasm first looks here for plugins, then if a plugin is not found here
-    // it is dynamically loaded at runtime using RequireJS where the plugin name
-    // corresponds to an AMD module name or arbitrary URL.
-    //
-    // * Keys are plugin names.
-    // * Values are plugin implementations, which are constructor functions for
-    //   runtime components. A plugin constructor function takes as input a reference
-    //   to the chiasm instance, and yields as output a ModelJS model with the following properties:
-    //   * `publicProperties` An array of property names. This is the list of properties that
-    //     are configurable via the JSON configuration structure. Each property listed here
-    //     must have a default value present on the freshly constructed component.
-    //   * `destroy` (optional) A function that frees all resources allocated by the component,
-    //     e.g. removing any DOM elements added to the Chiasm container, and removing event listeners.
-    //
-    // See additional plugin documentation at https://github.com/curran/chiasm/wiki
-    plugins: {},
+  // `plugins` is An object for setting up plugins before loading a configuration.
+  // Chiasm first looks here for plugins, then if a plugin is not found here
+  // it is dynamically loaded at runtime using RequireJS where the plugin name
+  // corresponds to an AMD module name or arbitrary URL.
+  //
+  // * Keys are plugin names.
+  // * Values are plugin implementations, which are constructor functions for
+  //   runtime components. A plugin constructor function takes as input a reference
+  //   to the chiasm instance, and yields as output a ModelJS model with the following properties:
+  //   * `publicProperties` An array of property names. This is the list of properties that
+  //     are configurable via the JSON configuration structure. Each property listed here
+  //     must have a default value present on the freshly constructed component.
+  //   * `destroy` (optional) A function that frees all resources allocated by the component,
+  //     e.g. removing any DOM elements added to the Chiasm container, and removing event listeners.
+  //
+  // See additional plugin documentation at https://github.com/curran/chiasm/wiki
+  chiasm.plugins = {};
 
-    // The JSON configuration object encapsulating application state.
-    //
-    //   * Keys are component aliases.
-    //   * Values are objects with the following properties:
-    //     * `plugin` - The name of the plugin.
-    //     * `state` - An object representing the state of a component, where
-    //       * Keys are component property names
-    //       * Values are component property values
-    config: {},
+  // The JSON configuration object encapsulating application state.
+  //
+  //   * Keys are component aliases.
+  //   * Values are objects with the following properties:
+  //     * `plugin` - The name of the plugin.
+  //     * `state` - An object representing the state of a component, where
+  //       * Keys are component property names
+  //       * Values are component property values
+  chiasm.config = {};
 
-    // The timeout (in milliseconds) used for plugin loading and getComponent().
-    // The default timeout is 10 seconds.
-    timeout: 10000
-  });
+  // The timeout (in milliseconds) used for plugin loading and getComponent().
+  // The default timeout is 10 seconds.
+  chiasm.timeout = 10000;
 
   // The runtime components created by plugins.
   //
