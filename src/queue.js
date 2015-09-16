@@ -1,7 +1,11 @@
 // An asynchronous batch queue for processing Actions using Promises.
 // Draws from https://www.promisejs.org/patterns/#all
-// The argument `process` is a function that takes as input
+//
+// The argument `process` is an asynchronous function that takes as input
 // an item to process, and returns a promise.
+//
+// The returned function can be passed arrays of values to add to the queue
+// that will be sequentially passed into `process`.
 function Queue(process){
 
   // This promise is replaced as each item is processed.

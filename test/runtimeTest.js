@@ -476,4 +476,17 @@ describe("chiasm runtime", function () {
       done();
     });
   });
+
+  it("should report an error for a missing plugin", function(done) {
+    var chiasm = Chiasm();
+
+    chiasm.setConfig({
+      "foo": {
+        "plugin": "bar"
+      }
+    }).catch(function(err){
+      expect(err.message).to.equal("Plugin 'bar' has not defined in chiasm.plugins.");
+      done();
+    });
+  });
 });
