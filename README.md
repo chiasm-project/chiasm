@@ -139,4 +139,4 @@ interacting with it allows users to rapidly pivot and navigate through the data.
 
 ## Contributing
 
-Any contributions or involvement is welcome. Feel free to [submit an issue](https://github.com/chiasm-project/chiasm/issues) for feature requests and bugs. For feedback and discussion in general, please post to the [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
+Any contributions or involvement is welcome. Please give this repository a star if you think it's cool. If you're looking for ways to contribute, take a look at the [issues](https://github.com/chiasm-project/chiasm/issues) to see if there are any you'd like to take on. Also feel free to submit new issues for feature requests and bugs. For feedback and discussion in general, please post to the [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
