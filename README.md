@@ -11,6 +11,7 @@ dynamically.
 Here's a video that explains the project: [Story of the Chiasm Project](https://www.youtube.com/watch?v=Qos1QSIfZhE).
 
 ## Examples
+Feel free to add your own here and send a pull request!
 
 | thumbnail | description  |
 |---|---|
