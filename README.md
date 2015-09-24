@@ -20,6 +20,7 @@ Here's a video that explains the project: [Story of the Chiasm Project](https://
 | [![](http://bl.ocks.org/curran/raw/d5252d37917ab6eab032/thumbnail.png)](http://bl.ocks.org/curran/d5252d37917ab6eab032) | Focus + Context Area Charts.|
 | [![](http://bl.ocks.org/curran/raw/87d038562333a7ad4a64/thumbnail.png)](http://bl.ocks.org/curran/87d038562333a7ad4a64) | Crossfilter & Chiasm.|
 | [![](http://bl.ocks.org/curran/raw/d1e9ea2850047562be09/thumbnail.png)](http://bl.ocks.org/curran/d1e9ea2850047562be09) | Focus + Context Scatter Plots.|
+| [![](http://bl.ocks.org/micahstubbs/raw/8172488984f877569956/thumbnail.png)](http://bl.ocks.org/micahstubbs/8172488984f877569956) | Focus + Context Scatter Plots with Color.|
 | [![](https://gist.githubusercontent.com/curran/01aa2685f083b6c1b9fb/raw/d20ddb8e5b42360234654d1a0d9344e8e15ae716/thumbnail.png)](http://bl.ocks.org/curran/01aa2685f083b6c1b9fb) | Map & Globe based on [Leaflet.js](leafletjs.com) and [This is a Globe](http://bl.ocks.org/mbostock/ba63c55dd2dbc3ab0127). |
 | [![](http://bl.ocks.org/curran/raw/81271937fa94fdbdd854/thumbnail.png)](http://bl.ocks.org/curran/81271937fa94fdbdd854) | Migrant Deaths Map with Leaflet. |
 | [![](http://bl.ocks.org/curran/raw/b4aa88691528c0f0b1fa/thumbnail.png)](http://bl.ocks.org/curran/b4aa88691528c0f0b1fa) | A self-contained example showing the new v0.2.0 plugin API. |
