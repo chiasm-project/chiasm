@@ -16,6 +16,7 @@ Feel free to add your own here and send a pull request!
 | thumbnail | description  |
 |---|---|
 | [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
+| [![](http://bl.ocks.org/curran/raw/b6e1d23c16dc76371a92/thumbnail.png)](http://bl.ocks.org/curran/b6e1d23c16dc76371a92) | Magic Bar Chart (AngularJS UI). |
 | [![](http://bl.ocks.org/curran/raw/f01e2a07ece4a9ad62cb/thumbnail.png)](http://bl.ocks.org/curran/f01e2a07ece4a9ad62cb) | Thumbnails of visualization techniques from a 1984 paper. |
 | [![](https://gist.githubusercontent.com/curran/3cc1a2a289dddbd64688/raw/5a938f66c0cb728da8eaa28e15816fea74e57ae8/thumbnail.png)](http://bl.ocks.org/curran/3cc1a2a289dddbd64688) | Fundamental visualization techniques in Chiasm.  |
 | [![](http://bl.ocks.org/curran/raw/d5252d37917ab6eab032/thumbnail.png)](http://bl.ocks.org/curran/d5252d37917ab6eab032) | Focus + Context Area Charts.|
