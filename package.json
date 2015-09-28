@@ -1,6 +1,6 @@
 {
   "name": "chiasm",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A browser based environment for interactive data visualizations.",
   "main": "src/index.js",
   "scripts": {
