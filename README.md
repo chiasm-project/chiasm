@@ -1,7 +1,7 @@
 ![Chiasm](http://curran.github.io/images/chiasm/chiasm_logo.png)
 
 [![Build
-Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm) Latest version: [chiasm-v0.2.0.js](http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js)
+Status](https://travis-ci.org/chiasm-project/chiasm.svg?branch=master)](https://travis-ci.org/chiasm-project/chiasm) Latest version: [chiasm-v0.2.1.js](http://chiasm-project.github.io/chiasm/chiasm-v0.2.0.js)
 
 Chiasm is a browser based runtime environment and component architecture for
 interactive data visualizations. It allows plugins for data access, data
