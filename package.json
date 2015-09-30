@@ -22,14 +22,14 @@
   },
   "homepage": "https://github.com/chiasm-project/chiasm",
   "dependencies": {
-    "chai": "^3.2.0",
     "lodash": "^3.10.1",
     "model-js": "^0.2.4"
   },
   "devDependencies": {
     "browserify-shim": "^3.8.10",
     "browserify-versionify": "^1.0.6",
-    "mocha": "^2.3.0"
+    "mocha": "^2.3.0",
+    "chai": "^3.2.0"
   },
   "browserify": {
     "transform": [
