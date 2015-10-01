@@ -4,7 +4,7 @@
   "description": "A browser based environment for interactive data visualizations.",
   "main": "src/index.js",
   "scripts": {
-    "pretest": "browserify -o chiasm.js -s Chiasm src/index.js",
+    "pretest": "browserify -t browserify-shim -o chiasm.js -s Chiasm src/index.js",
     "test": "mocha"
   },
   "repository": {
@@ -30,12 +30,6 @@
     "browserify-versionify": "^1.0.6",
     "mocha": "^2.3.0",
     "chai": "^3.2.0"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim",
-      "browserify-versionify"
-    ]
   },
   "browserify-shim": {
     "lodash": "global:_",
