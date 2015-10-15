@@ -16,6 +16,8 @@ Feel free to add your own here and send a pull request!
 | thumbnail | description  |
 |---|---|
 | [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
+| [![](http://bl.ocks.org/curran/raw/5e3c1bed7c9cdd2b431c/thumbnail.png)](http://bl.ocks.org/curran/5e3c1bed7c9cdd2b431c) | Reactive Mixins for Visualizations. |
+| [![](http://bl.ocks.org/curran/raw/a54fc3a6578efcdc19f4/thumbnail.png)](http://bl.ocks.org/curran/a54fc3a6578efcdc19f4) | Magic Heat Map. |
 | [![](http://bl.ocks.org/curran/raw/b6e1d23c16dc76371a92/thumbnail.png)](http://bl.ocks.org/curran/b6e1d23c16dc76371a92) | Magic Bar Chart (AngularJS UI). |
 | [![](http://bl.ocks.org/curran/raw/a931688fa8cb65db4079/thumbnail.png)](http://bl.ocks.org/curran/a931688fa8cb65db4079) | Magic Bar Chart (Browserified). |
 | [![](http://bl.ocks.org/curran/raw/f01e2a07ece4a9ad62cb/thumbnail.png)](http://bl.ocks.org/curran/f01e2a07ece4a9ad62cb) | Thumbnails of visualization techniques from a 1984 paper. |
