@@ -8,7 +8,7 @@ interactive data visualizations. It allows plugins for data access, data
 transformation, and interactive visualization to be loaded and configured
 dynamically.
 
-Here's a video that explains the project: [Story of the Chiasm Project](https://www.youtube.com/watch?v=Qos1QSIfZhE).
+Here's a video that explains the history of the project: [Story of the Chiasm Project](https://www.youtube.com/watch?v=Qos1QSIfZhE), and here's another that covers the details of how Chiasm works and how you can use it: [Introduction to Chiasm](https://www.youtube.com/watch?v=MpweS7gNBt4).
 
 ## Examples
 Feel free to add your own here and send a pull request!
@@ -82,6 +82,7 @@ There is a [collection of components in the v0.1.9 archive branch](https://githu
 
 ## Presentations on Chiasm
 
+ * [Introduction to Chiasm](https://www.youtube.com/watch?v=MpweS7gNBt4) - October 2015
  * [Story of the Chiasm Project](https://www.youtube.com/watch?v=Qos1QSIfZhE) - September 2015
  * [Chiasm @ Houston Data Visualization Meetup](https://www.youtube.com/watch?v=ivPSdm7Bz3o) - August 2015
  * [Lightning Demo (2 min) at San Francisco D3 Meetup](https://youtu.be/OJBwvSUgqQQ?t=5m58s) - July 2015
