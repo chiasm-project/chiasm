@@ -65,6 +65,8 @@ Several components are also subprojects under [github.com/chiasm-project](https:
 
  * [chiasm-layout](https://github.com/chiasm-project/chiasm-layout) Nested box layout for Chiasm components.
  * [chiasm-links](https://github.com/chiasm-project/chiasm-links) Data binding for Chiasm components.
+ * [chiasm-dsv-dataset](https://github.com/chiasm-project/chiasm-dsv-dataset) A Chiasm component that loads data files.
+ * [chiasm-data-reduction](https://github.com/chiasm-project/chiasm-data-reduction) A Chiasm component for aggregation and filtering data.
 
 There are also the following other components that exist in various examples:
 
@@ -86,14 +88,6 @@ There is a [collection of components in the v0.1.9 archive branch](https://githu
  * [Chiasm presentation at Alpine Data Labs](https://www.youtube.com/watch?v=9jh4E3-jxcQ&feature=youtu.be&a) ([slides](http://www.slideshare.net/currankelleher/chiasm)) - May 2015
  * [Constructing Interactive Data Visualizations - Plans for Chiasm](https://www.youtube.com/watch?v=GxGkHam33Cw) - February 2015
  * [Visualizing the Universal Data Cube](https://youtu.be/XVHyygdD1Kg?t=47m22s) - November 2014 - Doctoral dissertation defense including the blueprint for Chiasm.
-
-## Notice
-
-This project is currently undergoing restructuring and being split up
-into many modules that live under
-[github.com/chiasm-project](https://github.com/chiasm-project). The full project
-state before the refactoring (including visualization and data loading plugins)
-can be found on the [archive_v0.1.9 branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
 
 # Background
 
