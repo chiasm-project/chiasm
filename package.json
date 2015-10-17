@@ -1,10 +1,10 @@
 {
   "name": "chiasm",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "A browser based environment for interactive data visualizations.",
   "main": "src/index.js",
   "scripts": {
-    "pretest": "browserify -o chiasm.js -s Chiasm src/index.js",
+    "pretest": "browserify -t browserify-shim -o chiasm.js -s Chiasm src/index.js",
     "test": "mocha"
   },
   "repository": {
@@ -28,14 +28,8 @@
   "devDependencies": {
     "browserify-shim": "^3.8.10",
     "browserify-versionify": "^1.0.6",
-    "mocha": "^2.3.0",
-    "chai": "^3.2.0"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim",
-      "browserify-versionify"
-    ]
+    "mocha": "^2.3.3",
+    "chai": "^3.3.0"
   },
   "browserify-shim": {
     "lodash": "global:_",

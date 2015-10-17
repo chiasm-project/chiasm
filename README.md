@@ -8,7 +8,7 @@ interactive data visualizations. It allows plugins for data access, data
 transformation, and interactive visualization to be loaded and configured
 dynamically.
 
-Here's a video that explains the project: [Story of the Chiasm Project](https://www.youtube.com/watch?v=Qos1QSIfZhE).
+Here's a video that explains the history of the project: [Story of the Chiasm Project](https://www.youtube.com/watch?v=Qos1QSIfZhE), and here's another that covers the details of how Chiasm works and how you can use it: [Introduction to Chiasm](https://www.youtube.com/watch?v=MpweS7gNBt4).
 
 ## Examples
 Feel free to add your own here and send a pull request!
@@ -16,7 +16,10 @@ Feel free to add your own here and send a pull request!
 | thumbnail | description  |
 |---|---|
 | [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
+| [![](http://bl.ocks.org/curran/raw/5e3c1bed7c9cdd2b431c/thumbnail.png)](http://bl.ocks.org/curran/5e3c1bed7c9cdd2b431c) | Reactive Mixins for Visualizations. |
+| [![](http://bl.ocks.org/curran/raw/a54fc3a6578efcdc19f4/thumbnail.png)](http://bl.ocks.org/curran/a54fc3a6578efcdc19f4) | Magic Heat Map. |
 | [![](http://bl.ocks.org/curran/raw/b6e1d23c16dc76371a92/thumbnail.png)](http://bl.ocks.org/curran/b6e1d23c16dc76371a92) | Magic Bar Chart (AngularJS UI). |
+| [![](http://bl.ocks.org/curran/raw/a931688fa8cb65db4079/thumbnail.png)](http://bl.ocks.org/curran/a931688fa8cb65db4079) | Magic Bar Chart (Browserified). |
 | [![](http://bl.ocks.org/curran/raw/f01e2a07ece4a9ad62cb/thumbnail.png)](http://bl.ocks.org/curran/f01e2a07ece4a9ad62cb) | Thumbnails of visualization techniques from a 1984 paper. |
 | [![](https://gist.githubusercontent.com/curran/3cc1a2a289dddbd64688/raw/5a938f66c0cb728da8eaa28e15816fea74e57ae8/thumbnail.png)](http://bl.ocks.org/curran/3cc1a2a289dddbd64688) | Fundamental visualization techniques in Chiasm.  |
 | [![](http://bl.ocks.org/curran/raw/d5252d37917ab6eab032/thumbnail.png)](http://bl.ocks.org/curran/d5252d37917ab6eab032) | Focus + Context Area Charts.|
@@ -62,6 +65,8 @@ Several components are also subprojects under [github.com/chiasm-project](https:
 
  * [chiasm-layout](https://github.com/chiasm-project/chiasm-layout) Nested box layout for Chiasm components.
  * [chiasm-links](https://github.com/chiasm-project/chiasm-links) Data binding for Chiasm components.
+ * [chiasm-dsv-dataset](https://github.com/chiasm-project/chiasm-dsv-dataset) A Chiasm component that loads data files.
+ * [chiasm-data-reduction](https://github.com/chiasm-project/chiasm-data-reduction) A Chiasm component for aggregation and filtering data.
 
 There are also the following other components that exist in various examples:
 
@@ -77,20 +82,13 @@ There is a [collection of components in the v0.1.9 archive branch](https://githu
 
 ## Presentations on Chiasm
 
+ * [Introduction to Chiasm](https://www.youtube.com/watch?v=MpweS7gNBt4) - October 2015
  * [Story of the Chiasm Project](https://www.youtube.com/watch?v=Qos1QSIfZhE) - September 2015
  * [Chiasm @ Houston Data Visualization Meetup](https://www.youtube.com/watch?v=ivPSdm7Bz3o) - August 2015
  * [Lightning Demo (2 min) at San Francisco D3 Meetup](https://youtu.be/OJBwvSUgqQQ?t=5m58s) - July 2015
  * [Chiasm presentation at Alpine Data Labs](https://www.youtube.com/watch?v=9jh4E3-jxcQ&feature=youtu.be&a) ([slides](http://www.slideshare.net/currankelleher/chiasm)) - May 2015
  * [Constructing Interactive Data Visualizations - Plans for Chiasm](https://www.youtube.com/watch?v=GxGkHam33Cw) - February 2015
  * [Visualizing the Universal Data Cube](https://youtu.be/XVHyygdD1Kg?t=47m22s) - November 2014 - Doctoral dissertation defense including the blueprint for Chiasm.
-
-## Notice
-
-This project is currently undergoing restructuring and being split up
-into many modules that live under
-[github.com/chiasm-project](https://github.com/chiasm-project). The full project
-state before the refactoring (including visualization and data loading plugins)
-can be found on the [archive_v0.1.9 branch](https://github.com/curran/chiasm/tree/archive_v0.1.9).
 
 # Background
 

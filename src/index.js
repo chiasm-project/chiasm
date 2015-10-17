@@ -1,5 +1,4 @@
 // chiasm.js
-// v__VERSION__
 // github.com/chiasm-project/chiasm
 //
 // This file contains the core implementation of Chiasm, a runtime environment
