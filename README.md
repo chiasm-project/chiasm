@@ -130,11 +130,14 @@ This diagram illustrates that
 
 This project is inspired by the following related work:
 
- * Vega
- * DC.js
- * Plotly.js
- * Weave
- * Polaris
+ * [Vega](https://github.com/vega/vega)
+ * [Plotly.js](https://plot.ly/javascript/)
+ * [DC.js](https://dc-js.github.io/dc.js/)
+ * [Weave](https://github.com/WeaveTeam/Weave)
+ * Polaris, described in these three papers:
+   * [Polaris: A system for query, analysis, and visualization of multidimensional relational databases](http://courses.ischool.berkeley.edu/i247/f05/readings/Stolte_Polaris_TVCG02.pdf)
+   * [Query, analysis, and visualization of hierarchically structured data using Polaris](http://graphics.stanford.edu/papers/polaris_olap/paper.pdf)
+   * [Multiscale visualization using data cubes](https://graphics.stanford.edu/papers/pan_zoom/paper.pdf)
 
 # The word "[Chiasm](http://www.merriam-webster.com/audio.php?file=chiasm02&word=chiasm&text=)"
 
