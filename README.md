@@ -128,6 +128,16 @@ This diagram illustrates that
  * Changes in configuration propagate to runtime components.
  * Changes in runtime components propagate back to the configuration.
 
+# Related Work
+
+This project is inspired by the following related work:
+
+ * Vega
+ * DC.js
+ * Plotly.js
+ * Weave
+ * Polaris
+
 # The word "[Chiasm](http://www.merriam-webster.com/audio.php?file=chiasm02&word=chiasm&text=)"
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/1543%2CVisalius%27OpticChiasma.jpg" width=200>
@@ -145,4 +155,6 @@ interacting with it allows users to rapidly pivot and navigate through the data.
 
 ## Contributing
 
-Any contributions or involvement is welcome. Please give this repository a star if you think it's cool. If you're looking for ways to contribute, take a look at the [issues](https://github.com/chiasm-project/chiasm/issues) to see if there are any you'd like to take on. Also feel free to submit new issues for feature requests and bugs. For feedback and discussion in general, please post to the [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
+Any contributions or involvement is warmly welcome. Please give this repository a star if you think it's cool. If you're looking for ways to contribute, take a look at the [issues](https://github.com/chiasm-project/chiasm/issues) to see if there are any you'd like to take on. If you have made something with Chiasm, please add it to the list of examples and submit a pull request. Also feel free to submit new issues for feature requests and bugs. For feedback and discussion in general, please post to the [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
+
+
