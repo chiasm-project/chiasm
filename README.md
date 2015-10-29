@@ -16,6 +16,7 @@ Feel free to add your own here and send a pull request!
 | thumbnail | description  |
 |---|---|
 | [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
+| [![](http://bl.ocks.org/curran/raw/a479b91bba14d633487e/thumbnail.png)](http://bl.ocks.org/curran/a479b91bba14d633487e) | Migrant Deaths over Time.|
 | [![](http://bl.ocks.org/curran/raw/5e3c1bed7c9cdd2b431c/thumbnail.png)](http://bl.ocks.org/curran/5e3c1bed7c9cdd2b431c) | Reactive Mixins for Visualizations. |
 | [![](http://bl.ocks.org/curran/raw/a54fc3a6578efcdc19f4/thumbnail.png)](http://bl.ocks.org/curran/a54fc3a6578efcdc19f4) | Magic Heat Map. |
 | [![](http://bl.ocks.org/curran/raw/b6e1d23c16dc76371a92/thumbnail.png)](http://bl.ocks.org/curran/b6e1d23c16dc76371a92) | Magic Bar Chart (AngularJS UI). |
