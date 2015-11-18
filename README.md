@@ -16,6 +16,7 @@ Feel free to add your own here and send a pull request!
 | thumbnail | description  |
 |---|---|
 | [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
+| [![](http://bl.ocks.org/curran/raw/38aad0e939c685023a17/thumbnail.png)](http://bl.ocks.org/curran/38aad0e939c685023a17) | Fusillade à Paris, a visualization of the attacks in Paris on November 13, 2015. |
 | [![](https://gist.github.com/curran/a479b91bba14d633487e/raw/8f22d9f9ea249114d16785e6d3645f7d8d5937fc/thumbnail.png)](http://bl.ocks.org/curran/a479b91bba14d633487e) | Migrant Deaths over Time.|
 | [![](http://bl.ocks.org/curran/raw/5e3c1bed7c9cdd2b431c/thumbnail.png)](http://bl.ocks.org/curran/5e3c1bed7c9cdd2b431c) | Reactive Mixins for Visualizations. |
 | [![](http://bl.ocks.org/curran/raw/a54fc3a6578efcdc19f4/thumbnail.png)](http://bl.ocks.org/curran/a54fc3a6578efcdc19f4) | Magic Heat Map. |
