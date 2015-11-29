@@ -86,6 +86,7 @@ There is a [collection of components in the v0.1.9 archive branch](https://githu
 
 ## Presentations on Chiasm
 
+ * [Notes from the Chiasm presentation at VisFest, San Francisco](https://github.com/visfest/topics2015/wiki/Session-2C:-Chiasm-Project) - November 2015
  * [Introduction to Chiasm](https://www.youtube.com/watch?v=MpweS7gNBt4) - October 2015
  * [Story of the Chiasm Project](https://www.youtube.com/watch?v=Qos1QSIfZhE) - September 2015
  * [Chiasm @ Houston Data Visualization Meetup](https://www.youtube.com/watch?v=ivPSdm7Bz3o) - August 2015
