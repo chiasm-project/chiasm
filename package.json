@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/chiasm-project/chiasm",
   "dependencies": {
+    "es6-promise": "^3.0.2",
     "lodash": "^3.10.1",
     "model-js": "^0.2.4"
   },

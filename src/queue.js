@@ -1,3 +1,6 @@
+// Use this ES6 Promise polyfill for browser compatibility.
+var Promise = require("es6-promise").Promise;
+
 // An asynchronous batch queue for processing Actions using Promises.
 // Draws from https://www.promisejs.org/patterns/#all
 //

@@ -24,6 +24,9 @@
 var Model = require("model-js");
 var _ = require("lodash");
 
+// Use this ES6 Promise polyfill for browser compatibility.
+var Promise = require("es6-promise").Promise;
+
 // Load core Chiasm modules.
 var configDiff    = require("./config-diff");
 var Action        = require("./action");
