@@ -15,7 +15,8 @@ Feel free to add your own here and send a pull request!
 
 | thumbnail | description  |
 |---|---|
-| [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate. |
+| [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate |
+| [![](http://bl.ocks.org/curran/raw/46050d18d5ec1ab401fa/thumbnail.png)](http://bl.ocks.org/curran/46050d18d5ec1ab401fa) | Chiasm-Charts v0.1.0 |
 | [![](http://bl.ocks.org/curran/raw/bfc75d0fcc68b2d341f5/thumbnail.png)](http://bl.ocks.org/curran/bfc75d0fcc68b2d341f5) | Bootstrap + Chiasm |
 | [![](http://bl.ocks.org/curran/raw/38aad0e939c685023a17/thumbnail.png)](http://bl.ocks.org/curran/38aad0e939c685023a17) | Fusillade à Paris, a visualization of the attacks in Paris on November 13, 2015. |
 | [![](https://gist.github.com/curran/a479b91bba14d633487e/raw/8f22d9f9ea249114d16785e6d3645f7d8d5937fc/thumbnail.png)](http://bl.ocks.org/curran/a479b91bba14d633487e) | Migrant Deaths over Time.|
