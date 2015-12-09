@@ -16,6 +16,7 @@ Feel free to add your own here and send a pull request!
 | thumbnail | description  |
 |---|---|
 | [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate |
+| [![](http://bl.ocks.org/curran/raw/9938078a93a4ba380a0e/thumbnail.png)](http://bl.ocks.org/curran/9938078a93a4ba380a0e) | Interactive Scatter Plot with selectable X, Y columns. |
 | [![](http://bl.ocks.org/curran/raw/46050d18d5ec1ab401fa/thumbnail.png)](http://bl.ocks.org/curran/46050d18d5ec1ab401fa) | Chiasm-Charts v0.1.0 |
 | [![](http://bl.ocks.org/curran/raw/bfc75d0fcc68b2d341f5/thumbnail.png)](http://bl.ocks.org/curran/bfc75d0fcc68b2d341f5) | Bootstrap + Chiasm |
 | [![](http://bl.ocks.org/curran/raw/38aad0e939c685023a17/thumbnail.png)](http://bl.ocks.org/curran/38aad0e939c685023a17) | Fusillade à Paris, a visualization of the attacks in Paris on November 13, 2015. |
