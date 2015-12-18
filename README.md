@@ -17,6 +17,7 @@ Feel free to add your own here and send a pull request!
 | thumbnail | description  |
 |---|---|
 | [![](http://bl.ocks.org/curran/raw/1af08ad6cdb01707c33f/thumbnail.png)](http://bl.ocks.org/curran/1af08ad6cdb01707c33f) | Chiasm Boilerplate |
+| [![](http://bl.ocks.org/curran/raw/4b18d7b107c0e5b97407/thumbnail.png)](http://bl.ocks.org/curran/4b18d7b107c0e5b97407) | Chiasm-Charts v0.1.5 |
 | [![](http://bl.ocks.org/curran/raw/9938078a93a4ba380a0e/thumbnail.png)](http://bl.ocks.org/curran/9938078a93a4ba380a0e) | Interactive Scatter Plot with selectable X, Y columns. |
 | [![](http://bl.ocks.org/curran/raw/46050d18d5ec1ab401fa/thumbnail.png)](http://bl.ocks.org/curran/46050d18d5ec1ab401fa) | Chiasm-Charts v0.1.0 |
 | [![](http://bl.ocks.org/curran/raw/bfc75d0fcc68b2d341f5/thumbnail.png)](http://bl.ocks.org/curran/bfc75d0fcc68b2d341f5) | Bootstrap + Chiasm |
