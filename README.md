@@ -22,7 +22,7 @@ Here's a video that explains the history of the project: [Story of the Chiasm Pr
 | [![](http://bl.ocks.org/curran/raw/bfc75d0fcc68b2d341f5/thumbnail.png)](http://bl.ocks.org/curran/bfc75d0fcc68b2d341f5) | Bootstrap + Chiasm |
 | [![](http://bl.ocks.org/curran/raw/38aad0e939c685023a17/thumbnail.png)](http://bl.ocks.org/curran/38aad0e939c685023a17) | Fusillade à Paris, a visualization of the attacks in Paris on November 13, 2015. |
 | [![](https://gist.github.com/curran/a479b91bba14d633487e/raw/8f22d9f9ea249114d16785e6d3645f7d8d5937fc/thumbnail.png)](http://bl.ocks.org/curran/a479b91bba14d633487e) | Migrant Deaths over Time.|
-| [![](http://bl.ocks.org/curran/raw/5e3c1bed7c9cdd2b431c/thumbnail.png)](http://bl.ocks.org/curran/5e3c1bed7c9cdd2b431c) | Reactive Mixins for Visualizations. |
+| [![](http://bl.ocks.org/curran/raw/5e3c1bed7c9cdd2b431c/thumbnail.png)](http://bl.ocks.org/curran/5e3c1bed7c9cdd2b431c) | Reactive Mixins for Visualizations. Described in detail in the video  [Introduction to Chiasm](https://www.youtube.com/watch?v=MpweS7gNBt4). |
 | [![](http://bl.ocks.org/curran/raw/a54fc3a6578efcdc19f4/thumbnail.png)](http://bl.ocks.org/curran/a54fc3a6578efcdc19f4) | Magic Heat Map. |
 | [![](http://bl.ocks.org/curran/raw/b6e1d23c16dc76371a92/thumbnail.png)](http://bl.ocks.org/curran/b6e1d23c16dc76371a92) | Magic Bar Chart (AngularJS UI). |
 | [![](http://bl.ocks.org/curran/raw/a931688fa8cb65db4079/thumbnail.png)](http://bl.ocks.org/curran/a931688fa8cb65db4079) | Magic Bar Chart (Browserified). |
