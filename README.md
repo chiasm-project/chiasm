@@ -12,7 +12,6 @@ Here's a video that explains the history of the project: [Story of the Chiasm Pr
 
 
 ## Examples
-Feel free to add your own here and send a pull request!
 
 | thumbnail | description  |
 |---|---|
@@ -173,4 +172,4 @@ interacting with it allows users to rapidly pivot and navigate through the data.
 
 ## Contributing
 
-Any contributions or involvement is warmly welcome. Please give this repository a star if you think it's cool. If you're looking for ways to contribute, take a look at the [issues](https://github.com/chiasm-project/chiasm/issues) to see if there are any you'd like to take on. If you have made something with Chiasm, please add it to the list of examples and submit a pull request. Also feel free to submit new issues for feature requests and bugs. For feedback and discussion in general, please post to the [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
+Any contributions or involvement is warmly welcome. Please give this repository a star if you think it's cool. If you're looking for ways to contribute, any examples you have created using Chiasm would be welcome as additions to the examples list (fork the repository, edit this README.md file, and send a pull request). Also, please take a look at the [issues](https://github.com/chiasm-project/chiasm/issues) to see if there are any you'd be interested in taking on. Also feel free to submit new issues for feature requests and bugs. For feedback and discussion in general, please post to the [Chiasm Google Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/chiasm-project).
