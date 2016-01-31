@@ -1,39 +1,31 @@
 {
   "name": "chiasm",
-  "version": "0.2.3",
-  "description": "A browser based environment for interactive data visualizations.",
-  "main": "src/index.js",
+  "version": "1.0.0",
+  "description": "Experimental",
+  "main": "build/index.js",
   "scripts": {
-    "pretest": "browserify -t browserify-shim -o chiasm.js -s Chiasm src/index.js",
-    "test": "mocha"
+    "build": "node ./src/build.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chiasm-project/chiasm.git"
+    "url": "git+https://github.com/chiasm-project/chiasm.git"
   },
-  "keywords": [
-    "data",
-    "visualization"
-  ],
   "author": "Curran Kelleher",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/chiasm-project/chiasm/issues"
   },
-  "homepage": "https://github.com/chiasm-project/chiasm",
-  "dependencies": {
-    "es6-promise": "^3.0.2",
-    "lodash": "^3.10.1",
-    "model-js": "^0.2.4"
-  },
+  "homepage": "https://github.com/chiasm-project/chiasm#readme",
   "devDependencies": {
-    "browserify-shim": "^3.8.10",
-    "browserify-versionify": "^1.0.6",
-    "mocha": "^2.3.3",
-    "chai": "^3.3.0"
+    "babel-preset-react": "^6.3.13",
+    "mocha": "^2.4.5",
+    "rollup": "^0.25.1",
+    "rollup-plugin-babel": "^2.3.9",
+    "rollup-plugin-npm": "^1.3.0"
   },
-  "browserify-shim": {
-    "lodash": "global:_",
-    "model-js": "global:Model"
+  "dependencies": {
+    "cson": "^3.0.2",
+    "d3-selection": "^0.6.5",
+    "rollup-plugin-commonjs": "^2.2.0"
   }
 }

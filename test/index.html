@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Chiasm Test</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+
+    <link href="styles.css" rel="stylesheet" type="text/css">
+
+  </head>
+  <body>
+
+    <div>
+      <script type="text/chiasm">
+
+        scatterPlot:
+          data: iris
+          x: sepal_length
+          y: petal_length
+
+      </script>
+    </div>
+
+    <div>
+      <script type="text/chiasm">
+
+        barChart:
+          data: iris
+          x: class
+          y: petal_length
+
+      </script>
+    </div>
+
+    <script src="../dist/chiasm.js"></script>
+
+  </body>
+</html>
